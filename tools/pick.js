@@ -7,6 +7,12 @@
 //   node tools/pick.js order G C [W] — в каком порядке закрывать 2-3 позиции
 //   node tools/pick.js depth     — как пустеет рынок по позициям к моим ходам
 //
+// SKIP='Имя;Имя' — вычеркнуть игроков, которых проекции Yahoo ещё считают
+// живыми: травма, отстранение, холдаут. Движок такого знать не может, а
+// чужие команды уже знают — Хеллебак висел свободным 13 пиков сверх ранга.
+// Вычеркнутый выпадает и из кандидатов, и из плана добора, но НЕ считается
+// пикнутым: номера ходов не сдвигаются.
+//
 // Зачем. Колонка ЦЕНА считает кандидата против плана добора, а план строится
 // по рангу Yahoo. Настоящий крайний вытесняет из плана такого же крайнего и
 // получает ноль — Кемпе 273-е место при ранге Yahoo 47. Здесь три замера,
@@ -16,7 +22,14 @@ const fs = require('fs');
 const H = __dirname + '/..';
 const SEED = (() => { const m = fs.readFileSync(H+'/index.html','utf8').match(/const SEED\s*=\s*(\[[\s\S]*?\n\];)/);
   return eval(m[1].replace(/;$/,'')).map(x => Array.isArray(x) ? x[0] : x); })();
-const POOL = C.prepare(JSON.parse(fs.readFileSync(H+'/data/yahoo_proj.json','utf8')));
+const SKIP = (process.env.SKIP || '').split(';').map(x => x.trim()).filter(Boolean);
+const POOL0 = C.prepare(JSON.parse(fs.readFileSync(H+'/data/yahoo_proj.json','utf8')));
+const POOL = POOL0.filter(p => !SKIP.includes(p.name));
+if (SKIP.length){
+  const miss = SKIP.filter(n => !POOL0.some(p => p.name === n));
+  if (miss.length) console.log('ВЫЧЕРКНУТЬ НЕ УДАЛОСЬ (нет в данных): ' + miss.join(', '));
+  console.log('вычеркнуты: ' + SKIP.filter(n => !miss.includes(n)).join(', '));
+}
 const by = new Map(POOL.map(p => [p.name, p]));
 const TAKEN = {}; SEED.forEach((n,i) => { TAKEN[n] = C.teamOf(i+1) === C.MY_SLOT ? 'ME' : 'X'; });
 C.setOrder(SEED);
