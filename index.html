@@ -52,6 +52,7 @@ th:hover{color:var(--tx)} th.sorted{color:var(--acc)}
 .who{font-size:9px;color:var(--dim2);letter-spacing:.2px;max-width:56px;
   display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}
 .who.me{color:var(--acc);font-weight:700}
+.gives{font-size:10px;color:var(--dim2);white-space:nowrap}
 .slotmark{margin-left:6px;padding:0 4px;border:1px solid var(--ln);border-radius:3px;
   font-size:9px;color:var(--dim2)}
 table.opp{font-size:11px} table.opp td,table.opp th{padding:2px 4px;text-align:center}
@@ -228,7 +229,18 @@ const nextTeam = () => {
   return n > NHL.TEAMS * NHL.ROUNDS ? '—'
        : (NHL.teamOf(n) === NHL.MY_SLOT ? 'меня' : NHL.TEAM_NAMES[NHL.teamOf(n)-1]);
 };
-const seed = () => { S.order = SEED.map(x => Array.isArray(x) ? x[0] : x); };
+const SEEDED = () => SEED.map(x => Array.isArray(x) ? x[0] : x);
+const seed = () => { S.order = SEEDED(); };
+// Отметки живут в localStorage, поэтому свежие пики из кода раньше до браузера
+// не доезжали: сид применялся только к пустому состоянию. Теперь, если
+// сохранённый список — ровно начало сида, он доливается до полного.
+function topUp(){
+  const full = SEEDED();
+  if (S.order.length >= full.length) return false;
+  if (!S.order.every((n,i) => n === full[i])) return false;
+  S.order = full.slice(0, Math.max(full.length, S.order.length));
+  return true;
+}
 
 let POOL = [], view = {pos:'ALL', free:true, multi:false, q:'', sort:'vorp', dir:-1};
 
@@ -237,7 +249,11 @@ const COLS_SK = [{k:'vorp',n:'ЦЕНА'},{k:'score',n:'vs РАУНД'},{k:'rank_
   {k:'fw',n:'FW'},{k:'hit',n:'HIT'},{k:'blk',n:'BLK'},{k:'pm',n:'+/-'}];
 const COLS_G = [{k:'vorp',n:'ЦЕНА'},{k:'score',n:'vs РАУНД'},{k:'rank_pre',n:'Yahoo'},{k:'gp',n:'GP'},
   {k:'w',n:'W'},{k:'sv',n:'SV'},{k:'sa',n:'SA'},{k:'svpct',n:'SV%'},{k:'sho',n:'SHO'}];
-const cols = () => view.pos === 'G' ? COLS_G : COLS_SK;
+// В общем списке колонки статы у вратаря и полевого не совпадают, поэтому
+// там остаются только общие числа, а профиль пишется словами. Зато Василевский
+// виден рядом с защитниками — ради этого список и нужен.
+const COLS_ALL = [{k:'vorp',n:'ЦЕНА'},{k:'score',n:'vs РАУНД'},{k:'rank_pre',n:'Yahoo'},{k:'gp',n:'GP'}];
+const cols = () => view.pos === 'G' ? COLS_G : view.pos === 'ALL' ? COLS_ALL : COLS_SK;
 
 function fmt(v,k){
   if (v == null) return '—';
@@ -250,10 +266,17 @@ function render(){
   derive();
   const pr = NHL.scoreAll(POOL, S.taken);
   const sc = NHL.withScarcity(POOL, S.taken);
+  // чем игрок полезен — три категории, где он сильнее всего двигает шанс
+  const why = p => {
+    const top = NHL.catDelta(p, pr).filter(x=>x.rel>=1)
+      .sort((a,b)=>b.d-a.d).slice(0,3).filter(x=>x.d>0.01);
+    return top.length ? top.map(x=>`${x.n} +${(x.d*100).toFixed(0)}`).join(' · ') : 'добор глубины';
+  };
 
   const th = document.getElementById('thead');
   th.innerHTML = '<th class="l">игрок</th><th class="l">поз</th>' +
-    cols().map(c=>`<th data-k="${c.k}" class="${view.sort===c.k?'sorted':''}">${c.n}</th>`).join('') + '<th></th>';
+    cols().map(c=>`<th data-k="${c.k}" class="${view.sort===c.k?'sorted':''}">${c.n}</th>`).join('') +
+    (view.pos === 'ALL' ? '<th class="l">что даёт</th>' : '') + '<th></th>';
   th.querySelectorAll('th[data-k]').forEach(el => el.onclick = () => {
     const k = el.dataset.k;
     view.dir = view.sort === k ? -view.dir : -1;
@@ -262,8 +285,7 @@ function render(){
 
   let rows = POOL.filter(p=>{
     if (view.pos === 'G') { if (!p.isG) return false; }
-    else if (p.isG) return false;
-    if (view.pos !== 'ALL' && view.pos !== 'G' && !p.pos.includes(view.pos)) return false;
+    else if (view.pos !== 'ALL'){ if (p.isG || !p.pos.includes(view.pos)) return false; }
     if (view.free && S.taken[p.name]) return false;
     if (view.multi && p.pos.length < 2) return false;
     if (view.q){
@@ -282,6 +304,7 @@ function render(){
         <span class="pos" style="margin-left:5px;color:var(--dim2)">${p.team||''}</span></td>
       <td class="l"><span class="pos ${p.pos.length>1?'multi':''}">${p.pos.join('/')}</span></td>
       ${cols().map(c=>`<td class="num ${c.k==='vorp'?'v '+(p.vorp>0?'pos_':'neg'):''}">${fmt(p[c.k],c.k)}</td>`).join('')}
+      ${view.pos === 'ALL' ? `<td class="l gives">${why(p)}</td>` : ''}
       <td class="act">${st ? `<span class="who ${st==='ME'?'me':''}">${
           st==='ME' ? 'я' : NHL.TEAM_NAMES[NHL.teamOf(S.order.indexOf(p.name)+1)-1]}</span>`
         : `<button class="mini m" data-n="${encodeURIComponent(p.name)}"
@@ -295,11 +318,6 @@ function render(){
 
   // брать сейчас — поверх позиций, включая вратарей
   const best = POOL.filter(p => !S.taken[p.name]).sort((a,b)=>b.vorp-a.vorp).slice(0,5);
-  const why = p => {
-    const top = NHL.catDelta(p, pr).filter(x=>x.rel>=1)
-      .sort((a,b)=>b.d-a.d).slice(0,3).filter(x=>x.d>0.01);
-    return top.length ? top.map(x=>`${x.n} +${(x.d*100).toFixed(0)}`).join(' · ') : 'добор глубины';
-  };
   document.getElementById('best').innerHTML = best.map((p,i)=>
     `<div class="bc ${i===0?'top':''}">
       <div class="bv">${p.vorp.toFixed(0)}</div>
@@ -410,7 +428,9 @@ document.getElementById('undo').onclick = () => { S.order.pop(); save(); render(
 
 fetch('data/yahoo_proj.json?v=' + Date.now()).then(r=>r.json()).then(d=>{
   POOL = NHL.prepare(d);
-  if (!S.order.length){ seed(); save(); }
+  if (!S.order.length) seed();
+  topUp();
+  save();
   render();
 }).catch(e => {
   document.getElementById('meta').textContent = 'не загрузились данные: ' + e;
