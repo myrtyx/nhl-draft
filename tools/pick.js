@@ -8,6 +8,7 @@
 //   node tools/pick.js depth     — как пустеет рынок по позициям к моим ходам
 //   node tools/pick.js queue 'А;Б;В' 'Б;А;В' — сравнить очереди из Fantrax
 //   node tools/pick.js cats Имя ... — прибавка по каждой категории
+//   node tools/pick.js off pm Имя ... — решает ли эта категория выбор
 //
 // SKIP='Имя;Имя' — вычеркнуть игроков, которых проекции Yahoo ещё считают
 // живыми: травма, отстранение, холдаут. Движок такого знать не может, а
@@ -312,6 +313,59 @@ function cats(names){
   console.log('Итог по строке не складывай: для этого есть solo.');
 }
 
+// --- 8. решает ли категория? ------------------------------------------------
+// «Мне не нравится его -22» — законное возражение, но проекция +/- может быть
+// шумом. Обнуляю категорию ВСЕМ: тогда она у всех 50/50 и в выборе не
+// участвует. Если порядок кандидатов не изменился — категория спор не решает,
+// и обсуждать надо не её. Годится для любой: fw, hit, blk, pm.
+function contrib(pool, names){
+  const taken = {}; SEED.forEach((n,i) => { taken[n] = C.teamOf(i+1) === C.MY_SLOT ? 'ME' : 'X'; });
+  C.setOrder(SEED);
+  const pr = C.profile(pool, taken);
+  const mine = pr.roster.filter(q => taken[q.name] === 'ME');
+  const fill = pr.roster.filter(q => taken[q.name] !== 'ME');
+  const by2 = new Map(pool.map(q => [q.name, q]));
+  const out = new Map();
+  for (const n of names){ const q = by2.get(n); if (!q) continue;
+    out.set(n, 100*P7([...mine, ...cutFrom(fill, [!!q.isG]), q])); }
+  return out;
+}
+function off(cat, names){
+  const keys = [...C.SK_CATS, ...C.G_CATS].map(c => c.k);
+  if (!keys.includes(cat)) return console.log('нет категории «' + cat + '»; есть: ' + keys.join(' '));
+  const A = contrib(POOL, names);
+  const raw = JSON.parse(fs.readFileSync(H+'/data/yahoo_proj.json','utf8'));
+  let n = 0;
+  for (const grp of Object.values(raw)) if (Array.isArray(grp))
+    for (const q of grp) if (q[cat] != null){ q[cat] = 0; n++; }
+  const B = contrib(C.dropOut(C.prepare(raw), SKIP), names);
+  C.prepare(JSON.parse(fs.readFileSync(H+'/data/yahoo_proj.json','utf8')));  // вернуть лигу как была
+  const rank = m => [...m.entries()].sort((x,y) => y[1]-x[1]).map(x => x[0]);
+  const rA = rank(A), rB = rank(B);
+  console.log('\nЕСЛИ «' + cat + '» ОБНУЛИТЬ ВСЕМ (затронуто ' + n + ' игроков)\n');
+  console.log('кандидат'.padEnd(22) + 'как есть'.padStart(9) + ('без ' + cat).padStart(10) + 'место'.padStart(9));
+  for (const name of rA)
+    console.log(name.padEnd(22) + A.get(name).toFixed(1).padStart(9) + B.get(name).toFixed(1).padStart(10)
+      + (rA.indexOf(name) === rB.indexOf(name) ? '—' : (rA.indexOf(name)+1) + '→' + (rB.indexOf(name)+1)).padStart(9));
+  // Перестановка двух кандидатов, стоящих на одной десятой, — это не «категория
+  // решает», а округление. Считаю решающей только ту, что переставляет пару с
+  // заметным зазором: тот же порог 0.3 п.п., что и в проверке суммы.
+  let worst = null;
+  for (const x of names) for (const y of names){
+    if (x === y || !A.has(x) || !A.has(y)) continue;
+    if (A.get(x) > A.get(y) && B.get(x) < B.get(y)){
+      const gap = A.get(x) - A.get(y);
+      if (!worst || gap > worst.gap) worst = {x, y, gap};
+    }
+  }
+  const lead = rA[0] !== rB[0];
+  if (lead) console.log('\nПервый меняется: ' + rA[0] + ' → ' + rB[0] + '. «' + cat + '» решает выбор.');
+  else if (worst && worst.gap >= 0.3)
+    console.log('\nПервый тот же, но «' + cat + '» переставляет ' + worst.x + ' и ' + worst.y +
+                ' (зазор ' + worst.gap.toFixed(1) + ' п.п.).');
+  else console.log('\nПервый тот же, заметных перестановок нет: «' + cat + '» этот выбор не решает.');
+}
+
 const args = process.argv.slice(2);
 const free = POOL.filter(p => !TAKEN[p.name]).sort((a,b) => (a.rank_pre??9e9) - (b.rank_pre??9e9));
 if (args[0] === 'pair') pair(args.slice(1));
@@ -319,6 +373,7 @@ else if (args[0] === 'order'){ const a = args.slice(1);
   const n = a.length && /^\d+$/.test(a[a.length-1]) ? +a.pop() : 0; order(a, n); }
 else if (args[0] === 'depth') depth(+args[1] || 0);
 else if (args[0] === 'cats') cats(args.slice(1));
+else if (args[0] === 'off') off(args[1], args.slice(2));
 else if (args[0] === 'queue'){ const a = args.slice(1);
   const n = a.length && /^\d+$/.test(a[a.length-1]) ? +a.pop() : 0; queue(a, n); }
 else if (args[0] === 'solo') solo(args.slice(1));
