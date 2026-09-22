@@ -141,7 +141,12 @@ function order(groups, RUNS){
   // кандидаты: 14 лучших по рангу в группе, каждому — чистый вклад (один раз)
   const cand = {};
   for (const g of new Set(groups)){
-    cand[g] = free.filter(filt(g)).sort((a,b) => (a.rank_pre??9e9)-(b.rank_pre??9e9)).slice(0, 14)
+    // Обрезать кандидатов по предсезонному рангу Yahoo было нельзя: 22.09 Так
+    // (ранг 116) оказался лучшим свободным крайним по чистому вкладу — 66.2
+    // против 66.1 у Холлоуэя, — но в первые 14 по рангу не входил, и order
+    // его не рассматривал вовсе. Ранг решает, КОГДА игрока снимут с доски;
+    // кого брать, решает вклад. Считаем вклад всем свободным в группе.
+    cand[g] = free.filter(filt(g))
       .map(q => ({q, v: P7([...mine, ...cutFrom(fill, [!!q.isG]), q])}))
       .sort((a,b) => b.v - a.v);
     if (!cand[g].length){ console.log('в группе ' + g + ' никого нет'); return; }
@@ -201,7 +206,7 @@ function depth(RUNS){
   const free = POOL.filter(p => !TAKEN[p.name]);
   const cand = {}, acc = {};
   for (const g of groups){
-    cand[g] = free.filter(GFILT(g)).sort((a,b) => (a.rank_pre??9e9)-(b.rank_pre??9e9)).slice(0, 24)
+    cand[g] = free.filter(GFILT(g))   // без обрезки по рангу — см. order()
       .map(q => ({q, v: P7([...mine, ...cutFrom(fill, [!!q.isG]), q])}))
       .sort((a,b) => b.v - a.v);
     acc[g] = marks.map(() => ({sum: 0, n: 0, who: {}}));
