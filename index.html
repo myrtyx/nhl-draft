@@ -198,7 +198,7 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
 отметки хранятся в этом браузере</footer>
 </div>
 
-<script src="core.js?v=1790073979"></script>
+<script src="core.js?v=1790074216"></script>
 <script>
 const LS = 'nhl-draft-v2';
 let S = {order:[]};
@@ -214,7 +214,7 @@ function derive(){
   NHL.setOrder(S.order);
   return t;
 }
-const save = () => { try{ localStorage.setItem(LS, JSON.stringify({order:S.order, seeded:S.seeded})); }catch(e){} };
+const save = () => { try{ localStorage.setItem(LS, JSON.stringify({order:S.order})); }catch(e){} };
 const LIMIT = 12 * 16;
 let busy = false;
 function pick(name){
@@ -256,8 +256,11 @@ const seed = () => { S.order = SEEDED(); };
 function topUp(){
   const full = SEEDED();
   if (S.order.length >= full.length) return false;
+  // Доливаю, только если сохранённое — начало сида: значит это те же пики,
+  // просто старее. Отметки, сделанные руками поверх, не трону.
   if (!S.order.every((n,i) => n === full[i])) return false;
-  S.order = full.slice(0, Math.max(full.length, S.order.length));
+  S.order = full.slice();
+  save();
   return true;
 }
 
@@ -458,8 +461,7 @@ document.getElementById('skip').onclick = () =>
 fetch('data/yahoo_proj.json?v=' + Date.now()).then(r=>r.json()).then(d=>{
   POOL = NHL.prepare(d);
   if (!S.order.length) seed();
-  else if (!S.seeded) topUp();
-  S.seeded = true;
+  else topUp();
   save();
   render();
 }).catch(e => {
