@@ -134,12 +134,14 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
       <div class="body">
         <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:10px">
           <span class="big" id="expNum">—</span>
-          <span class="sub" id="expSub">категорий из 12 по темпу · нужно 7</span>
+          <span class="sub" id="expSub">категорий из 12 · нужно 7</span>
         </div>
         <div class="cats" id="cats"></div>
         <p class="note">Полоса — вероятность выиграть категорию у средней команды
-          <b>на этой же стадии драфта</b>. Пока игроков мало, цифры прыгают — это нормально.
-          Зелёная — иду с запасом, жёлтая — вот тут и решается, серая — сдана.</p>
+          <b>по итогам сезона</b>: пустые слоты добиваются тем, что в среднем достаётся
+          на оставшихся пиках. Поэтому на старте везде ровно 50%, и цифра меняется только
+          от того, лучше или хуже мои игроки типичных для этих пиков.
+          Жёлтая — вот тут и решается, серая — сдана.</p>
       </div>
     </div>
 
@@ -290,9 +292,9 @@ function render(){
   const raw = pr.nSk + pr.nG < 6;
   en.className = 'big' + (raw ? ' raw' : pr.expected < 7 ? ' low' : '');
   document.getElementById('expSub').innerHTML = raw
-    ? `категорий из 12 по темпу · <b style="color:var(--warn)">рано судить</b>,
+    ? `категорий из 12 · <b style="color:var(--warn)">рано судить</b>,
        взято ${pr.nSk + pr.nG} из 16`
-    : `категорий из 12 по темпу · нужно 7 · взято ${pr.nSk + pr.nG} из 16`;
+    : `категорий из 12 · нужно 7 · взято ${pr.nSk + pr.nG} из 16`;
 
   // ростер
   document.getElementById('slots').innerHTML = NHL.fillRoster(POOL, S.taken).map(([s,p]) =>
