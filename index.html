@@ -287,7 +287,7 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
 отметки хранятся в этом браузере</footer>
 </div>
 
-<script src="core.js?v=1790092324"></script>
+<script src="core.js?v=1790093873"></script>
 <script>
 const LS = 'nhl-draft-v2';
 let S = {order:[]};
@@ -349,7 +349,14 @@ const SEED = [
  ['Brock Faber','X'],['Alex DeBrincat','X'],['Darren Raddysh','ME'],
   ['Adrian Kempe','X'],['Miro Heiskanen','X'],['Sidney Crosby','ME'],
   ['Leo Carlsson','X'],['Shea Theodore','X'],['Karel Vejmelka','X'],['Erik Karlsson','X'],
+  ['Andrei Svechnikov','X'],['Robert Thomas','X'],['Jackson LaCombe','X'],['Josh Morrissey','X'],
 ];
+
+// Проекции Yahoo не знают ни травм, ни отстранений: игрок числится живым
+// и всю дорогу висит наверху доски, а взять его нельзя. Такие вычёркиваются
+// из пула целиком — ровно как SKIP в tools/pick.js, чтобы сайт и консоль
+// считали по одному и тому же списку.
+const OUT = [['Connor Hellebuyck','отстранён «Джетс»']];
 const nextTeam = () => {
   const n = S.order.length + 1;
   return n > NHL.TEAMS * NHL.ROUNDS ? '—'
@@ -663,7 +670,8 @@ function render(){
 
   const mine = S.order.filter((n,i)=>NHL.teamOf(i+1)===NHL.MY_SLOT).length;
   document.getElementById('meta').textContent =
-    `отмечено ${done} · сейчас пикает ${nextTeam()} · у меня ${mine} · мои пики: ${NHL.MY_PICKS.join(', ')}`;
+    `отмечено ${done} · сейчас пикает ${nextTeam()} · у меня ${mine} · мои пики: ${NHL.MY_PICKS.join(', ')}`
+    + (OUT.length ? ' · вычеркнут: ' + OUT.map(x => x[0] + ' (' + x[1] + ')').join(', ') : '');
 
   const nm = g => sc.repl[g][0] ? sc.repl[g][0].name : '—';
   document.getElementById('explain').innerHTML =
@@ -710,7 +718,8 @@ document.getElementById('skip').onclick = () =>
   pick('— пик #' + (S.order.length + 1));
 
 fetch('data/yahoo_proj.json?v=' + Date.now()).then(r=>r.json()).then(d=>{
-  POOL = NHL.prepare(d);
+  const out = new Set(OUT.map(x => x[0]));
+  POOL = NHL.prepare(d).filter(p => !out.has(p.name));
   if (!S.order.length) seed();
   else topUp();
   save();
