@@ -53,8 +53,54 @@ const G_CATS = [
   {k:'sho',   n:'SHO', rel:0.5},
 ];
 
-// Клуб НХЛ играет 3.5 раза за 7 дней; вратарь выходит примерно в 60% игр.
-const P_DAY_SK = 0.5, P_DAY_G = 0.3;
+// Как часто игрок вообще доступен: его же прогноз игр, разложенный по дням
+// сезона. Раньше тут стояли две круглые цифры (0.5 и 0.3), и обе врали —
+// 0.5 означало бы 3.5 игры за матчап, тогда как в модели их ровно 3.0.
+// Заодно уходит целый класс ошибок: хрупкий игрок и вратарь-сменщик сами
+// становятся реже доступны, без отдельной поправки.
+// Сезон 2026-27: у каждого клуба ровно 84 игры, с 29 сентября по 10 апреля.
+// Календарь клуба сидит в DAY_BINS, а здесь — только здоровье самого игрока:
+// какую долю игр СВОЕГО клуба он проведёт. Раньше тут стояла круглая 0.5,
+// одинаковая для железного и для хрупкого.
+const SEASON_GP = 84, DAYS = 194;
+const pDay = p => Math.min(1, (p.gp || 0) / SEASON_GP);
+
+// Лига требует три выхода вратарей за неделю. Не выбрал — теряешь ВСЕ четыре
+// вратарские категории сразу, а не одну. Один вратарь, даже лучший в лиге,
+// даёт всего два выхода и минимум не берёт в принципе. Считаю вероятность
+// выбрать: свёртка семи дней по каждому вратарю состава.
+const G_MIN = 3;
+// Здесь календарь входит иначе, чем в playShare. Там важен разброс густоты
+// дней, тут — сколько раз клуб выйдет на лёд за неделю, а это число куда
+// ровнее случайного: 56% недель ровно три игры, и почти никогда меньше двух.
+// Независимые дни завышали риск на 7 пунктов, потому что выдумывали недели
+// по одной игре, которых в расписании нет. Посчитано по 26 полным неделям
+// пн-вс сезона 2026-27, среднее 3.02 игры.
+const WEEK_GAMES = [[0,0.0168],[1,0.0264],[2,0.1358],[3,0.5625],[4,0.2584]];
+function gMinOK(roster){
+  let v = [1];
+  for (const g of roster){
+    if (!g.isG) continue;
+    const hp = pDay(g);
+    // сколько выходов даст этот вратарь: сперва сколько сыграет клуб, потом
+    // сколько из них достанется ему
+    const own = [];
+    for (const [k, w] of WEEK_GAMES){
+      let c = 1;
+      for (let j = 0; j <= k; j++){
+        own[j] = (own[j] || 0) + w * c * Math.pow(hp, j) * Math.pow(1 - hp, k - j);
+        c = c * (k - j) / (j + 1);
+      }
+    }
+    const n = [];
+    for (let a = 0; a < v.length; a++)
+      for (let b = 0; b < own.length; b++) n[a+b] = (n[a+b] || 0) + v[a] * own[b];
+    v = n;
+  }
+  let fail = 0;
+  for (let k = 0; k < G_MIN && k < v.length; k++) fail += v[k];
+  return Math.max(0, 1 - fail);
+}
 
 // Игрок попадает в состав, только если на его позиции есть свободный слот,
 // а сильнейших ставят первыми. Значит его доля игр — это шанс, что сегодня
@@ -62,15 +108,41 @@ const P_DAY_SK = 0.5, P_DAY_G = 0.3;
 // Сверено с прямой симуляцией расстановки по дням (алгоритм Куна, 5000
 // недель): третий центр 0.750 против 0.740, четвёртый 0.500 против 0.486,
 // шестой защитник 0.813 против 0.800.
-function playShare(slots, better, pd){
-  if (slots <= 0) return 0;
-  if (better <= 0) return 1;
+// Календарь НХЛ рваный: бывает день на 2 команды и день на все 32. Посчитано
+// по расписанию 2026-27 — 185 игровых дней, 32 команды, ровно 84 игры у каждой.
+// Усреднять его нельзя: шанс, что слот займут, выпукл по числу играющих, и
+// плоская неделя завышала выход запасного на 4-10 пунктов. Пары [доля команд,
+// доля дней].
+const DAY_BINS = [[0.0625,0.0054],[0.125,0.0595],[0.1875,0.1351],[0.25,0.1297],
+  [0.3125,0.1081],[0.375,0.0703],[0.4375,0.0541],[0.5,0.0486],[0.5625,0.0595],
+  [0.625,0.0649],[0.6875,0.0865],[0.75,0.0703],[0.8125,0.0378],[0.875,0.0486],
+  [0.9375,0.0108],[1,0.0108]];
+
+// Шанс выйти в один день, когда играет доля q соперников за слот.
+function shareAt(slots, better, q){
   let s = 0, c = 1;
   for (let j = 0; j < slots && j <= better; j++){
-    s += c * Math.pow(pd, j) * Math.pow(1 - pd, better - j);
+    s += c * Math.pow(q, j) * Math.pow(1 - q, better - j);
     c = c * (better - j) / (j + 1);
   }
   return s;
+}
+
+// Доля игр, в которых игрок реально попадёт в состав. Прохожу по настоящему
+// разбросу игровых дней: в густой день конкуренты играют все разом и слот
+// уходит, в редкий — слот свободен, но и сам он чаще отдыхает. Здоровье (hp)
+// отделено от календаря: это его собственные пропуски, не расписание клуба.
+function playShare(slots, better, hp){
+  if (slots <= 0) return 0;
+  if (better <= 0) return 1;
+  let num = 0, den = 0;
+  for (const [f, w] of DAY_BINS){
+    const q = Math.min(1, f * hp);
+    const mine = w * q;
+    num += mine * shareAt(slots, better, q);
+    den += mine;
+  }
+  return den > 0 ? num / den : 0;
 }
 
 // Вес игрока внутри конкретного состава. Заменил сразу два выдуманных числа:
@@ -82,7 +154,7 @@ function weightOf(p, roster){
   if (p.isG){
     let better = 0;
     for (const q of roster) if (q !== p && q.isG && rk(q) < rk(p)) better++;
-    return playShare(SLOT_COUNT.G, better, P_DAY_G);
+    return playShare(SLOT_COUNT.G, better, pDay(p));
   }
   const pos = p.pos || [];
   let slots = 0;
@@ -93,7 +165,7 @@ function weightOf(p, roster){
     const qp = q.pos || [];
     for (const s of qp) if (pos.includes(s)){ better++; break; }
   }
-  return playShare(slots, better, P_DAY_SK);
+  return playShare(slots, better, pDay(p));
 }
 
 // Сумма категории по составу с честными весами.
@@ -232,6 +304,8 @@ function pool(runs, cats, key){
     const sums = rosters.map(r => catSum(r, c, isG));
     out[c.k] = {m: mean(sums), sd: std(sums), sorted:[...sums].sort((a,b)=>b-a)};
   }
+  // Тем же минимумом меряю и соперников: у них те же два слота и то же правило.
+  if (isG) out.minOK = mean(rosters.map(r => gMinOK(r)));
   return out;
 }
 
@@ -380,7 +454,11 @@ function profile(pool, taken){
   const p = {};
   let exp = 0;
   for (const c of SK_CATS){ p[c.k] = pWin(c, z[c.k], false); exp += p[c.k]; }
-  for (const c of G_CATS) { p[c.k] = pWin(c, z[c.k], true ); exp += p[c.k]; }
+  // Вратарские категории идут через минимум выходов: провалил — отдал их все,
+  // сколько бы сэйвов ни набрал. Соперник рискует тем же, и когда провалит он,
+  // категория моя без борьбы.
+  const a = gMinOK(roster), b = LG.gk && LG.gk.minOK != null ? LG.gk.minOK : 1;
+  for (const c of G_CATS) { p[c.k] = a * (1 - b) + a * b * pWin(c, z[c.k], true); exp += p[c.k]; }
   const nG = mine.filter(x=>x.isG).length;
   return {z, p, pFull: p, expected: exp, used, at, free, fill, gs, roster,
           nSk: mine.length - nG, nG};
@@ -399,8 +477,10 @@ function catDelta(p, pr){
   const out = [];
   for (const c of SK_CATS)
     out.push({n:c.n, k:c.k, rel:c.rel, d: pWin(c, catSum(next,c,false), false) - pr.p[c.k]});
+  const a = gMinOK(next), b = LG.gk && LG.gk.minOK != null ? LG.gk.minOK : 1;
   for (const c of G_CATS)
-    out.push({n:c.n, k:c.k, rel:c.rel, d: pWin(c, catSum(next,c,true), true) - pr.p[c.k]});
+    out.push({n:c.n, k:c.k, rel:c.rel,
+              d: a * (1 - b) + a * b * pWin(c, catSum(next,c,true), true) - pr.p[c.k]});
   return out;
 }
 
@@ -534,7 +614,7 @@ function runs(pool, taken, depth){
 
 function setOrder(o){ ORDER = Array.isArray(o) ? o : []; }
 
-const API = {TEAMS, MY_SLOT, ROUNDS, MY_PICKS, TEAM_NAMES, SLOTS, SK_CATS, G_CATS, weightOf, catSum,
+const API = {TEAMS, MY_SLOT, ROUNDS, MY_PICKS, TEAM_NAMES, SLOTS, SK_CATS, G_CATS, weightOf, catSum, playShare, pDay, gMinOK,
              prepare, setOrder, scoreAll, profile, pWin, catDelta, simulate, assign, teamOf, rosters, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
              get LG(){return LG;}};
 if (typeof module !== 'undefined' && module.exports) module.exports = API;
