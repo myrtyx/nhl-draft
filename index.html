@@ -198,7 +198,7 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
 отметки хранятся в этом браузере</footer>
 </div>
 
-<script src="core.js?v=1790074216"></script>
+<script src="core.js?v=1790075420"></script>
 <script>
 const LS = 'nhl-draft-v2';
 let S = {order:[]};
@@ -238,10 +238,13 @@ const SEED = [
  ['Connor McDavid','X'],['Nathan MacKinnon','ME'],['Nikita Kucherov','X'],['Macklin Celebrini','X'],
  ['Leon Draisaitl','X'],['Kirill Kaprizov','X'],['Cale Makar','X'],['David Pastrnak','X'],
  ['Auston Matthews','X'],['Nick Suzuki','X'],['Jason Robertson','X'],['Jack Eichel','X'],
- // R2 (идёт обратным ходом: 2-1 … 2-7)
+ // R2 (обратным ходом: 2-1 … 2-12)
  ['Matt Boldy','X'],['Evan Bouchard','X'],['Cole Caufield','X'],['Jack Hughes','X'],
  ['Brady Tkachuk','X'],['Tage Thompson','X'],['Zach Werenski','X'],
  ['Quinn Hughes','X'],['Martin Necas','X'],['Andrei Vasilevskiy','X'],
+ ['Ilya Sorokin','ME'],['Wyatt Johnston','X'],
+ // R3 — Fantrax развернул раунд, порядок тот же, что во втором
+ ['Mikko Rantanen','X'],
 ];
 const nextTeam = () => {
   const n = S.order.length + 1;

@@ -23,9 +23,14 @@ const TEAMS = 12, MY_SLOT = 2, ROUNDS = 16;
 // Порядок колонок на доске Fantrax. myrtyx второй — отсюда и MY_SLOT.
 const TEAM_NAMES = ['Bacha2201','myrtyx','sergei87','TOMIKS','Kris282828','Tomashek',
                     'AleksandrsZ','Dias','unwill','vlzsy','BATONS BAKERY','klavs'];
+// Fantrax развернул третий раунд: после обратного второго он идёт обратным
+// ещё раз, и дальше змейка отсчитывается уже от него. Проверено по доске —
+// R1 прямой, R2 и R3 обратные, R4 прямой, R5 обратный, R6 прямой.
+// Начиная с третьего раунда направление просто отстаёт на раунд.
+const reversed = r => (r <= 2 ? r : r - 1) % 2 === 0;
 const MY_PICKS = [];
 for (let r = 1; r <= ROUNDS; r++)
-  MY_PICKS.push((r - 1) * TEAMS + (r % 2 ? MY_SLOT : TEAMS - MY_SLOT + 1));
+  MY_PICKS.push((r - 1) * TEAMS + (reversed(r) ? TEAMS - MY_SLOT + 1 : MY_SLOT));
 
 const SLOTS = ['C','C','LW','LW','RW','RW','D','D','D','D','G','G','BN','BN','BN','BN'];
 
@@ -448,8 +453,8 @@ function fillRoster(pool, taken){
 // команда. Поэтому достаточно вести один список пиков по порядку — ростеры
 // всех 12 команд восстанавливаются сами.
 function teamOf(n){
-  const r = Math.floor((n - 1) / TEAMS), s = (n - 1) % TEAMS;
-  return r % 2 ? TEAMS - s : s + 1;
+  const r = Math.floor((n - 1) / TEAMS) + 1, s = (n - 1) % TEAMS;
+  return reversed(r) ? TEAMS - s : s + 1;
 }
 
 // Профиль каждой команды: кто взят, суммы z по категориям, какие слоты пусты.
