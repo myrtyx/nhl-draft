@@ -59,6 +59,16 @@ button.mini{background:var(--panel2);border:1px solid var(--line);color:var(--di
   border-radius:5px;padding:2px 7px;cursor:pointer;font:600 11px/1.4 inherit}
 button.mini.m:hover{background:#1f3b2a;color:var(--good);border-color:var(--good)}
 button.mini.t:hover{background:#2a1c1c;color:var(--bad);border-color:var(--bad)}
+.best{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:8px}
+.bc{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 10px;position:relative}
+.bc.top{border-color:var(--good)}
+.bc .bn{font-weight:600;font-size:13px;margin-bottom:2px}
+.bc .bp{font:600 10px/1 var(--mono);color:var(--dim);letter-spacing:.4px}
+.bc .bv{position:absolute;right:9px;top:8px;font:700 15px/1 var(--mono);color:var(--good)}
+.bc .bw{color:var(--dim);font-size:11px;margin-top:6px;line-height:1.35}
+.bc button{margin-top:7px;width:100%;background:transparent;border:1px solid var(--line);
+  color:var(--dim);border-radius:5px;padding:4px;cursor:pointer;font:600 11px inherit}
+.bc button:hover{background:#1f3b2a;color:var(--good);border-color:var(--good)}
 .slots{display:grid;grid-template-columns:30px 1fr;gap:3px 8px;font-size:12px;align-items:center}
 .slotname{font:600 10px/1 var(--mono);color:var(--dim2);text-align:right}
 .slotval{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -87,8 +97,14 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
 </header>
 
 <div class="layout">
+  <div>
   <div class="card">
-    <h2>Игроки</h2>
+    <h2>Брать сейчас <span id="bestPick" style="text-transform:none;letter-spacing:0;color:var(--dim2)"></span></h2>
+    <div class="body"><div class="best" id="best"></div></div>
+  </div>
+
+  <div class="card">
+    <h2>Все игроки</h2>
     <div class="body">
       <div class="ctrl">
         <input type="search" id="q" placeholder="имя или команда…">
@@ -103,6 +119,7 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
         <thead><tr id="thead"></tr></thead><tbody id="tbody"></tbody>
       </table></div>
     </div>
+  </div>
   </div>
 
   <div>
@@ -218,6 +235,29 @@ function render(){
     if (S.taken[n] === a) delete S.taken[n]; else S.taken[n] = a;
     save(); render();
   });
+
+  // брать сейчас — поверх позиций, включая вратарей
+  const best = POOL.filter(p => !S.taken[p.name]).sort((a,b)=>b.vorp-a.vorp).slice(0,5);
+  const why = p => {
+    const cats = p.isG ? NHL.G_CATS : NHL.SK_CATS;
+    const top = cats.filter(c=>c.rel>=1)
+      .map(c=>({n:c.n, d: NHL.pWin(c, pr.z[c.k]+p.z[c.k], !!p.isG, (p.isG?pr.nG:pr.nSk)+1)
+                            - NHL.pWin(c, pr.z[c.k], !!p.isG, p.isG?pr.nG:pr.nSk)}))
+      .sort((a,b)=>b.d-a.d).slice(0,3).filter(x=>x.d>0.01);
+    return top.length ? top.map(x=>`${x.n} +${(x.d*100).toFixed(0)}`).join(' · ') : 'добор глубины';
+  };
+  document.getElementById('best').innerHTML = best.map((p,i)=>
+    `<div class="bc ${i===0?'top':''}">
+      <div class="bv">${p.vorp.toFixed(0)}</div>
+      <div class="bn">${p.name}${p.inj?`<span class="inj">${p.inj}</span>`:''}</div>
+      <div class="bp">${p.isG?'G':p.pos.join('/')} · ${p.team} · ${p.gp} GP · Yahoo ${p.rank_pre}</div>
+      <div class="bw">${why(p)}</div>
+      <button data-n="${encodeURIComponent(p.name)}">взял</button>
+    </div>`).join('');
+  document.querySelectorAll('#best button').forEach(b => b.onclick = () => {
+    S.taken[decodeURIComponent(b.dataset.n)] = 'ME'; save(); render(); });
+  document.getElementById('bestPick').textContent =
+    sc.cur ? `— пик #${sc.cur}` : '';
 
   // категории
   const catRow = c => {
