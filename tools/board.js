@@ -6,7 +6,9 @@ const fs = require('fs');
 const html = fs.readFileSync('/Users/martins/Desktop/dev/nhl-draft/index.html','utf8');
 const block = html.slice(html.indexOf('const SEED = ['), html.indexOf('];', html.indexOf('const SEED = [')));
 const ORDER = [...block.matchAll(/\['([^']+)'/g)].map(m => m[1]);
-const P = C.prepare(JSON.parse(fs.readFileSync('/Users/martins/Desktop/dev/nhl-draft/data/yahoo_proj.json','utf8')));
+// dropOut — как на сайте (POOL = NHL.dropOut(NHL.prepare(d))): пока OUT был
+// пуст, разницы не было, а с 22.09 без него план добора брал вычеркнутых.
+const P = C.dropOut(C.prepare(JSON.parse(fs.readFileSync('/Users/martins/Desktop/dev/nhl-draft/data/yahoo_proj.json','utf8'))));
 C.setOrder(ORDER);
 const taken = {};
 ORDER.forEach((n,i) => { taken[n] = C.teamOf(i+1) === 2 ? 'ME' : 'X'; });

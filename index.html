@@ -287,7 +287,7 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
 отметки хранятся в этом браузере</footer>
 </div>
 
-<script src="core.js?v=1790102659"></script>
+<script src="core.js?v=1790105074"></script>
 <script>
 const LS = 'nhl-draft-v2';
 let S = {order:[]};
@@ -509,7 +509,13 @@ function render(){
   en.className = 'big' + (pr.p7 < 0.5 ? ' low' : '');
   document.getElementById('expSub').innerHTML =
     `шанс взять 7 категорий из 12 · в сумме ${pr.expected.toFixed(1)} · взято ${pr.nSk + pr.nG} из 16
-     <span style="color:var(--dim2)">· остальные слоты считаются средними</span>`;
+     <span style="color:var(--dim2)">· остальные слоты считаются средними</span>` +
+    // Третий вратарь в плане — решение движка, и видно оно должно быть здесь:
+    // иначе непонятно, откуда в шансе лишние десять пунктов.
+    (pr.g3 && pr.g3.on ? `<br>в плане третий вратарь последним пиком
+      (${pr.fill.list.find(f => f.pos === 'BN' && f.p.isG).p.name}): без него
+      ${(pr.g3.without * 100).toFixed(0)}% <span style="color:var(--dim2)">· разбор:
+      node tools/pick.js g3</span>` : '');
 
   // Вкладка «Команды» считается только когда открыта: двенадцать составов на
   // каждый клик по доске — лишняя работа.

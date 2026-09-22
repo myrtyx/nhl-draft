@@ -493,31 +493,40 @@ function benchFree(used){ return Math.max(0, BENCH - used.BN); }
 // на пике N доступен игрок ранга N, то к концу драфта я «беру» 191-го, а в
 // живой раздаче к этому моменту разобраны ранги до 245 — слоты вынуждают
 // команды пропускать и уходить глубже по списку.
-function futureFill(pool, taken, used){
+// g3 — отдать мой последний пик третьему вратарю на скамейку. Брать ли его,
+// решает profile() по p7. Соперники третьего не берут: 83 из 86 живых пиков
+// закрывали пустой слот основы.
+function futureFill(pool, taken, used, g3){
   const done  = Object.keys(taken).length;
   const byRank = pool.filter(q => !taken[q.name])
                      .sort((a,b)=>(a.rank_pre??9999)-(b.rank_pre??9999));
   const by = new Map(pool.map(q => [q.name, q]));
 
-  // чем заняты слоты у каждой команды на текущий момент
+  // Чем заняты слоты у каждой команды на текущий момент. Раскладка через
+  // assign, а не жадным slotFor по порядку пиков: жадный сажал Кросби на
+  // скамейку (центры заняты), хотя Зибанейд уходит на RW, — и план добора
+  // брал мне двух RW и оставлял на лавку три места вместо четырёх.
   const st = Array.from({length: TEAMS}, () => ({C:0,LW:0,RW:0,D:0,G:0,BN:0}));
+  const own = Array.from({length: TEAMS}, () => []);
   ORDER.slice(0, done).forEach((nm, i) => {
-    const q = by.get(nm); if (!q) return;
-    const u = st[teamOf(i + 1) - 1];
-    const sl = slotFor(q, u); if (sl) u[sl]++;
+    const q = by.get(nm); if (q) own[teamOf(i + 1) - 1].push(q);
   });
   if (!ORDER.length) for (const nm of Object.keys(taken)){      // порядка нет — всё моё
-    const q = by.get(nm); if (!q) continue;
-    const u = st[MY_SLOT - 1]; const sl = slotFor(q, u); if (sl) u[sl]++;
+    const q = by.get(nm); if (q) own[MY_SLOT - 1].push(q);
   }
+  own.forEach((ps, t) => { if (ps.length) Object.assign(st[t], assign(ps).used); });
+  let myG = own[MY_SLOT - 1].filter(q => q.isG).length;
+  const lastMine = MY_PICKS[MY_PICKS.length - 1];
 
   const gone = new Set(), out = [], byPos = {};
   for (let n = done + 1; n <= TEAMS * ROUNDS; n++){
     const u = st[teamOf(n) - 1];
     const bench = (u.C+u.LW+u.RW+u.D+u.G) >= STARTERS;
+    const wantG = g3 && bench && n === lastMine && myG < 3;
     let pick = null, slot = 'BN';
     for (const q of byRank){
       if (gone.has(q.name)) continue;
+      if (wantG){ if (!q.isG) continue; pick = q; break; }
       if (bench){ if (q.isG) continue; pick = q; break; }
       const sl = slotFor(q, u);
       if (sl === 'BN' || !sl) continue;
@@ -526,6 +535,7 @@ function futureFill(pool, taken, used){
     if (!pick) continue;
     gone.add(pick.name); u[slot]++;
     if (teamOf(n) === MY_SLOT){
+      if (pick.isG) myG++;
       out.push({pos: slot, p: pick});
       if (!byPos[slot]) byPos[slot] = pick;
     }
@@ -536,35 +546,52 @@ function futureFill(pool, taken, used){
 // Профиль = прогноз состава на конец драфта: мои игроки плюс то, чем реально
 // добьются пустые места. Сравнение честное: два пика сравниваются как два
 // готовых ростера, а не как два полуфабриката.
+// Шансы по категориям у готового состава из 16.
+function winProbs(roster){
+  const z = {}, p = {};
+  for (const c of SK_CATS) z[c.k] = catSum(roster, c, false);
+  for (const c of G_CATS)  z[c.k] = catSum(roster, c, true);
+  for (const c of SK_CATS) p[c.k] = pWin(c, z[c.k], false);
+  // Вратарские категории идут через минимум выходов: провалил — отдал их все,
+  // сколько бы сэйвов ни набрал. Соперник рискует тем же, и когда провалит он,
+  // категория моя без борьбы.
+  const a = gMinOK(roster), b = LG.gk && LG.gk.minOK != null ? LG.gk.minOK : 1;
+  for (const c of G_CATS) p[c.k] = a * (1 - b) + a * b * pWin(c, z[c.k], true);
+  // Главное число — не сумма категорий, а шанс взять большинство. Неделя
+  // выигрывается по счёту 7:5, и команда с ровными 6.2 в сумме может брать
+  // семёрку реже, чем команда с тем же средним, но без провалов.
+  const p7 = pAtLeast(SK_CATS.concat(G_CATS).map(c => p[c.k]), NEED);
+  return {z, p, p7};
+}
+
 function profile(pool, taken){
   const mine = pool.filter(p => taken[p.name] === 'ME');
   const {used, at} = assign(mine);
-  const fill = futureFill(pool, taken, used);
-  // считаю по итоговому составу: и уже взятые, и те, кем добью пустые слоты
-  const roster = [...mine, ...fill.list.map(f => f.p)];
-  const z = {};
-  for (const c of SK_CATS) z[c.k] = catSum(roster, c, false);
-  for (const c of G_CATS)  z[c.k] = catSum(roster, c, true);
+  // Два плана добора: как раньше, и с третьим вратарём последним пиком вместо
+  // четвёртого запасного полевого. Берём тот, что даёт больший p7. 22.09
+  // третий давал +9 п.п.: при дневных составах он выходит в неделю, когда у
+  // двух основных мало игр, и минимум в 3 выхода проваливается реже (85→97%).
+  // Движок не знает, что минимум можно закрыть и трансфером; при идеальном
+  // стриминге прибавка +1.5–4 п.п. — но всё равно в плюс. Разбор в DECISIONS.md.
+  let fill = futureFill(pool, taken, used);
+  let roster = [...mine, ...fill.list.map(f => f.p)];
+  let w = winProbs(roster);
+  const f3 = futureFill(pool, taken, used, true);
+  const r3 = [...mine, ...f3.list.map(f => f.p)];
+  const w3 = f3.list.some(f => f.pos === 'BN' && f.p.isG) ? winProbs(r3) : null;
+  // two — план с двумя вратарями целиком: pick.js g3 сравнивает с ним честно, на 16
+  const g3 = w3 ? {p7: w3.p7, without: w.p7, on: w3.p7 > w.p7, two: roster} : null;
+  if (g3 && g3.on){ fill = f3; roster = r3; w = w3; }
+  const {z, p, p7} = w;
   const free = {};
   for (const [pos, n] of Object.entries(SLOT_COUNT))
     free[pos] = Math.max(0, n - used[pos]);
   free.BN = benchFree(used);
   const gs = roster.filter(q => q.isG).map(q => [q, weightOf(q, roster)]);
-  const p = {};
-  let exp = 0;
-  for (const c of SK_CATS){ p[c.k] = pWin(c, z[c.k], false); exp += p[c.k]; }
-  // Вратарские категории идут через минимум выходов: провалил — отдал их все,
-  // сколько бы сэйвов ни набрал. Соперник рискует тем же, и когда провалит он,
-  // категория моя без борьбы.
-  const a = gMinOK(roster), b = LG.gk && LG.gk.minOK != null ? LG.gk.minOK : 1;
-  for (const c of G_CATS) { p[c.k] = a * (1 - b) + a * b * pWin(c, z[c.k], true); exp += p[c.k]; }
+  const exp = SK_CATS.concat(G_CATS).reduce((s, c) => s + p[c.k], 0);
   const nG = mine.filter(x=>x.isG).length;
-  // Главное число — не сумма категорий, а шанс взять большинство. Неделя
-  // выигрывается по счёту 7:5, и команда с ровными 6.2 в сумме может брать
-  // семёрку реже, чем команда с тем же средним, но без провалов.
-  const p7 = pAtLeast(SK_CATS.concat(G_CATS).map(c => p[c.k]), NEED);
   return {z, p, pFull: p, expected: exp, p7, used, at, free, fill, gs, roster,
-          nSk: mine.length - nG, nG};
+          nSk: mine.length - nG, nG, g3};
 }
 
 // Прирост вероятностей по категориям, если игрок встанет на свой слот вместо
@@ -627,7 +654,11 @@ function catDelta(p, pr){
   // прогнозе добора, и тогда concat вписывал его в состав ВТОРЫМ экземпляром —
   // одним объектом, который в weightOf считался за двух конкурентов и душил
   // веса остальных.
-  const next = pr.roster.filter(q => q !== alt && q !== p).concat(p);
+  // Игрок уже стоит в плане добора — его взятие план не меняет. Раньше из
+  // состава вынимался и он сам, и чужой филлер его слота, и запасные из плана
+  // (Конечны, Кейн) считались на составе из 15.
+  const next = pr.roster.includes(p) ? pr.roster
+             : pr.roster.filter(q => q !== alt).concat(p);
   const out = [];
   for (const c of SK_CATS)
     out.push({n:c.n, k:c.k, rel:c.rel, d: pWin(c, catSum(next,c,false), false) - pr.p[c.k]});
@@ -751,7 +782,13 @@ function teamOf(n){
 // живым, висит наверху доски и портит любой расчёт — движок планирует состав с
 // тем, кого взять нельзя. Такие вычёркиваются из пула целиком. Список живёт
 // здесь, а не в сайте и не в pick.js, чтобы доска и консоль считали по одному.
-const OUT = [];   // Хеллебайка взяли на #82 — он теперь обычный пик, вычёркивать некого
+// 22.09 сверено по ESPN: у всех троих в проекциях Yahoo полный сезон.
+const OUT = [
+  ['Troy Terry',       'травма, ещё 2–3 месяца'],
+  ['Brad Marchand',    'весь октябрь на восстановлении'],
+  ['Filip Gustavsson', 'травма, до начала ноября'],
+  ['Alexander Nikishin', 'не подписан, просит обмен, пропускает сборы'],
+];
 const dropOut = (pool, extra) => {
   const out = new Set([...OUT.map(x => x[0]), ...(extra || [])]);
   return pool.filter(p => !out.has(p.name));

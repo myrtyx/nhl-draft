@@ -9,6 +9,7 @@
 //   node tools/pick.js queue 'А;Б;В' 'Б;А;В' — сравнить очереди из Fantrax
 //   node tools/pick.js cats Имя ... — прибавка по каждой категории
 //   node tools/pick.js off pm Имя ... — решает ли эта категория выбор
+//   node tools/pick.js g3            — третий вратарь: кого, когда и сколько даёт
 //
 // SKIP='Имя;Имя' — вычеркнуть игроков, которых проекции Yahoo ещё считают
 // живыми: травма, отстранение, холдаут. Движок такого знать не может, а
@@ -45,27 +46,17 @@ const gauss = () => { let u=0,v=0; while(!u)u=Math.random(); while(!v)v=Math.ran
 // Доска сравнивает кандидата с филлером по рангу; тут сравнение честное —
 // та же команда, та же дырка, разные игроки в ней.
 function solo(namesToTest){
-  const pr = C.profile(POOL, TAKEN);
-  const mine = pr.roster.filter(q => TAKEN[q.name] === 'ME');
-  const fill = pr.roster.filter(q => TAKEN[q.name] !== 'ME');
-  // Вырезаю филлера того же типа, что кандидат: иначе вратарь встаёт третьим
-  // сверх слотов G:2 и минимум выходов улетает вверх на пустом месте.
-  const cut = isG => { const i = [...fill].reverse().findIndex(q => !!q.isG === isG);
-    return i < 0 ? fill : fill.filter((_,j) => j !== fill.length-1-i); };
-  const p7of = r => {
-    const p = {};
-    for (const c of C.SK_CATS) p[c.k] = C.pWin(c, C.catSum(r,c,false), false);
-    const ok = C.gMinOK(r), b = C.LG.gk && C.LG.gk.minOK != null ? C.LG.gk.minOK : 1;
-    for (const c of C.G_CATS) p[c.k] = ok*(1-b) + ok*b*C.pWin(c, C.catSum(r,c,true), true);
-    return { p7: C.pAtLeast(C.SK_CATS.concat(C.G_CATS).map(c => p[c.k]), C.NEED), ok, p };
-  };
-  console.log('\nЧИСТЫЙ ВКЛАД (15 человек те же, меняется 16-й)\n');
+  const {mine, fill, pr} = BASE();
+  console.log('\nЧИСТЫЙ ВКЛАД (15 человек те же, меняется 16-й)   план сейчас: p7 ' +
+    (100*pr.p7).toFixed(1) + '%\n');
   for (const n of namesToTest){
     const q = by.get(n); if (!q){ console.log(n + ' — нет в данных'); continue; }
-    const o = p7of([...mine, ...cut(!!q.isG), q]);
-    console.log(n.padEnd(22) + 'p7 ' + (100*o.p7).toFixed(1) + '%   минимум вратарских выходов ' +
-      (100*o.ok).toFixed(0) + '%   | W ' + (100*o.p.w).toFixed(0) + ' SV ' + (100*o.p.sv).toFixed(0) +
-      ' SV% ' + (100*o.p.svpct).toFixed(0) + ' SHO ' + (100*o.p.sho).toFixed(0));
+    const o = fit(mine, fill, [q]);
+    const ok = C.gMinOK(o.r), p = VEC(o.r);
+    const was = o.out[0] === q ? 'уже в плане' : 'вместо ' + o.out[0].name.split(' ').slice(-1)[0];
+    console.log(n.padEnd(22) + 'p7 ' + (100*o.v).toFixed(1) + '%   ' + was.padEnd(20) +
+      'минимум вратарских выходов ' + (100*ok).toFixed(0) + '%   | W ' + (100*p.w).toFixed(0) +
+      ' SV ' + (100*p.sv).toFixed(0) + ' SV% ' + (100*p.svpct).toFixed(0) + ' SHO ' + (100*p.sho).toFixed(0));
   }
 }
 
@@ -86,35 +77,67 @@ function live(watch, N = 400){
   console.log('средняя ошибка обещания 3.7 п.п. Точное имя чужого пика не предсказуемо (17%).');
 }
 
-// Состав из 16 под одного-двух кандидатов: под каждого вырезается филлер
-// своего типа, иначе сравниваются разные по размеру команды.
+// Состав из 16 под одного-двух кандидатов: под каждого из плана добора уходит
+// один филлер. Раньше уходил последний филлер того же типа, и это ломалось
+// дважды. Вратарь-кандидат всегда вытеснял запланированного вратаря, так что
+// вариант «третий вратарь вместо слабейшего полевого» не считался вовсе, а
+// второй вратарь в паре давал состав 17 и выкидывался. А кандидат, который
+// уже стоит в плане (Раст, Найт), попадал в состав вторым экземпляром.
+// Теперь: кандидат из плана вытесняет сам себя, остальные пробуют каждый
+// разумный вариант (последний полевой, любой вратарь плана), и берётся
+// лучший по p7 — в Yahoo состав выставляю я, и выставлю лучший.
 const BASE = () => { const pr = C.profile(POOL, TAKEN);
   return { mine: pr.roster.filter(q => TAKEN[q.name] === 'ME'),
-           fill: pr.roster.filter(q => TAKEN[q.name] !== 'ME') }; };
-const cutFrom = (fill, isGs) => { let f = [...fill];
-  for (const isG of isGs){ const i = [...f].reverse().findIndex(q => !!q.isG === isG);
-    if (i >= 0) f = f.filter((_,j) => j !== f.length-1-i); }
-  return f; };
-const P7 = r => { const p = {};
+           fill: pr.roster.filter(q => TAKEN[q.name] !== 'ME'), pr }; };
+const P7 = r => C.pAtLeast(C.SK_CATS.concat(C.G_CATS).map(c => VEC(r)[c.k]), C.NEED);
+const VEC = (r, okOver) => { const p = {};
   for (const c of C.SK_CATS) p[c.k] = C.pWin(c, C.catSum(r,c,false), false);
-  const ok = C.gMinOK(r), b = C.LG.gk && C.LG.gk.minOK != null ? C.LG.gk.minOK : 1;
+  const ok = okOver ?? C.gMinOK(r), b = C.LG.gk && C.LG.gk.minOK != null ? C.LG.gk.minOK : 1;
   for (const c of C.G_CATS) p[c.k] = ok*(1-b) + ok*b*C.pWin(c, C.catSum(r,c,true), true);
-  return C.pAtLeast(C.SK_CATS.concat(C.G_CATS).map(c => p[c.k]), C.NEED); };
+  return p; };
+const FIT = new Map();
+function fit(mine, fill, qs){
+  const key = qs.map(q => q.name).join('|');
+  if (FIT.has(key)) return FIT.get(key);
+  let best = null;
+  const rec = (i, f, out) => {
+    if (i === qs.length){
+      const r = [...mine, ...f, ...qs];
+      // четвёртый вратарь — это уже не подстраховка минимума, а ставка на объём
+      // W/SV, который соперник закрывает тем же трансфером; не рассматриваем
+      if (r.length !== 16 || r.filter(x => x.isG).length > 3) return;
+      const v = P7(r);
+      if (!best || v > best.v) best = {r, v, out};
+      return;
+    }
+    const q = qs[i];
+    if (f.includes(q)) return rec(i + 1, f.filter(x => x !== q), [...out, q]);
+    const opts = new Set();
+    const lastSk = [...f].reverse().find(x => !x.isG);
+    if (lastSk) opts.add(lastSk);
+    for (const x of f) if (x.isG) opts.add(x);
+    for (const o of opts) rec(i + 1, f.filter(x => x !== o), [...out, o]);
+  };
+  rec(0, fill, []);
+  FIT.set(key, best);
+  return best;   // {r: состав 16, v: p7, out: кого вытеснил каждый} или null
+}
 
 // --- 3. пара: два ближайших пика вместе ------------------------------------
 // «Возьму крайнего сейчас, центра с фейсоффами доберу потом» — довод про ДВА
 // пика, и проверять его надо парой. Состав держится на 16: под каждого
 // кандидата вырезается филлер своего типа.
 function pair(specs){
-  const {mine, fill} = BASE(), cut = isGs => cutFrom(fill, isGs), p7of = P7;
+  const {mine, fill} = BASE();
   console.log('\nПАРА НА ДВА БЛИЖАЙШИХ ПИКА (состав 16)\n');
   for (const spec of specs){
     const names = spec.split('+').map(s => s.trim());
     const qs = names.map(n => by.get(n));
     if (qs.some(q => !q)){ console.log(names.join(' + ') + ' — нет в данных'); continue; }
-    const r = [...mine, ...cut(qs.map(q => !!q.isG)), ...qs];
-    if (r.length !== 16) { console.log(names.join(' + ') + ' — состав ' + r.length + ', не 16'); continue; }
-    console.log(names.join(' + ').padEnd(42) + 'p7 ' + (100*p7of(r)).toFixed(1) + '%');
+    const o = fit(mine, fill, qs);
+    if (!o) { console.log(names.join(' + ') + ' — состав из 16 не собрать'); continue; }
+    console.log(names.join(' + ').padEnd(42) + 'p7 ' + (100*o.v).toFixed(1) + '%   вместо ' +
+      o.out.map(x => x.name.split(' ').slice(-1)[0]).join(', '));
   }
   console.log('\nДожитие второго игрока смотри в режиме live — пара без него врёт.');
 }
@@ -147,7 +170,7 @@ function order(groups, RUNS){
     // его не рассматривал вовсе. Ранг решает, КОГДА игрока снимут с доски;
     // кого брать, решает вклад. Считаем вклад всем свободным в группе.
     cand[g] = free.filter(filt(g))
-      .map(q => ({q, v: P7([...mine, ...cutFrom(fill, [!!q.isG]), q])}))
+      .map(q => ({q, v: fit(mine, fill, [q]).v}))
       .sort((a,b) => b.v - a.v);
     if (!cand[g].length){ console.log('в группе ' + g + ' никого нет'); return; }
   }
@@ -171,9 +194,9 @@ function order(groups, RUNS){
         if (!x) return;
         got.push(x); names.add(x.q.name);
       }
-      const r = [...mine, ...cutFrom(fill, got.map(x => !!x.q.isG)), ...got.map(x => x.q)];
-      if (r.length !== 16) return;
-      const o = acc[i]; o.sum += P7(r); o.n++;
+      const f = fit(mine, fill, got.map(x => x.q));
+      if (!f) return;
+      const o = acc[i]; o.sum += f.v; o.n++;
       got.forEach((x, j) => { o.who[j][x.q.name] = (o.who[j][x.q.name] || 0) + 1; });
     });
   });
@@ -207,7 +230,7 @@ function depth(RUNS){
   const cand = {}, acc = {};
   for (const g of groups){
     cand[g] = free.filter(GFILT(g))   // без обрезки по рангу — см. order()
-      .map(q => ({q, v: P7([...mine, ...cutFrom(fill, [!!q.isG]), q])}))
+      .map(q => ({q, v: fit(mine, fill, [q]).v}))
       .sort((a,b) => b.v - a.v);
     acc[g] = marks.map(() => ({sum: 0, n: 0, who: {}}));
   }
@@ -261,9 +284,9 @@ function queue(specs, RUNS){
         if (!nm){ acc[i].miss++; return; }
         got.push(by.get(nm)); used.add(nm);
       }
-      const r = [...mine, ...cutFrom(fill, got.map(x => !!x.isG)), ...got];
-      if (r.length !== 16) return;
-      const o = acc[i]; o.sum += P7(r); o.n++;
+      const f = fit(mine, fill, got);
+      if (!f) return;
+      const o = acc[i]; o.sum += f.v; o.n++;
       got.forEach((x, j) => { o.who[j][x.name] = (o.who[j][x.name] || 0) + 1; });
     });
   });
@@ -296,22 +319,19 @@ function cats(names){
   const mixed = qs.some(q => q.isG) && qs.some(q => !q.isG);
   const {mine, fill} = BASE();
   const ALL = [...C.SK_CATS, ...C.G_CATS];
-  const vec = r => { const p = {};
-    for (const c of C.SK_CATS) p[c.k] = C.pWin(c, C.catSum(r,c,false), false);
-    const ok = C.gMinOK(r), b = C.LG.gk && C.LG.gk.minOK != null ? C.LG.gk.minOK : 1;
-    for (const c of C.G_CATS) p[c.k] = ok*(1-b) + ok*b*C.pWin(c, C.catSum(r,c,true), true);
-    return p; };
+  const vec = r => VEC(r);
   const anyG = qs.some(q => q.isG);
   const show = anyG ? ALL : C.SK_CATS;
   console.log('\nПРИБАВКА К ВЕРОЯТНОСТИ ВЗЯТЬ КАТЕГОРИЮ, п.п.\n');
-  const base0 = vec([...mine, ...cutFrom(fill, [false])]);
+  const base0 = vec([...mine, ...fill]);
   console.log('план сейчас       ' + show.map(c =>
     (Math.round(100*base0[c.k])+'%').padStart(7)).join(''));
   for (const q of qs){
-    const base = vec([...mine, ...cutFrom(fill, [!!q.isG])]);
-    const b = vec([...mine, ...cutFrom(fill, [!!q.isG]), q]);
+    const o = fit(mine, fill, [q]);
+    const b = vec(o.r), base = base0;   // против плана как он есть
     console.log(q.name.padEnd(18) + show.map(c =>
-      (100*(b[c.k]-base[c.k])).toFixed(1).padStart(7)).join(''));
+      (100*(b[c.k]-base[c.k])).toFixed(1).padStart(7)).join('') +
+      '   вместо ' + (o.out[0] === q ? '— (уже в плане)' : o.out[0].name.split(' ').slice(-1)[0]));
   }
   console.log('                  ' + show.map(c => c.k.padStart(7)).join(''));
   if (mixed) console.log('\nВ списке и вратарь, и полевой — строки между ними не сравнимы.');
@@ -331,8 +351,10 @@ function contrib(pool, names){
   const fill = pr.roster.filter(q => taken[q.name] !== 'ME');
   const by2 = new Map(pool.map(q => [q.name, q]));
   const out = new Map();
+  FIT.clear();   // лига другая — кэш составов от прошлого расчёта не годится
   for (const n of names){ const q = by2.get(n); if (!q) continue;
-    out.set(n, 100*P7([...mine, ...cutFrom(fill, [!!q.isG]), q])); }
+    out.set(n, 100*fit(mine, fill, [q]).v); }
+  FIT.clear();
   return out;
 }
 function off(cat, names){
@@ -371,6 +393,53 @@ function off(cat, names){
   else console.log('\nПервый тот же, заметных перестановок нет: «' + cat + '» этот выбор не решает.');
 }
 
+
+// --- 9. третий вратарь -------------------------------------------------------
+// Вратарь на скамейку вместо четвёртого запасного полевого. Движок сам решает,
+// класть ли его в план (profile, по p7), здесь — разбор этого решения: сколько
+// даёт каждый доступный вратарь, доживёт ли он до моих поздних ходов и сколько
+// от прибавки остаётся, если минимум выходов закрывать трансфером.
+function g3(RUNS){
+  RUNS = RUNS || 400;
+  const {mine, fill, pr} = BASE();
+  const inPlan = fill.filter(q => q.isG);
+  const benchG = pr.g3 && pr.g3.on ? pr.fill.list.find(f => f.pos === 'BN' && f.p.isG) : null;
+  // план без третьего: запланированный запасной вратарь уступает место полевому
+  const pr2 = pr.g3 ? pr.g3.without : pr.p7;
+  const skFill = fill.filter(q => !q.isG);
+  console.log('\nТРЕТИЙ ВРАТАРЬ НА СКАМЕЙКУ ВМЕСТО ЧЕТВЁРТОГО ЗАПАСНОГО ПОЛЕВОГО\n');
+  console.log('план с двумя вратарями        p7 ' + (100*pr2).toFixed(1) + '%');
+  if (benchG) console.log('план с третьим (' + benchG.p.name + ' последним пиком)  p7 ' +
+    (100*pr.p7).toFixed(1) + '%   → движок кладёт третьего в план');
+  else console.log('движок третьего в план не кладёт' + (pr.g3 ? ' (с ним p7 ' + (100*pr.g3.p7).toFixed(1) + '%)' : ''));
+  // два состава на одного кандидата: с ним третьим и без него (полевой на его месте)
+  const two = pr.g3 ? pr.g3.two : mine.concat(fill);
+  const done = Object.keys(TAKEN).length;
+  const marks = C.MY_PICKS.filter(n => n > done).slice(2);   // поздние ходы — туда и ставим
+  const res = marks.length ? C.survive(POOL, TAKEN, marks, RUNS) : [];
+  const idx = new Map(res.map(r => [r.p.name, r]));
+  const free = POOL.filter(p => !TAKEN[p.name] && p.isG);
+  const rows = free.map(q => ({q, o: fit(mine, fill, [q])})).filter(x => x.o)
+    .sort((a,b) => b.o.v - a.o.v).slice(0, 10);
+  console.log('\nвратарь              GP   p7 с ним   минимум   при стриминге' +
+    marks.map(m => ('#'+m).padStart(6)).join('') + '   ← доживёт до хода');
+  for (const {q, o} of rows){
+    // «при стриминге»: минимум выходов считается выполненным всегда и у меня,
+    // и в составе без третьего — остаётся только объём W/SV и SV%
+    const base = two;
+    if (base.length !== 16 || o.r.length !== 16) throw new Error('состав не 16');
+    const s1 = C.pAtLeast(Object.values(VEC(o.r, 1)), C.NEED), s0 = C.pAtLeast(Object.values(VEC(base, 1)), C.NEED);
+    const sv = idx.get(q.name);
+    console.log((q.name + (inPlan.includes(q) ? ' *' : '')).padEnd(20) + String(q.gp).padStart(4) +
+      ((100*o.v).toFixed(1) + '%').padStart(11) + ((100*C.gMinOK(o.r)).toFixed(0) + '%').padStart(10) +
+      ((s1 - s0 >= 0 ? '+' : '') + (100*(s1 - s0)).toFixed(1) + ' п.п.').padStart(16) +
+      (sv ? sv.s.map(c => ((100*c).toFixed(0)+'%').padStart(6)).join('') : ''));
+  }
+  console.log('\n* уже в плане добора. «при стриминге» — прибавка к p7 против состава с двумя');
+  console.log('вратарями, если минимум в 3 выхода закрывать трансфером каждую неделю: это нижняя');
+  console.log('граница пользы. Движок без стриминга даёт верхнюю. Правда между ними.');
+}
+
 const args = process.argv.slice(2);
 const free = POOL.filter(p => !TAKEN[p.name]).sort((a,b) => (a.rank_pre??9e9) - (b.rank_pre??9e9));
 if (args[0] === 'pair') pair(args.slice(1));
@@ -382,6 +451,7 @@ else if (args[0] === 'off') off(args[1], args.slice(2));
 else if (args[0] === 'queue'){ const a = args.slice(1);
   const n = a.length && /^\d+$/.test(a[a.length-1]) ? +a.pop() : 0; queue(a, n); }
 else if (args[0] === 'solo') solo(args.slice(1));
+else if (args[0] === 'g3') g3(+args[1] || 0);
 else if (args[0] === 'live') live(args.length > 1 ? args.slice(1) : free.slice(0,14).map(p => p.name));
 else { solo(free.slice(0,6).map(p => p.name).concat(free.filter(p=>p.isG).slice(0,3).map(p=>p.name)));
        live(free.slice(0,14).map(p => p.name)); }
