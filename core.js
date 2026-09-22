@@ -418,17 +418,22 @@ function prepare(d){
 // Сравниваю не с разбросом по лиге за сезон, а со случайностью одной недели:
 // сильнейший по категории всё равно проигрывает её примерно в трети случаев.
 function pWin(cat, v, isG){
-  const L = (isG ? LG.gk : LG.sk)[cat.k];
+  return pVs(cat, v, (isG ? LG.gk : LG.sk)[cat.k].m, isG);
+}
+
+// То же против конкретной суммы соперника u, а не средней по лиге. Нужно
+// недельному разбору в Life Dash: там у обеих команд известно число игр.
+function pVs(cat, v, u, isG){
   let sd;
   if (cat.k === RATIO){
-    const q = (v + L.m) / 2;
+    const q = (v + u) / 2;
     sd = Math.sqrt(2 * q * (1 - q) / Math.max(SHOTS, 1));
   } else if (cat.k === 'pm'){
     sd = PM_SD * Math.SQRT2;
   } else {
-    sd = Math.sqrt(noise(v, isG) + noise(L.m, isG));
+    sd = Math.sqrt(noise(v, isG) + noise(u, isG));
   }
-  return sd > 0 ? Phi((v - L.m) / sd) : 0.5;
+  return sd > 0 ? Phi((v - u) / sd) : 0.5;
 }
 
 // Разложить моих игроков по слотам Yahoo. Негибких ставим первыми — иначе
@@ -917,7 +922,7 @@ function runs(pool, taken, depth){
 function setOrder(o){ ORDER = Array.isArray(o) ? o : []; }
 
 const API = {pAtLeast, NEED,TEAMS, MY_SLOT, ROUNDS, MY_PICKS, TEAM_NAMES, SLOTS, SK_CATS, G_CATS, weightOf, catSum, playShare, pDay, gMinOK,
-             prepare, dropOut, OUT, setOrder, scoreAll, profile, standings, survive, SD_RANK, pWin, catDelta, simulate, assign, teamOf, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
+             prepare, dropOut, OUT, setOrder, scoreAll, profile, standings, survive, SD_RANK, pWin, pVs, winProbs, catDelta, simulate, assign, teamOf, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
              get LG(){return LG;}};
 if (typeof module !== 'undefined' && module.exports) module.exports = API;
 root.NHL = API;
