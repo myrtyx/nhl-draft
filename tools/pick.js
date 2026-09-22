@@ -7,6 +7,7 @@
 //   node tools/pick.js order G C [W] — в каком порядке закрывать 2-3 позиции
 //   node tools/pick.js depth     — как пустеет рынок по позициям к моим ходам
 //   node tools/pick.js queue 'А;Б;В' 'Б;А;В' — сравнить очереди из Fantrax
+//   node tools/pick.js cats Имя ... — прибавка по каждой категории
 //
 // SKIP='Имя;Имя' — вычеркнуть игроков, которых проекции Yahoo ещё считают
 // живыми: травма, отстранение, холдаут. Движок такого знать не может, а
@@ -271,12 +272,51 @@ function queue(specs, RUNS){
     });
 }
 
+// --- 7. категории: из чего складывается чистый вклад ------------------------
+// Показывает, ГДЕ игрок добавляет. Суммы по строке здесь намеренно нет: она
+// совпадает с solo p7 по порядку (корреляция 0.9999 на 60 полевых, ни одного
+// расхождения больше 0.3 п.п.), то есть не добавляет ничего, а выглядит как
+// отдельное доказательство. И она ломается на смеси типов: вратарь двигает
+// gMinOK и все четыре вратарские категории разом, поэтому в общем списке с
+// полевыми корреляция суммы с p7 уходит в минус (-0.33). Сравнивать вратаря
+// с полевым по строкам этой таблицы нельзя — для этого есть solo.
+function cats(names){
+  const qs = names.map(n => by.get(n)).filter(Boolean);
+  const miss = names.filter(n => !by.has(n));
+  if (miss.length) console.log('нет в данных: ' + miss.join(', '));
+  if (!qs.length) return;
+  const mixed = qs.some(q => q.isG) && qs.some(q => !q.isG);
+  const {mine, fill} = BASE();
+  const ALL = [...C.SK_CATS, ...C.G_CATS];
+  const vec = r => { const p = {};
+    for (const c of C.SK_CATS) p[c.k] = C.pWin(c, C.catSum(r,c,false), false);
+    const ok = C.gMinOK(r), b = C.LG.gk && C.LG.gk.minOK != null ? C.LG.gk.minOK : 1;
+    for (const c of C.G_CATS) p[c.k] = ok*(1-b) + ok*b*C.pWin(c, C.catSum(r,c,true), true);
+    return p; };
+  const anyG = qs.some(q => q.isG);
+  const show = anyG ? ALL : C.SK_CATS;
+  console.log('\nПРИБАВКА К ВЕРОЯТНОСТИ ВЗЯТЬ КАТЕГОРИЮ, п.п.\n');
+  const base0 = vec([...mine, ...cutFrom(fill, [false])]);
+  console.log('план сейчас       ' + show.map(c =>
+    (Math.round(100*base0[c.k])+'%').padStart(7)).join(''));
+  for (const q of qs){
+    const base = vec([...mine, ...cutFrom(fill, [!!q.isG])]);
+    const b = vec([...mine, ...cutFrom(fill, [!!q.isG]), q]);
+    console.log(q.name.padEnd(18) + show.map(c =>
+      (100*(b[c.k]-base[c.k])).toFixed(1).padStart(7)).join(''));
+  }
+  console.log('                  ' + show.map(c => c.k.padStart(7)).join(''));
+  if (mixed) console.log('\nВ списке и вратарь, и полевой — строки между ними не сравнимы.');
+  console.log('Итог по строке не складывай: для этого есть solo.');
+}
+
 const args = process.argv.slice(2);
 const free = POOL.filter(p => !TAKEN[p.name]).sort((a,b) => (a.rank_pre??9e9) - (b.rank_pre??9e9));
 if (args[0] === 'pair') pair(args.slice(1));
 else if (args[0] === 'order'){ const a = args.slice(1);
   const n = a.length && /^\d+$/.test(a[a.length-1]) ? +a.pop() : 0; order(a, n); }
 else if (args[0] === 'depth') depth(+args[1] || 0);
+else if (args[0] === 'cats') cats(args.slice(1));
 else if (args[0] === 'queue'){ const a = args.slice(1);
   const n = a.length && /^\d+$/.test(a[a.length-1]) ? +a.pop() : 0; queue(a, n); }
 else if (args[0] === 'solo') solo(args.slice(1));
