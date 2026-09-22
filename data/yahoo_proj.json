@@ -3347,7 +3347,7 @@
    "blk": 180
   },
   {
-   "name": "Brad MarchandIR-LT",
+   "name": "Brad Marchand",
    "team": "FLA",
    "pos": [
     "LW",
@@ -3365,7 +3365,8 @@
    "sog": 185,
    "fw": 5,
    "hit": 61,
-   "blk": 26
+   "blk": 26,
+   "inj": "IR-LT"
   },
   {
    "name": "Mikael Granlund",

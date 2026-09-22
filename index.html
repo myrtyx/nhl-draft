@@ -25,7 +25,12 @@ header h1{font-size:17px}
 .badge.now{background:var(--warn);color:#2a1a00}
 .sub{color:var(--dim);font-size:12px}
 .layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:14px;align-items:start}
-@media(max-width:1100px){.layout{grid-template-columns:1fr}}
+.layout>div:last-child{position:sticky;top:12px}
+/* на узком экране сводка по категориям важнее списка — поднимаем её наверх */
+@media(max-width:1100px){
+  .layout{grid-template-columns:1fr}
+  .layout>div:last-child{order:-1;position:static}
+}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:12px}
 .card h2{font-size:11px;text-transform:uppercase;letter-spacing:.9px;color:var(--dim);
   padding:10px 12px;border-bottom:1px solid var(--line)}
@@ -37,7 +42,7 @@ header h1{font-size:17px}
   padding:6px 10px;border-radius:7px;cursor:pointer;font-size:12px;user-select:none;white-space:nowrap}
 .chip:hover{color:var(--tx)}
 .chip.on{background:var(--acc);border-color:var(--acc);color:#04121f;font-weight:600}
-.tablewrap{overflow-x:auto}
+.tablewrap{overflow:auto;max-height:calc(100vh - 230px);min-height:320px}
 table{border-collapse:collapse;width:100%;font-size:12px}
 th,td{padding:5px 7px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
 th{position:sticky;top:0;background:var(--panel2);color:var(--dim);font-weight:600;
