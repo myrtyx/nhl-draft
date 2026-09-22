@@ -3,6 +3,7 @@
 //   node tools/pick.js               — всё сразу
 //   node tools/pick.js live          — только дожитие кандидатов
 //   node tools/pick.js solo Имя ...  — только чистый вклад игроков
+//   node tools/pick.js pair 'А+Б' ... — пара на два ближайших пика
 //
 // Зачем. Колонка ЦЕНА считает кандидата против плана добора, а план строится
 // по рангу Yahoo. Настоящий крайний вытесняет из плана такого же крайнего и
@@ -81,9 +82,39 @@ function live(watch, N = 400, SD = 9){
   console.log('\nПравило: среди кандидатов с близким вкладом бери того, кто до следующего пика не доживёт.');
 }
 
+// --- 3. пара: два ближайших пика вместе ------------------------------------
+// «Возьму крайнего сейчас, центра с фейсоффами доберу потом» — довод про ДВА
+// пика, и проверять его надо парой. Состав держится на 16: под каждого
+// кандидата вырезается филлер своего типа.
+function pair(specs){
+  const pr = C.profile(POOL, TAKEN);
+  const mine = pr.roster.filter(q => TAKEN[q.name] === 'ME');
+  const fill = pr.roster.filter(q => TAKEN[q.name] !== 'ME');
+  const cut = isGs => { let f = [...fill];
+    for (const isG of isGs){ const i = [...f].reverse().findIndex(q => !!q.isG === isG);
+      if (i >= 0) f = f.filter((_,j) => j !== f.length-1-i); }
+    return f; };
+  const p7of = r => { const p = {};
+    for (const c of C.SK_CATS) p[c.k] = C.pWin(c, C.catSum(r,c,false), false);
+    const ok = C.gMinOK(r), b = C.LG.gk && C.LG.gk.minOK != null ? C.LG.gk.minOK : 1;
+    for (const c of C.G_CATS) p[c.k] = ok*(1-b) + ok*b*C.pWin(c, C.catSum(r,c,true), true);
+    return C.pAtLeast(C.SK_CATS.concat(C.G_CATS).map(c => p[c.k]), C.NEED); };
+  console.log('\nПАРА НА ДВА БЛИЖАЙШИХ ПИКА (состав 16)\n');
+  for (const spec of specs){
+    const names = spec.split('+').map(s => s.trim());
+    const qs = names.map(n => by.get(n));
+    if (qs.some(q => !q)){ console.log(names.join(' + ') + ' — нет в данных'); continue; }
+    const r = [...mine, ...cut(qs.map(q => !!q.isG)), ...qs];
+    if (r.length !== 16) { console.log(names.join(' + ') + ' — состав ' + r.length + ', не 16'); continue; }
+    console.log(names.join(' + ').padEnd(42) + 'p7 ' + (100*p7of(r)).toFixed(1) + '%');
+  }
+  console.log('\nДожитие второго игрока смотри в режиме live — пара без него врёт.');
+}
+
 const args = process.argv.slice(2);
 const free = POOL.filter(p => !TAKEN[p.name]).sort((a,b) => (a.rank_pre??9e9) - (b.rank_pre??9e9));
-if (args[0] === 'solo') solo(args.slice(1));
+if (args[0] === 'pair') pair(args.slice(1));
+else if (args[0] === 'solo') solo(args.slice(1));
 else if (args[0] === 'live') live(args.length > 1 ? args.slice(1) : free.slice(0,14).map(p => p.name));
 else { solo(free.slice(0,6).map(p => p.name).concat(free.filter(p=>p.isG).slice(0,3).map(p=>p.name)));
        live(free.slice(0,14).map(p => p.name)); }
