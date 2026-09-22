@@ -5,6 +5,7 @@
 //   node tools/pick.js solo Имя ...  — только чистый вклад игроков
 //   node tools/pick.js pair 'А+Б' ... — пара на два ближайших пика
 //   node tools/pick.js order G C  — что закрывать первым, что вторым
+//   node tools/pick.js depth     — как пустеет рынок по позициям к моим ходам
 //
 // Зачем. Колонка ЦЕНА считает кандидата против плана добора, а план строится
 // по рангу Yahoo. Настоящий крайний вытесняет из плана такого же крайнего и
@@ -100,6 +101,11 @@ function pair(specs){
   console.log('\nДожитие второго игрока смотри в режиме live — пара без него врёт.');
 }
 
+const GFILT = g => g === 'G'  ? (q => !!q.isG)
+                : g === 'SK' ? (q => !q.isG)
+                : g === 'W'  ? (q => !q.isG && (q.pos.includes('LW') || q.pos.includes('RW')))
+                : (q => !q.isG && q.pos.includes(g));
+
 // --- 4. порядок: какую позицию закрывать первой ----------------------------
 // «Сейчас центра, потом вратаря» — или наоборот? Ответ зависит не от того, кто
 // лучше сегодня, а от того, кто останется к следующему ходу. Каждый прогон
@@ -110,9 +116,7 @@ function order(groups, RUNS){
   const done = Object.keys(TAKEN).length;
   const marks = C.MY_PICKS.filter(n => n > done).slice(0, 2);
   if (marks.length < 2){ console.log('остался один ход — сравнивать нечего'); return; }
-  const filt = g => g === 'G'  ? (q => !!q.isG)
-                  : g === 'SK' ? (q => !q.isG)
-                  : (q => !q.isG && q.pos.includes(g));
+  const filt = GFILT;
   const {mine, fill} = BASE();
   const free = POOL.filter(p => !TAKEN[p.name]);
   // кандидаты: 14 лучших по рангу в группе, каждому — чистый вклад (один раз)
@@ -157,10 +161,55 @@ function order(groups, RUNS){
     (d < 1 ? ' — это шум, порядок не решает; бери лучшего по чистому вкладу' : ''));
 }
 
+// --- 5. глубина: что рынок предложит на каждом моём ходу -------------------
+// Довод «возьму центра — потом хороших крайних не останется» проверяется не
+// списком имён, а кривой: сколько стоит ЛУЧШИЙ СВОБОДНЫЙ в каждой группе на
+// каждом моём ходу. Позиция дефицитна, если кривая обрывается; если она
+// пологая — ждать не страшно, кто-то того же уровня будет.
+function depth(RUNS){
+  RUNS = RUNS || 400;
+  const done = Object.keys(TAKEN).length;
+  const marks = C.MY_PICKS.filter(n => n > done).slice(0, 5);
+  const groups = ['C', 'LW', 'RW', 'D', 'G'];
+  const {mine, fill} = BASE();
+  const free = POOL.filter(p => !TAKEN[p.name]);
+  const cand = {}, acc = {};
+  for (const g of groups){
+    cand[g] = free.filter(GFILT(g)).sort((a,b) => (a.rank_pre??9e9)-(b.rank_pre??9e9)).slice(0, 24)
+      .map(q => ({q, v: P7([...mine, ...cutFrom(fill, [!!q.isG]), q])}))
+      .sort((a,b) => b.v - a.v);
+    acc[g] = marks.map(() => ({sum: 0, n: 0, who: {}}));
+  }
+  C.survive(POOL, TAKEN, marks, RUNS, (k, gone) => {
+    for (const g of groups){
+      const b = cand[g].find(x => !gone.has(x.q.name));
+      if (!b) continue;
+      const o = acc[g][k]; o.sum += b.v; o.n++;
+      o.who[b.q.name] = (o.who[b.q.name] || 0) + 1;
+    }
+  });
+  console.log('\nЛУЧШИЙ СВОБОДНЫЙ НА МОЁМ ХОДУ · ' + RUNS + ' прогонов, σ=' + C.SD_RANK);
+  console.log('(чистый вклад в p7; чужие пики разыграны шумом, свои не вычтены)\n');
+  console.log('поз ' + marks.map(m => ('#'+m).padStart(8)).join('') + '   обрыв');
+  for (const g of groups){
+    const v = acc[g].map(o => o.n ? 100*o.sum/o.n : null);
+    console.log(g.padEnd(4) + v.map(x => (x==null?'—':x.toFixed(1)).padStart(8)).join('') +
+      '   ' + (v[0]!=null && v[v.length-1]!=null ? '-'+(v[0]-v[v.length-1]).toFixed(1)+' п.п.' : '—'));
+  }
+  console.log('');
+  for (const g of groups){
+    const top = k => Object.entries(acc[g][k].who).sort((a,b)=>b[1]-a[1]).slice(0,2)
+      .map(([nm,c]) => nm.split(' ').slice(-1)[0]+' '+Math.round(100*c/acc[g][k].n)+'%').join(', ');
+    console.log(g.padEnd(4) + '#' + marks[0] + ': ' + top(0) + '   →   #' +
+      marks[marks.length-1] + ': ' + top(marks.length-1));
+  }
+}
+
 const args = process.argv.slice(2);
 const free = POOL.filter(p => !TAKEN[p.name]).sort((a,b) => (a.rank_pre??9e9) - (b.rank_pre??9e9));
 if (args[0] === 'pair') pair(args.slice(1));
 else if (args[0] === 'order') order(args.slice(1, 3), +args[3] || 0);
+else if (args[0] === 'depth') depth(+args[1] || 0);
 else if (args[0] === 'solo') solo(args.slice(1));
 else if (args[0] === 'live') live(args.length > 1 ? args.slice(1) : free.slice(0,14).map(p => p.name));
 else { solo(free.slice(0,6).map(p => p.name).concat(free.filter(p=>p.isG).slice(0,3).map(p=>p.name)));
