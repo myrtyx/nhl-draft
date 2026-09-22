@@ -839,6 +839,43 @@ function projectAll(pool, taken){
   return teams;
 }
 
+// Кого возьмут ближайшие k пиков, если лига пойдёт по рангу Yahoo и будет
+// закрывать пустые слоты. Модель грубая — средняя ошибка 8.8 пика, — но она
+// отвечает на единственный нужный вопрос: доживёт ли игрок до моего хода.
+function nextPicks(pool, taken, k){
+  const by = new Map(pool.map(q => [q.name, q]));
+  const done = Object.keys(taken).length;
+  const byRank = pool.filter(q => !taken[q.name])
+                     .sort((a,b)=>(a.rank_pre??9999)-(b.rank_pre??9999));
+  const st = Array.from({length: TEAMS}, () => ({C:0,LW:0,RW:0,D:0,G:0,BN:0}));
+  ORDER.slice(0, done).forEach((nm, i) => {
+    const q = by.get(nm); if (!q) return;
+    const u = st[teamOf(i+1) - 1];
+    const sl = slotFor(q, u); if (sl) u[sl]++;
+  });
+  const gone = new Set(), out = [];
+  const last = Math.min(TEAMS * ROUNDS, done + (k || 12));
+  for (let n = done + 1; n <= last; n++){
+    const u = st[teamOf(n) - 1];
+    const bench = (u.C+u.LW+u.RW+u.D+u.G) >= STARTERS;
+    let pick = null, slot = 'BN';
+    for (const q of byRank){
+      if (gone.has(q.name)) continue;
+      if (bench){ if (q.isG) continue; pick = q; break; }
+      const sl = slotFor(q, u);
+      if (sl === 'BN' || !sl) continue;
+      pick = q; slot = sl; break;
+    }
+    if (!pick) continue;
+    gone.add(pick.name); u[slot]++;
+    out.push({n, team: teamOf(n), name: TEAM_NAMES[teamOf(n)-1], mine: teamOf(n) === MY_SLOT,
+              p: pick, slot,
+              need: Object.fromEntries(Object.entries(SLOT_COUNT)
+                      .map(([pos,c]) => [pos, Math.max(0, c - u[pos])]))});
+  }
+  return out;
+}
+
 // Сколько игроков каждой позиции ушло и сколько осталось в верхушке пула.
 // Нужно, чтобы поймать забег: если вратарей разбирают, ждать дороже.
 function runs(pool, taken, depth){
@@ -857,7 +894,7 @@ function runs(pool, taken, depth){
 function setOrder(o){ ORDER = Array.isArray(o) ? o : []; }
 
 const API = {pAtLeast, NEED,TEAMS, MY_SLOT, ROUNDS, MY_PICKS, TEAM_NAMES, SLOTS, SK_CATS, G_CATS, weightOf, catSum, playShare, pDay, gMinOK,
-             prepare, setOrder, scoreAll, profile, projectAll, pWin, catDelta, simulate, assign, teamOf, rosters, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
+             prepare, setOrder, scoreAll, profile, projectAll, nextPicks, pWin, catDelta, simulate, assign, teamOf, rosters, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
              get LG(){return LG;}};
 if (typeof module !== 'undefined' && module.exports) module.exports = API;
 root.NHL = API;

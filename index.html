@@ -111,6 +111,42 @@ button.mini.t:hover{background:#2a1c1c;color:var(--bad);border-color:var(--bad)}
 .catval{font-family:var(--mono);text-align:right;font-size:10px;color:var(--dim)}
 .big{font:700 22px/1 var(--mono);color:var(--good)}
 .big.low{color:var(--warn)} .big.raw{color:var(--dim2)}
+nav.tabs{display:flex;gap:4px;margin:10px 0 0;flex-wrap:wrap}
+nav.tabs .tab{background:var(--panel2);border:1px solid var(--line);color:var(--dim);
+  padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px;user-select:none;font-weight:600}
+nav.tabs .tab:hover{color:var(--tx)}
+nav.tabs .tab.on{background:var(--acc);border-color:var(--acc);color:#04121f}
+nav.tabs .tab .n{font:600 10px/1 var(--mono);opacity:.65;margin-left:5px}
+.wide table{font-size:12px}
+.wide table.proj td.c{font-size:12px;padding:4px 7px}
+.wide .tablewrap{max-height:none}
+[hidden]{display:none!important}
+.teamgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.tcard{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:9px 11px}
+.tcard.me{border-color:var(--acc)}
+.tcard h3{margin:0 0 6px;font-size:12px;letter-spacing:.3px;text-transform:uppercase;color:var(--dim)}
+.tcard.me h3{color:var(--acc)}
+.tcard ol{margin:0;padding-left:20px;font-size:12px;line-height:1.65}
+.tcard ol li::marker{color:var(--dim2);font:600 10px var(--mono)}
+.tcard .tneed{margin-top:7px;font-size:11px;color:var(--dim2)}
+.tcard .tneed b{color:var(--warn);font-weight:600}
+.board{display:grid;grid-template-columns:34px repeat(12,minmax(88px,1fr));gap:3px;font-size:11px;min-width:1100px}
+.board .hd{font:600 10px/1.3 var(--mono);color:var(--dim);padding:4px 3px;text-align:center;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.board .rd{font:600 10px/1 var(--mono);color:var(--dim2);display:flex;align-items:center;justify-content:center}
+.board .cell{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:4px 6px;
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;min-height:34px}
+.board .cell.me{background:#1f3b2a;border-color:#2f5c41}
+.board .cell.soon{background:#241f14;border-color:#4a3a1c;border-style:dashed}
+.board .cell.empty{background:transparent;border-style:dashed;border-color:#232a36}
+.board .cell .nm{display:block;overflow:hidden;text-overflow:ellipsis}
+.board .cell .sb{display:block;font:600 9px/1.3 var(--mono);color:var(--dim2)}
+.board .cell.soon .sb{color:#c9a227}
+.soonlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;font-size:12px}
+.soonlist .s{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:6px 9px}
+.soonlist .s.me{border-color:var(--acc);background:#132030}
+.soonlist .s .t{font:600 10px/1 var(--mono);color:var(--dim2)}
+.soonlist .s.me .t{color:var(--acc)}
 .note{color:var(--dim);font-size:11px;line-height:1.5;margin:8px 0 0}
 .note b{color:var(--tx)}
 .row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
@@ -124,9 +160,14 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
   <h1>BETBY NHL — доска драфта</h1>
   <span class="badge" id="badge">—</span>
   <span class="sub" id="meta">загрузка…</span>
+  <nav class="tabs" id="tabs">
+    <span class="tab on" data-tab="draft">Доска</span>
+    <span class="tab" data-tab="teams">Команды<span class="n">12</span></span>
+    <span class="tab" data-tab="picks">Пики<span class="n" id="tabPicks"></span></span>
+  </nav>
 </header>
 
-<div class="layout">
+<div class="layout" id="view-draft">
   <div>
   <div class="card">
     <h2>Брать сейчас <span id="bestPick" style="text-transform:none;letter-spacing:0;color:var(--dim2)"></span></h2>
@@ -171,22 +212,6 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
     </div>
 
     <div class="card">
-      <h2>Прогноз команд <span id="runline" style="text-transform:none;letter-spacing:0;color:var(--dim2)"></span></h2>
-      <div class="body">
-        <div class="tablewrap"><table class="opp proj">
-          <thead><tr id="ophead"></tr></thead><tbody id="opbody"></tbody><tfoot id="opfoot"></tfoot>
-        </table></div>
-        <p class="note">Прогноз <b>на конец драфта</b>: взятые игроки плюс то, чем команда добьёт
-          пустые слоты — иначе сравнивались бы составы разной длины. Числа сезонные, стартовый
-          состав. Зелёное — выше середины лиги, красное — ниже. «Берёт» — сколько категорий
-          из двенадцати команда держит в верхней половине: семь и больше значит выигранная
-          неделя. Внизу порог шестого места и чего <b>мне</b> до него не хватает — это и есть
-          список того, за чем идти. «Гибк.» — сколько взятых полевых закрывают больше одного
-          слота. Заголовок категории кликается — сортировка.</p>
-      </div>
-    </div>
-
-    <div class="card">
       <h2>Мой ростер</h2>
       <div class="body"><div class="slots" id="slots"></div></div>
     </div>
@@ -207,11 +232,59 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
   </div>
 </div>
 
+<div id="view-teams" class="wide" hidden>
+  <div class="card">
+    <h2>Прогноз команд <span id="runline" style="text-transform:none;letter-spacing:0;color:var(--dim2)"></span></h2>
+    <div class="body">
+      <div class="tablewrap"><table class="opp proj">
+        <thead><tr id="ophead"></tr></thead><tbody id="opbody"></tbody><tfoot id="opfoot"></tfoot>
+      </table></div>
+      <p class="note">Прогноз <b>на конец драфта</b>: взятые игроки плюс то, чем команда добьёт
+        пустые слоты — иначе сравнивались бы составы разной длины. Числа сезонные, стартовый
+        состав. Зелёное — выше середины лиги, красное — ниже. «Берёт» — сколько категорий
+        из двенадцати команда держит в верхней половине: семь и больше значит выигранная
+        неделя. Внизу порог шестого места и чего <b>мне</b> до него не хватает — это и есть
+        список того, за чем идти. «Гибк.» — сколько взятых полевых закрывают больше одного
+        слота. Заголовок категории кликается — сортировка.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Составы</h2>
+    <div class="body">
+      <div class="teamgrid" id="teamgrid"></div>
+      <p class="note">Только реально взятые игроки, в порядке пиков. «Надо» — какие стартовые
+        слоты команде ещё закрывать: отсюда видно, за кем она побежит.</p>
+    </div>
+  </div>
+</div>
+
+<div id="view-picks" class="wide" hidden>
+  <div class="card">
+    <h2>Кто пикнет дальше</h2>
+    <div class="body">
+      <div class="soonlist" id="soon"></div>
+      <p class="note">Прогноз по рангу Yahoo с учётом того, какие слоты у команды пусты.
+        Модель грубая — на прошедших пиках этой лиги средняя ошибка <b>8.8 пика</b>, — но
+        отвечает на нужный вопрос: доживёт ли игрок до моего хода. Мои пики подсвечены.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Лента драфта</h2>
+    <div class="body">
+      <div class="tablewrap"><div class="board" id="board"></div></div>
+      <p class="note">Раунды сверху вниз, змейкой. Зелёное — моё, пунктир с жёлтым —
+        предсказание, а не факт.</p>
+    </div>
+  </div>
+</div>
+
 <footer>Проекции Yahoo (Remaining Games proj), 400 полевых + 100 вратарей ·
 отметки хранятся в этом браузере</footer>
 </div>
 
-<script src="core.js?v=1790082800"></script>
+<script src="core.js?v=1790087423"></script>
 <script>
 const LS = 'nhl-draft-v2';
 let S = {order:[]};
@@ -293,7 +366,7 @@ function topUp(){
   return true;
 }
 
-let POOL = [], view = {pos:'ALL', free:true, multi:false, q:'', sort:'vorp', dir:-1, opsort:'takes'};
+let POOL = [], view = {tab:'draft', pos:'ALL', free:true, multi:false, q:'', sort:'vorp', dir:-1, opsort:'takes'};
 
 const COLS_SK = [{k:'vorp',n:'ЦЕНА'},{k:'score',n:'vs РАУНД'},{k:'rank_pre',n:'Yahoo'},{k:'gp',n:'GP'},
   {k:'g',n:'G'},{k:'a',n:'A'},{k:'ppp',n:'PPP'},{k:'sog',n:'SOG'},
@@ -424,7 +497,9 @@ function render(){
     `шанс взять 7 категорий из 12 · в сумме ${pr.expected.toFixed(1)} · взято ${pr.nSk + pr.nG} из 16
      <span style="color:var(--dim2)">· остальные слоты считаются средними</span>`;
 
-  // прогноз команд на конец драфта
+  // Тяжёлое считается только для открытой вкладки: projectAll достраивает
+  // двенадцать составов до конца драфта, и на доске это лишняя работа.
+  if (view.tab === 'teams'){
   const PJ = NHL.projectAll(POOL, S.taken);
   const ALLC = [...NHL.SK_CATS, ...NHL.G_CATS];
   // сезонные числа: движок считает за матчап, а Fantrax показывает за год
@@ -480,6 +555,75 @@ function render(){
     'ушло / осталось в топ-60: ' +
     ['C','LW','RW','D','G'].map(k=>`${k} ${rn[k].gone}/${rn[k].left}`).join(' · ');
 
+  // составы: только реально взятые, в порядке пиков. Пропуски («чужой пик,
+  // игрока нет в списке») тоже показываю — иначе номера пиков разъезжаются.
+  const byName = new Map(POOL.map(q => [q.name, q]));
+  const lists = Array.from({length: NHL.TEAMS}, () => []);
+  S.order.forEach((nm, i) => lists[NHL.teamOf(i + 1) - 1].push({n: i + 1, nm, p: byName.get(nm)}));
+  document.getElementById('teamgrid').innerHTML = PJ.map(t => {
+    const need = Object.entries(t.need).filter(([,n]) => n > 0)
+      .map(([pos,n]) => `<b>${pos}${n>1?'×'+n:''}</b>`).join(' ') || 'состав собран';
+    const li = lists[t.slot - 1].map(x => x.p
+      ? `<li>${x.p.name} <span class="pos" style="color:var(--dim2)">${
+          (x.p.isG ? ['G'] : x.p.pos).join('/')}</span></li>`
+      : `<li style="color:var(--dim2)">пропуск</li>`).join('') || '<li style="color:var(--dim2)">пусто</li>';
+    return `<div class="tcard ${t.mine?'me':''}"><h3>${t.mine?'я — '+t.name:t.name}</h3>
+      <ol>${li}</ol><div class="tneed">надо: ${need}</div></div>`;
+  }).join('');
+  }
+
+  // вкладка «Пики»: ближайшие ходы и лента всей доски
+  if (view.tab === 'picks'){
+    const byName = new Map(POOL.map(q => [q.name, q]));
+    const posOf = q => (q.isG ? ['G'] : q.pos).join('/');
+    // На доске ширина ячейки 88px — полное имя всё равно обрежется, а фамилия
+    // с инициалом читается с одного взгляда.
+    const short = nm => { const w = nm.split(' ');
+      return w.length > 1 ? w[0][0] + '. ' + w.slice(1).join(' ') : nm; };
+
+    const soonN = NHL.nextPicks(POOL, S.taken, 14);
+    document.getElementById('soon').innerHTML = soonN.map(x => {
+      const left = Object.entries(x.need).filter(([,n]) => n > 0)
+        .map(([pos,n]) => pos + (n>1 ? '×'+n : '')).join(' ');
+      return `<div class="s ${x.mine ? 'me' : ''}">
+        <span class="t">#${x.n} · ${x.mine ? 'Я' : x.name}</span>
+        <div>${x.p.name} <span class="pos" style="color:var(--dim2)">${posOf(x.p)}</span></div>
+        <span class="t">${x.slot === 'BN' ? 'на лавку' : 'слот ' + x.slot}${
+          left ? ' · осталось ' + left : ''}</span></div>`;
+    }).join('');
+
+    const dn = S.order.length;
+    const pred = new Map(soonN.map(x => [x.n, x]));
+    const lastN = Math.min(NHL.TEAMS * NHL.ROUNDS, dn + soonN.length);
+    const lastR = Math.max(1, Math.ceil(lastN / NHL.TEAMS));
+    let bd = '<div class="rd"></div>' + NHL.TEAM_NAMES.map((nm, i) =>
+      `<div class="hd" title="${nm}">${i + 1 === NHL.MY_SLOT ? 'Я' : nm}</div>`).join('');
+    for (let r = 1; r <= lastR; r++){
+      bd += `<div class="rd">${r}</div>`;
+      // змейка: номер пика раскладываю по колонкам той же функцией, что и движок
+      const col = new Array(NHL.TEAMS);
+      for (let k = 0; k < NHL.TEAMS; k++){
+        const n = (r - 1) * NHL.TEAMS + k + 1;
+        col[NHL.teamOf(n) - 1] = n;
+      }
+      bd += col.map(n => {
+        const mine = NHL.teamOf(n) === NHL.MY_SLOT;
+        if (n <= dn){
+          const q = byName.get(S.order[n - 1]);
+          return `<div class="cell ${mine ? 'me' : ''}" title="пик #${n}${q ? ' · ' + q.name : ''}">
+            <span class="nm">${q ? short(q.name) : '—'}</span>
+            <span class="sb">${n}${q ? ' · ' + posOf(q) : ''}</span></div>`;
+        }
+        const x = pred.get(n);
+        if (!x) return `<div class="cell empty"><span class="sb">${n}</span></div>`;
+        return `<div class="cell soon" title="прогноз, не факт · пик #${n} · ${x.p.name}">
+          <span class="nm">${short(x.p.name)}</span>
+          <span class="sb">${n} · ${posOf(x.p)}</span></div>`;
+      }).join('');
+    }
+    document.getElementById('board').innerHTML = bd;
+  }
+
   // ростер
   document.getElementById('slots').innerHTML = NHL.fillRoster(POOL, S.taken).map(([s,p]) =>
     `<div class="slotname">${s}</div><div class="slotval ${p?'':'empty'}">${
@@ -493,6 +637,12 @@ function render(){
   if (!cur) { b.textContent = 'драфт пройден'; b.className = 'badge'; }
   else if (away <= 0) { b.textContent = `ТВОЙ ПИК #${cur}`; b.className = 'badge now'; }
   else { b.textContent = `пик #${cur} · через ${away}`; b.className = 'badge' + (away<=2?' soon':''); }
+
+  document.getElementById('tabPicks').textContent = S.order.length + '/192';
+  document.querySelectorAll('#tabs .tab').forEach(el => {
+    el.classList.toggle('on', el.dataset.tab === view.tab);
+    document.getElementById('view-' + el.dataset.tab).hidden = el.dataset.tab !== view.tab;
+  });
 
   const mine = S.order.filter((n,i)=>NHL.teamOf(i+1)===NHL.MY_SLOT).length;
   document.getElementById('meta').textContent =
@@ -509,6 +659,9 @@ function render(){
      <b>G</b> ${nm('G')} · <b>D</b> ${nm('D')} · <b>F</b> ${nm('F')}.<br><br>
      Отмечай пики подряд кнопкой <b>+</b> — чья команда, считается по номеру пика.`;
 }
+
+document.querySelectorAll('#tabs .tab').forEach(el => el.onclick = () => {
+  view.tab = el.dataset.tab; render(); window.scrollTo(0, 0); });
 
 document.querySelectorAll('.chip[data-pos]').forEach(c => c.onclick = () => {
   document.querySelectorAll('.chip[data-pos]').forEach(x=>x.classList.remove('on'));
