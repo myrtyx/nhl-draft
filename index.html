@@ -59,6 +59,13 @@ table.opp{font-size:11px} table.opp td,table.opp th{padding:2px 4px;text-align:c
 table.opp td.l,table.opp th.l{text-align:left;white-space:nowrap}
 table.opp tr.me{background:rgba(93,169,255,.09)}
 table.opp tr.me td.l{color:var(--acc);font-weight:700}
+table.proj td.c{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:11px}
+table.proj tfoot td{border-top:1px solid var(--ln);border-bottom:none;color:var(--dim2);font-size:10px}
+table.proj tfoot tr.gap td{font-family:var(--mono);font-variant-numeric:tabular-nums}
+table.proj tfoot tr.gap td.miss{color:#ff8b8b;font-weight:700}
+table.proj tfoot tr.gap td.ok{color:var(--dim2)}
+table.proj td.takes{font-weight:700;font-family:var(--mono)}
+table.proj td.takes.win{color:var(--good)}
 .rk{display:inline-block;min-width:15px;border-radius:3px;padding:1px 0}
 .rk.hi{background:rgba(58,190,120,.22);color:#8fe3b2}
 .rk.lo{background:rgba(255,255,255,.04);color:var(--dim2)}
@@ -70,6 +77,9 @@ tr.taken{opacity:.3} tr.taken:hover{opacity:.55}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .pos{font:600 10px/1 var(--mono);color:var(--dim);letter-spacing:.4px}
 .pos.multi{color:var(--good)}
+.pos i{font-style:normal;color:var(--dim2)}
+.pos i.fit{color:var(--good);font-weight:700}
+.pos b{font:inherit;color:var(--good);margin-left:3px}
 .inj{font:600 9px/1 var(--mono);padding:1px 3px;border-radius:3px;background:#3a1f1f;
   color:#ff8080;margin-left:4px;vertical-align:1px}
 .v{font-family:var(--mono);font-weight:700}
@@ -161,15 +171,18 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
     </div>
 
     <div class="card">
-      <h2>Соперники <span id="runline" style="text-transform:none;letter-spacing:0;color:var(--dim2)"></span></h2>
+      <h2>Прогноз команд <span id="runline" style="text-transform:none;letter-spacing:0;color:var(--dim2)"></span></h2>
       <div class="body">
-        <div class="tablewrap"><table class="opp">
-          <thead><tr id="ophead"></tr></thead><tbody id="opbody"></tbody>
+        <div class="tablewrap"><table class="opp proj">
+          <thead><tr id="ophead"></tr></thead><tbody id="opbody"></tbody><tfoot id="opfoot"></tfoot>
         </table></div>
-        <p class="note">Место команды в каждой категории <b>среди двенадцати</b> на сегодняшний
-          день. Зелёное — забирают, серое — сдают. Смотреть надо на свои жёлтые категории:
-          если в них у многих зелёное, ждать нельзя. «Надо» — сколько стартовых слотов
-          команде ещё закрывать; отсюда видно, кто скоро побежит за вратарями.</p>
+        <p class="note">Прогноз <b>на конец драфта</b>: взятые игроки плюс то, чем команда добьёт
+          пустые слоты — иначе сравнивались бы составы разной длины. Числа сезонные, стартовый
+          состав. Зелёное — выше середины лиги, красное — ниже. «Берёт» — сколько категорий
+          из двенадцати команда держит в верхней половине: семь и больше значит выигранная
+          неделя. Внизу порог шестого места и чего <b>мне</b> до него не хватает — это и есть
+          список того, за чем идти. «Гибк.» — сколько взятых полевых закрывают больше одного
+          слота. Заголовок категории кликается — сортировка.</p>
       </div>
     </div>
 
@@ -198,7 +211,7 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
 отметки хранятся в этом браузере</footer>
 </div>
 
-<script src="core.js?v=1790081453"></script>
+<script src="core.js?v=1790082800"></script>
 <script>
 const LS = 'nhl-draft-v2';
 let S = {order:[]};
@@ -256,6 +269,8 @@ const SEED = [
  // R5 — обратный ход, от klavs
  ['Jake Sanderson','X'],['Aleksander Barkov','X'],['Juuse Saros','X'],
  ['Juraj Slafkovský','X'],['Jesper Wallstedt','X'],
+ ['Adam Fox','X'],['Brandon Hagel','X'],['Dylan Guenther','X'],
+ ['Brock Faber','X'],['Alex DeBrincat','X'],['Darren Raddysh','ME'],
 ];
 const nextTeam = () => {
   const n = S.order.length + 1;
@@ -278,7 +293,7 @@ function topUp(){
   return true;
 }
 
-let POOL = [], view = {pos:'ALL', free:true, multi:false, q:'', sort:'vorp', dir:-1};
+let POOL = [], view = {pos:'ALL', free:true, multi:false, q:'', sort:'vorp', dir:-1, opsort:'takes'};
 
 const COLS_SK = [{k:'vorp',n:'ЦЕНА'},{k:'score',n:'vs РАУНД'},{k:'rank_pre',n:'Yahoo'},{k:'gp',n:'GP'},
   {k:'g',n:'G'},{k:'a',n:'A'},{k:'ppp',n:'PPP'},{k:'sog',n:'SOG'},
@@ -307,6 +322,26 @@ function render(){
     const top = NHL.catDelta(p, pr).filter(x=>x.rel>=1)
       .sort((a,b)=>b.d-a.d).slice(0,3).filter(x=>x.d>0.01);
     return top.length ? top.map(x=>`${x.n} +${(x.d*100).toFixed(0)}`).join(' · ') : 'добор глубины';
+  };
+
+  // Какие мои пустые слоты игрок закрывает. Для мультипозиционного их может
+  // быть два — тогда он держит выбор открытым, и это стоит видеть до клика.
+  const fits = p => {
+    const f = p.isG ? (pr.free.G > 0 ? ['G'] : []) : p.pos.filter(x => pr.free[x] > 0);
+    return f.length > 1 ? 'закрывает ' + f.join(' и ')
+         : f.length === 1 ? 'слот ' + f[0]
+         : 'слот ' + p.slot;
+  };
+  // Позиции игрока с подсветкой тех, что затыкают мои пустые слоты. Игрок на
+  // две мои дыры сразу оставляет выбор открытым — это и есть мультипозиционная
+  // игра, и видно её должно быть в списке, а не после клика.
+  const posCell = p => {
+    const ps = p.isG ? ['G'] : p.pos;
+    const n = ps.filter(x => pr.free[x] > 0).length;
+    return `<span class="pos" title="${n ? 'закрывает мои слоты: ' +
+        ps.filter(x=>pr.free[x]>0).join(', ') : 'мои слоты этой позиции уже закрыты'}">` +
+      ps.map(x => `<i class="${pr.free[x] > 0 ? 'fit' : ''}">${x}</i>`).join('/') +
+      (n > 1 ? `<b>×${n}</b>` : '') + '</span>';
   };
 
   const th = document.getElementById('thead');
@@ -338,7 +373,7 @@ function render(){
     return `<tr class="${st==='ME'?'mine':st?'taken':''}">
       <td class="l"><span style="font-weight:550">${p.name}</span>${p.inj?`<span class="inj">${p.inj}</span>`:''}
         <span class="pos" style="margin-left:5px;color:var(--dim2)">${p.team||''}</span></td>
-      <td class="l"><span class="pos ${p.pos.length>1?'multi':''}">${p.pos.join('/')}</span></td>
+      <td class="l">${posCell(p)}</td>
       ${cols().map(c=>`<td class="num ${c.k==='vorp'?'v '+(p.vorp>0?'pos_':'neg'):''}">${fmt(p[c.k],c.k)}</td>`).join('')}
       ${view.pos === 'ALL' ? `<td class="l gives">${why(p)}</td>` : ''}
       <td class="act">${st ? `<span class="who ${st==='ME'?'me':''}">${
@@ -359,7 +394,7 @@ function render(){
       <div class="bv">${p.vorp.toFixed(0)}</div>
       <div class="bn">${p.name}${p.inj?`<span class="inj">${p.inj}</span>`:''}</div>
       <div class="bp">${p.isG?'G':p.pos.join('/')} · ${p.team} · ${p.gp} GP · Yahoo ${p.rank_pre}
-        <span class="slotmark">слот ${p.slot}</span></div>
+        <span class="slotmark">${fits(p)}</span></div>
       <div class="bw">${why(p)}</div>
       <button data-n="${encodeURIComponent(p.name)}">взял</button>
     </div>`).join('');
@@ -389,25 +424,57 @@ function render(){
     `шанс взять 7 категорий из 12 · в сумме ${pr.expected.toFixed(1)} · взято ${pr.nSk + pr.nG} из 16
      <span style="color:var(--dim2)">· остальные слоты считаются средними</span>`;
 
-  // соперники
-  const OPP = NHL.rosters(POOL, S.order);
+  // прогноз команд на конец драфта
+  const PJ = NHL.projectAll(POOL, S.taken);
   const ALLC = [...NHL.SK_CATS, ...NHL.G_CATS];
+  // сезонные числа: движок считает за матчап, а Fantrax показывает за год
+  const sez = (c,v) => c.k === 'svpct' ? (+v).toFixed(3).replace(/^0/,'') : Math.round(v * 28);
+  // заливка по месту: +1 первый, −1 последний. Не по разрыву, а по месту —
+  // категория берётся местом, а не тем, на сколько ты оторвался.
+  const heat = r => { const t = (6.5 - r) / 5.5;
+    return t > 0 ? `rgba(58,190,120,${(t*.30).toFixed(2)})` : `rgba(255,107,107,${(-t*.24).toFixed(2)})`; };
+  const thr = {};   // порог шестого места — выше него категория твоя
+  ALLC.forEach(c => { thr[c.k] = PJ.map(t=>t.sum[c.k]).sort((a,b)=>b-a)[5]; });
+  const me = PJ.find(t => t.mine);
+
   document.getElementById('ophead').innerHTML =
-    '<th class="l">команда</th><th class="l">игроков</th>' +
-    ALLC.map(c=>`<th title="${c.n}">${c.n}</th>`).join('') + '<th class="l">надо</th>';
-  document.getElementById('opbody').innerHTML = OPP.map(t => {
+    '<th class="l" data-o="name">команда</th>' +
+    ALLC.map(c=>`<th data-o="${c.k}" class="${view.opsort===c.k?'sorted':''}"
+       title="${c.n}${c.rel<1?' — категория шумная, вес меньше':''}">${c.n}</th>`).join('') +
+    `<th data-o="takes" class="${view.opsort==='takes'?'sorted':''}" title="категорий в верхней половине">берёт</th>` +
+    `<th data-o="multi" class="${view.opsort==='multi'?'sorted':''}" title="взятых полевых с двумя и более позициями">гибк.</th>` +
+    '<th class="l">надо</th>';
+  document.getElementById('ophead').querySelectorAll('th[data-o]').forEach(el => el.onclick = () => {
+    view.opsort = el.dataset.o; render(); });
+
+  const key = view.opsort;
+  const sorted = [...PJ].sort((a,b) =>
+    key === 'name' ? a.slot - b.slot :
+    key === 'takes' ? b.takes - a.takes || b.p7 - a.p7 :
+    key === 'multi' ? b.multi - a.multi :
+    b.sum[key] - a.sum[key]);
+  document.getElementById('opbody').innerHTML = sorted.map(t => {
     const need = Object.entries(t.need).filter(([,n])=>n>0)
       .map(([pos,n]) => `${pos}${n>1?'×'+n:''}`).join(' ') || '—';
     return `<tr class="${t.mine?'me':''}">
       <td class="l">${t.mine?'я':t.name}</td>
-      <td class="l">${t.players.length}</td>
-      ${ALLC.map(c=>{
-        const r = t.rank[c.k];
-        if (!r) return '<td><span style="color:var(--dim2)">·</span></td>';
-        return `<td><span class="rk ${r<=3?'hi':r>=10?'lo':''}">${r}</span></td>`;
-      }).join('')}
+      ${ALLC.map(c=>`<td class="c" style="background:${heat(t.rank[c.k])}"
+          title="${c.n}: ${t.rank[c.k]}-е место из 12">${sez(c,t.sum[c.k])}</td>`).join('')}
+      <td class="takes ${t.takes>=7?'win':''}">${t.takes}</td>
+      <td class="c">${t.multi||'·'}</td>
       <td class="l need">${need}</td></tr>`;
   }).join('');
+  document.getElementById('opfoot').innerHTML =
+    `<tr><td class="l">порог 6-го места</td>${
+      ALLC.map(c=>`<td class="c">${sez(c,thr[c.k])}</td>`).join('')}<td>7</td><td></td><td></td></tr>
+     <tr class="gap"><td class="l">мне не хватает</td>${
+      ALLC.map(c=>{
+        const d = me.sum[c.k] - thr[c.k];
+        const ok = d >= 0;
+        const v = c.k === 'svpct' ? (d>=0?'+':'−') + Math.abs(d).toFixed(3).replace(/^0/,'')
+                                  : (d>=0?'+':'−') + Math.round(Math.abs(d)*28);
+        return `<td class="c ${ok?'ok':'miss'}">${v}</td>`;
+      }).join('')}<td class="takes ${me.takes>=7?'win':''}">${me.takes}</td><td></td><td></td></tr>`;
   const rn = NHL.runs(POOL, S.taken, 60);
   document.getElementById('runline').textContent =
     'ушло / осталось в топ-60: ' +

@@ -780,6 +780,65 @@ function rosters(pool, order){
   return out;
 }
 
+// Прогноз каждой команды на конец драфта: взятые плюс то, чем она добьёт
+// пустые слоты. Сравнивать полуфабрикаты разной длины нельзя — у одной
+// команды на пик больше, и она «выигрывает» категорию просто числом игроков.
+// Добор общий для всех: игрок уходит одной команде и исчезает из пула.
+function projectAll(pool, taken){
+  const by = new Map(pool.map(q => [q.name, q]));
+  const done = Object.keys(taken).length;
+  const byRank = pool.filter(q => !taken[q.name])
+                     .sort((a,b)=>(a.rank_pre??9999)-(b.rank_pre??9999));
+  const teams = Array.from({length: TEAMS}, (_, i) => ({
+    slot: i+1, mine: i+1 === MY_SLOT, name: TEAM_NAMES[i] || ('K'+(i+1)),
+    have: [], fill: [], used: {C:0,LW:0,RW:0,D:0,G:0,BN:0}
+  }));
+  ORDER.slice(0, done).forEach((nm, i) => {
+    const q = by.get(nm); if (!q) return;
+    const t = teams[teamOf(i+1) - 1];
+    const sl = slotFor(q, t.used); if (sl) t.used[sl]++;
+    t.have.push(q);
+  });
+  // «надо» снимаю до добора: после него все слоты закрыты и колонка пустая
+  for (const t of teams){
+    t.need = {};
+    for (const [pos, n] of Object.entries(SLOT_COUNT)) t.need[pos] = Math.max(0, n - t.used[pos]);
+  }
+  const gone = new Set();
+  for (let n = done + 1; n <= TEAMS * ROUNDS; n++){
+    const t = teams[teamOf(n) - 1], u = t.used;
+    const bench = (u.C+u.LW+u.RW+u.D+u.G) >= STARTERS;
+    let pick = null, slot = 'BN';
+    for (const q of byRank){
+      if (gone.has(q.name)) continue;
+      if (bench){ if (q.isG) continue; pick = q; break; }
+      const sl = slotFor(q, u);
+      if (sl === 'BN' || !sl) continue;
+      pick = q; slot = sl; break;
+    }
+    if (!pick) continue;
+    gone.add(pick.name); u[slot]++; t.fill.push(pick);
+  }
+  const cats = [...SK_CATS, ...G_CATS];
+  for (const t of teams){
+    t.roster = [...t.have, ...t.fill];
+    t.sum = {}; t.p = {}; t.rank = {};
+    for (const c of SK_CATS) t.sum[c.k] = catSum(t.roster, c, false);
+    for (const c of G_CATS)  t.sum[c.k] = catSum(t.roster, c, true);
+    const ok = gMinOK(t.roster), b = LG.gk && LG.gk.minOK != null ? LG.gk.minOK : 1;
+    for (const c of SK_CATS) t.p[c.k] = pWin(c, t.sum[c.k], false);
+    for (const c of G_CATS)  t.p[c.k] = ok*(1-b) + ok*b*pWin(c, t.sum[c.k], true);
+    t.p7 = pAtLeast(cats.map(c => t.p[c.k]), NEED);
+    // гибкость: сколько уже взятых полевых закрывают больше одного слота
+    t.multi = t.have.filter(q => !q.isG && q.pos.length > 1).length;
+  }
+  for (const c of cats)
+    [...teams].sort((a,b) => b.sum[c.k] - a.sum[c.k]).forEach((t,i) => { t.rank[c.k] = i+1; });
+  // сколько категорий команда берёт: выше медианы лиги = категория её
+  for (const t of teams) t.takes = cats.filter(c => t.rank[c.k] <= 6).length;
+  return teams;
+}
+
 // Сколько игроков каждой позиции ушло и сколько осталось в верхушке пула.
 // Нужно, чтобы поймать забег: если вратарей разбирают, ждать дороже.
 function runs(pool, taken, depth){
@@ -798,7 +857,7 @@ function runs(pool, taken, depth){
 function setOrder(o){ ORDER = Array.isArray(o) ? o : []; }
 
 const API = {pAtLeast, NEED,TEAMS, MY_SLOT, ROUNDS, MY_PICKS, TEAM_NAMES, SLOTS, SK_CATS, G_CATS, weightOf, catSum, playShare, pDay, gMinOK,
-             prepare, setOrder, scoreAll, profile, pWin, catDelta, simulate, assign, teamOf, rosters, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
+             prepare, setOrder, scoreAll, profile, projectAll, pWin, catDelta, simulate, assign, teamOf, rosters, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
              get LG(){return LG;}};
 if (typeof module !== 'undefined' && module.exports) module.exports = API;
 root.NHL = API;
