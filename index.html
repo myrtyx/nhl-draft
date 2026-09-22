@@ -234,18 +234,20 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
 
 <div id="view-teams" class="wide" hidden>
   <div class="card">
-    <h2>Прогноз команд <span id="runline" style="text-transform:none;letter-spacing:0;color:var(--dim2)"></span></h2>
+    <h2>Статистика команд <span id="runline" style="text-transform:none;letter-spacing:0;color:var(--dim2)"></span></h2>
     <div class="body">
       <div class="tablewrap"><table class="opp proj">
         <thead><tr id="ophead"></tr></thead><tbody id="opbody"></tbody><tfoot id="opfoot"></tfoot>
       </table></div>
-      <p class="note">Прогноз <b>на конец драфта</b>: взятые игроки плюс то, чем команда добьёт
-        пустые слоты — иначе сравнивались бы составы разной длины. Числа сезонные, стартовый
-        состав. Зелёное — выше середины лиги, красное — ниже. «Берёт» — сколько категорий
-        из двенадцати команда держит в верхней половине: семь и больше значит выигранная
-        неделя. Внизу порог шестого места и чего <b>мне</b> до него не хватает — это и есть
-        список того, за чем идти. «Гибк.» — сколько взятых полевых закрывают больше одного
-        слота. Заголовок категории кликается — сортировка.</p>
+      <p class="note">Сумма <b>сезонных проекций Yahoo по уже взятым игрокам</b> — то, что у команды
+        есть прямо сейчас. Ничего не достраивается: любое число тут можно пересчитать руками
+        по карточкам пяти игроков. Зелёное — выше середины, красное — ниже, прочерк — игроков
+        этого типа ещё нет (вратарей взяли не все, и место по ним считается среди тех, у кого
+        вратарь есть). «Пик» — сколько ходов команда сделала: у кого ходом больше, у того и
+        суммы больше. «Берёт» — сколько категорий из двенадцати команда держит в верхней
+        половине <i>на этот момент</i>. Внизу порог верхней половины и чего <b>мне</b> до него
+        не хватает. «Гибк.» — сколько взятых полевых закрывают больше одного слота.
+        Заголовок кликается — сортировка.</p>
     </div>
   </div>
 
@@ -284,7 +286,7 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
 отметки хранятся в этом браузере</footer>
 </div>
 
-<script src="core.js?v=1790087744"></script>
+<script src="core.js?v=1790088133"></script>
 <script>
 const LS = 'nhl-draft-v2';
 let S = {order:[]};
@@ -497,57 +499,67 @@ function render(){
     `шанс взять 7 категорий из 12 · в сумме ${pr.expected.toFixed(1)} · взято ${pr.nSk + pr.nG} из 16
      <span style="color:var(--dim2)">· остальные слоты считаются средними</span>`;
 
-  // Тяжёлое считается только для открытой вкладки: projectAll достраивает
-  // двенадцать составов до конца драфта, и на доске это лишняя работа.
+  // Вкладка «Команды» считается только когда открыта: двенадцать составов на
+  // каждый клик по доске — лишняя работа.
   if (view.tab === 'teams'){
-  const PJ = NHL.projectAll(POOL, S.taken);
+  // Суммы сезонных проекций Yahoo по РЕАЛЬНО взятым игрокам. Добора нет: план
+  // по рангу приписывал Tomashek 2545 вбрасываний при одном центре, и читалось
+  // это как его статистика. Числа ниже пересчитываются руками по карточкам.
+  const PJ = NHL.standings(POOL, S.taken);
   const ALLC = [...NHL.SK_CATS, ...NHL.G_CATS];
-  // сезонные числа: движок считает за матчап, а Fantrax показывает за год
-  const sez = (c,v) => c.k === 'svpct' ? (+v).toFixed(3).replace(/^0/,'') : Math.round(v * 28);
+  const sez = (c,v) => v == null ? '—'
+    : c.k === 'svpct' ? (+v).toFixed(3).replace(/^0/,'') : Math.round(v);
   // заливка по месту: +1 первый, −1 последний. Не по разрыву, а по месту —
   // категория берётся местом, а не тем, на сколько ты оторвался.
-  const heat = r => { const t = (6.5 - r) / 5.5;
+  const heat = r => { if (r == null) return 'transparent';
+    const t = (6.5 - r) / 5.5;
     return t > 0 ? `rgba(58,190,120,${(t*.30).toFixed(2)})` : `rgba(255,107,107,${(-t*.24).toFixed(2)})`; };
-  const thr = {};   // порог шестого места — выше него категория твоя
-  ALLC.forEach(c => { thr[c.k] = PJ.map(t=>t.sum[c.k]).sort((a,b)=>b-a)[5]; });
+  // Порог верхней половины среди тех, у кого категория есть: вратарей взяли
+  // не все, и «шестое из двенадцати» по ним было бы враньём.
+  const thr = {}, thrN = {};
+  ALLC.forEach(c => { const v = PJ.map(t=>t.sum[c.k]).filter(x=>x!=null).sort((a,b)=>b-a);
+    thrN[c.k] = v.length; thr[c.k] = v.length ? v[Math.ceil(v.length/2)-1] : null; });
   const me = PJ.find(t => t.mine);
 
   document.getElementById('ophead').innerHTML =
-    '<th class="l" data-o="name">команда</th>' +
+    '<th class="l" data-o="name">команда</th><th data-o="picks" title="сколько пиков сделано">пик</th>' +
     ALLC.map(c=>`<th data-o="${c.k}" class="${view.opsort===c.k?'sorted':''}"
-       title="${c.n}${c.rel<1?' — категория шумная, вес меньше':''}">${c.n}</th>`).join('') +
-    `<th data-o="takes" class="${view.opsort==='takes'?'sorted':''}" title="категорий в верхней половине">берёт</th>` +
+       title="${c.n} — сумма сезонных проекций Yahoo по взятым${thrN[c.k]<NHL.TEAMS?', есть у '+thrN[c.k]+' из 12':''}">${c.n}</th>`).join('') +
+    `<th data-o="takes" class="${view.opsort==='takes'?'sorted':''}" title="категорий в верхней половине прямо сейчас">берёт</th>` +
     `<th data-o="multi" class="${view.opsort==='multi'?'sorted':''}" title="взятых полевых с двумя и более позициями">гибк.</th>` +
     '<th class="l">надо</th>';
   document.getElementById('ophead').querySelectorAll('th[data-o]').forEach(el => el.onclick = () => {
     view.opsort = el.dataset.o; render(); });
 
   const key = view.opsort;
+  const num = (t,k) => t.sum[k] == null ? -Infinity : t.sum[k];
   const sorted = [...PJ].sort((a,b) =>
-    key === 'name' ? a.slot - b.slot :
-    key === 'takes' ? b.takes - a.takes || b.p7 - a.p7 :
+    key === 'name'  ? a.slot - b.slot :
+    key === 'picks' ? b.picks - a.picks :
+    key === 'takes' ? b.takes - a.takes :
     key === 'multi' ? b.multi - a.multi :
-    b.sum[key] - a.sum[key]);
+    num(b,key) - num(a,key));
   document.getElementById('opbody').innerHTML = sorted.map(t => {
     const need = Object.entries(t.need).filter(([,n])=>n>0)
       .map(([pos,n]) => `${pos}${n>1?'×'+n:''}`).join(' ') || '—';
     return `<tr class="${t.mine?'me':''}">
-      <td class="l">${t.mine?'я':t.name}</td>
+      <td class="l">${t.mine?'я':t.name}</td><td class="c">${t.picks}</td>
       ${ALLC.map(c=>`<td class="c" style="background:${heat(t.rank[c.k])}"
-          title="${c.n}: ${t.rank[c.k]}-е место из 12">${sez(c,t.sum[c.k])}</td>`).join('')}
+          title="${c.n}: ${t.rank[c.k] ? t.rank[c.k]+'-е из '+thrN[c.k] : 'игроков этого типа нет'}">${
+          sez(c,t.sum[c.k])}</td>`).join('')}
       <td class="takes ${t.takes>=7?'win':''}">${t.takes}</td>
       <td class="c">${t.multi||'·'}</td>
       <td class="l need">${need}</td></tr>`;
   }).join('');
   document.getElementById('opfoot').innerHTML =
-    `<tr><td class="l">порог 6-го места</td>${
-      ALLC.map(c=>`<td class="c">${sez(c,thr[c.k])}</td>`).join('')}<td>7</td><td></td><td></td></tr>
-     <tr class="gap"><td class="l">мне не хватает</td>${
+    `<tr><td class="l">порог верхней половины</td><td></td>${
+      ALLC.map(c=>`<td class="c">${sez(c,thr[c.k])}</td>`).join('')}<td></td><td></td><td></td></tr>
+     <tr class="gap"><td class="l">мне не хватает</td><td></td>${
       ALLC.map(c=>{
-        const d = me.sum[c.k] - thr[c.k];
-        const ok = d >= 0;
-        const v = c.k === 'svpct' ? (d>=0?'+':'−') + Math.abs(d).toFixed(3).replace(/^0/,'')
-                                  : (d>=0?'+':'−') + Math.round(Math.abs(d)*28);
+        if (me.sum[c.k] == null || thr[c.k] == null) return '<td class="c">—</td>';
+        const d = me.sum[c.k] - thr[c.k], ok = d >= 0;
+        const v = c.k === 'svpct' ? (ok?'+':'−') + Math.abs(d).toFixed(3).replace(/^0/,'')
+                                  : (ok?'+':'−') + Math.round(Math.abs(d));
         return `<td class="c ${ok?'ok':'miss'}">${v}</td>`;
       }).join('')}<td class="takes ${me.takes>=7?'win':''}">${me.takes}</td><td></td><td></td></tr>`;
   const rn = NHL.runs(POOL, S.taken, 60);

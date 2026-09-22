@@ -743,99 +743,54 @@ function teamOf(n){
   return reversed(r) ? TEAMS - s : s + 1;
 }
 
-// Профиль каждой команды: кто взят, суммы z по категориям, какие слоты пусты.
-function rosters(pool, order){
-  const by = new Map(pool.map(p => [p.name, p]));
-  const out = Array.from({length: TEAMS}, (_, i) => ({
-    slot: i + 1, mine: i + 1 === MY_SLOT, players: [], z: {}
-  }));
-  for (const t of out) for (const c of [...SK_CATS, ...G_CATS]) t.z[c.k] = 0;
-  order.forEach((name, i) => {
-    const p = by.get(name); if (!p) return;
-    const t = out[teamOf(i + 1) - 1];
-    t.players.push(p);
-    for (const c of (p.isG ? G_CATS : SK_CATS)) t.z[c.k] += p.z[c.k];
-  });
-  for (const t of out){
-    t.name = TEAM_NAMES[t.slot-1] || ('K'+t.slot);
-    const {used} = assign(t.players);
-    t.used = used;
-    t.need = {};
-    for (const [pos, n] of Object.entries(SLOT_COUNT)) t.need[pos] = Math.max(0, n - used[pos]);
-  }
-  // Место каждой команды в каждой категории — так видно, кто за что борется.
-  // Команды без игроков нужного типа в расчёт не идут: иначе двенадцать нулей
-  // выстроились бы в фальшивый рейтинг 1…12.
-  for (const t of out){
-    t.nSk = t.players.filter(p=>!p.isG).length;
-    t.nG  = t.players.length - t.nSk;
-    t.rank = {};
-  }
-  for (const c of [...SK_CATS, ...G_CATS]){
-    const isG = G_CATS.includes(c);
-    const live = out.filter(t => isG ? t.nG : t.nSk).sort((a,b)=>b.z[c.k]-a.z[c.k]);
-    live.forEach((t,i)=>{ t.rank[c.k] = i + 1; });
-    for (const t of out) if (!(isG ? t.nG : t.nSk)) t.rank[c.k] = null;
-  }
-  return out;
-}
-
-// Прогноз каждой команды на конец драфта: взятые плюс то, чем она добьёт
-// пустые слоты. Сравнивать полуфабрикаты разной длины нельзя — у одной
-// команды на пик больше, и она «выигрывает» категорию просто числом игроков.
-// Добор общий для всех: игрок уходит одной команде и исчезает из пула.
-function projectAll(pool, taken){
+// Что у команд НАБРАНО НА ДАННЫЙ МОМЕНТ: сумма сезонных проекций Yahoo по
+// реально взятым игрокам. Без добора и без весов состава — эти числа можно
+// пересчитать руками по карточкам игроков, и они обязаны сойтись.
+//
+// Здесь был прогноз на конец драфта: каждая команда достраивалась планом по
+// рангу Yahoo. Он выдавал Tomashek 2545 вбрасываний при одном центре в
+// составе. Команды пикают не по списку, и такая достройка в таблице
+// статистики читается как факт, не будучи им. Прогноз убран.
+function standings(pool, taken){
   const by = new Map(pool.map(q => [q.name, q]));
   const done = Object.keys(taken).length;
-  const byRank = pool.filter(q => !taken[q.name])
-                     .sort((a,b)=>(a.rank_pre??9999)-(b.rank_pre??9999));
   const teams = Array.from({length: TEAMS}, (_, i) => ({
     slot: i+1, mine: i+1 === MY_SLOT, name: TEAM_NAMES[i] || ('K'+(i+1)),
-    have: [], fill: [], used: {C:0,LW:0,RW:0,D:0,G:0,BN:0}
+    have: [], picks: 0, used: {C:0,LW:0,RW:0,D:0,G:0,BN:0}
   }));
   ORDER.slice(0, done).forEach((nm, i) => {
-    const q = by.get(nm); if (!q) return;
     const t = teams[teamOf(i+1) - 1];
+    t.picks++;
+    const q = by.get(nm); if (!q) return;
     const sl = slotFor(q, t.used); if (sl) t.used[sl]++;
     t.have.push(q);
   });
-  // «надо» снимаю до добора: после него все слоты закрыты и колонка пустая
+  const cats = [...SK_CATS, ...G_CATS];
   for (const t of teams){
     t.need = {};
     for (const [pos, n] of Object.entries(SLOT_COUNT)) t.need[pos] = Math.max(0, n - t.used[pos]);
-  }
-  const gone = new Set();
-  for (let n = done + 1; n <= TEAMS * ROUNDS; n++){
-    const t = teams[teamOf(n) - 1], u = t.used;
-    const bench = (u.C+u.LW+u.RW+u.D+u.G) >= STARTERS;
-    let pick = null, slot = 'BN';
-    for (const q of byRank){
-      if (gone.has(q.name)) continue;
-      if (bench){ if (q.isG) continue; pick = q; break; }
-      const sl = slotFor(q, u);
-      if (sl === 'BN' || !sl) continue;
-      pick = q; slot = sl; break;
-    }
-    if (!pick) continue;
-    gone.add(pick.name); u[slot]++; t.fill.push(pick);
-  }
-  const cats = [...SK_CATS, ...G_CATS];
-  for (const t of teams){
-    t.roster = [...t.have, ...t.fill];
-    t.sum = {}; t.p = {}; t.rank = {};
-    for (const c of SK_CATS) t.sum[c.k] = catSum(t.roster, c, false);
-    for (const c of G_CATS)  t.sum[c.k] = catSum(t.roster, c, true);
-    const ok = gMinOK(t.roster), b = LG.gk && LG.gk.minOK != null ? LG.gk.minOK : 1;
-    for (const c of SK_CATS) t.p[c.k] = pWin(c, t.sum[c.k], false);
-    for (const c of G_CATS)  t.p[c.k] = ok*(1-b) + ok*b*pWin(c, t.sum[c.k], true);
-    t.p7 = pAtLeast(cats.map(c => t.p[c.k]), NEED);
-    // гибкость: сколько уже взятых полевых закрывают больше одного слота
+    const gs = t.have.filter(q => q.isG), sk = t.have.filter(q => !q.isG);
+    t.nG = gs.length; t.nSk = sk.length;
+    t.sum = {}; t.rank = {};
+    for (const c of SK_CATS) t.sum[c.k] = sk.length ? sk.reduce((v,q) => v + (q[c.k]||0), 0) : null;
+    const sv = gs.reduce((v,q)=>v+(q.sv||0),0), sa = gs.reduce((v,q)=>v+(q.sa||0),0);
+    for (const c of G_CATS) t.sum[c.k] = !gs.length ? null
+      : c.k === RATIO ? (sa ? sv/sa : null) : gs.reduce((v,q) => v + (q[c.k]||0), 0);
     t.multi = t.have.filter(q => !q.isG && q.pos.length > 1).length;
   }
-  for (const c of cats)
-    [...teams].sort((a,b) => b.sum[c.k] - a.sum[c.k]).forEach((t,i) => { t.rank[c.k] = i+1; });
-  // сколько категорий команда берёт: выше медианы лиги = категория её
-  for (const t of teams) t.takes = cats.filter(c => t.rank[c.k] <= 6).length;
+  // Место — только среди тех, у кого игроки этого типа вообще есть: иначе
+  // двенадцать нулей выстраиваются в фальшивый рейтинг 1…12.
+  for (const t of teams) t.inHalf = {};
+  for (const c of cats){
+    const live = teams.filter(t => t.sum[c.k] != null).sort((a,b) => b.sum[c.k] - a.sum[c.k]);
+    live.forEach((t,i) => { t.rank[c.k] = i+1; });
+    for (const t of teams) if (t.sum[c.k] == null) t.rank[c.k] = null;
+    // Верхняя половина считается от числа команд, у которых категория вообще
+    // есть: вратарей взяли не все, и «топ-6 из 12» там было бы неправдой.
+    const half = Math.ceil(live.length / 2);
+    for (const t of teams) t.inHalf[c.k] = t.rank[c.k] != null && t.rank[c.k] <= half;
+  }
+  for (const t of teams) t.takes = cats.filter(c => t.inHalf[c.k]).length;
   return teams;
 }
 
@@ -894,7 +849,7 @@ function runs(pool, taken, depth){
 function setOrder(o){ ORDER = Array.isArray(o) ? o : []; }
 
 const API = {pAtLeast, NEED,TEAMS, MY_SLOT, ROUNDS, MY_PICKS, TEAM_NAMES, SLOTS, SK_CATS, G_CATS, weightOf, catSum, playShare, pDay, gMinOK,
-             prepare, setOrder, scoreAll, profile, projectAll, nextPicks, pWin, catDelta, simulate, assign, teamOf, rosters, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
+             prepare, setOrder, scoreAll, profile, standings, nextPicks, pWin, catDelta, simulate, assign, teamOf, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
              get LG(){return LG;}};
 if (typeof module !== 'undefined' && module.exports) module.exports = API;
 root.NHL = API;
