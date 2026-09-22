@@ -260,6 +260,9 @@ const ratioOf = gs => {
 // Сколько игроков каждой позиции реально нужно лиге: слотов × 12 команд.
 // Отсюда берётся уровень «кто займёт этот слот, если я его не усилю».
 const SLOT_COUNT = {C:2, LW:2, RW:2, D:4, G:2};
+// Скамейка: 4 места. Без этого предела модель набирала по семь защитников —
+// лишние просто садились на лавку, которая считалась бездонной.
+const BENCH = 4;
 const SK_DEPTH = 250, G_DEPTH = 40;   // глубина пула для нормировки
 const SK_PER_TEAM = 14, G_PER_TEAM = 2;
 
@@ -322,7 +325,7 @@ function simulate(all, jitter){
         if (gone.has(p.name)) continue;
         if (bench){ if (p.isG) continue; pick = p; break; }   // скамейку добирают полевыми
         const sl = slotFor(p, t.used);
-        if (sl === 'BN') continue;
+        if (sl === 'BN' || !sl) continue;
         pick = p; slot = sl; break;
       }
       if (!pick) continue;
@@ -383,9 +386,10 @@ function slotBase(teams){
 
 // какой слот займёт игрок: лучший свободный из его позиций
 function slotFor(p, used){
-  if (p.isG) return used.G < SLOT_COUNT.G ? 'G' : 'BN';
+  const bn = () => (used.BN || 0) < BENCH ? 'BN' : null;   // null = места нет вовсе
+  if (p.isG) return used.G < SLOT_COUNT.G ? 'G' : bn();
   for (const pos of p.pos) if ((used[pos]||0) < (SLOT_COUNT[pos]||0)) return pos;
-  return 'BN';
+  return bn();
 }
 
 function prepare(d){
@@ -442,7 +446,7 @@ function seatIn(p, at, taken, seen){
   for (const sl of (p.isG ? ['G'] : p.pos)){
     if (seen.has(sl)) continue;
     seen.add(sl);
-    for (const [q, qs] of at){
+    for (const [q, qs] of [...at]){   // копия: at.set ниже дописывает в конец
       if (qs !== sl || q === p) continue;
       at.delete(q);
       if (seatIn(q, at, taken, seen)){ at.set(p, sl); return true; }
@@ -477,7 +481,7 @@ function assign(mine){
 
 // Скамейка: 4 места. Третий вратарь садится сюда же, поэтому за него
 // платишь одним полевым — это учитывается само собой.
-function benchFree(used){ return Math.max(0, 4 - used.BN); }
+function benchFree(used){ return Math.max(0, BENCH - used.BN); }
 
 // Чем реально закроется пустой слот, если не брать игрока прямо сейчас.
 // Раньше сюда подставлялся средний стартер лиги — и слот выходил бесплатно
@@ -500,11 +504,11 @@ function futureFill(pool, taken, used){
   ORDER.slice(0, done).forEach((nm, i) => {
     const q = by.get(nm); if (!q) return;
     const u = st[teamOf(i + 1) - 1];
-    u[slotFor(q, u)]++;
+    const sl = slotFor(q, u); if (sl) u[sl]++;
   });
   if (!ORDER.length) for (const nm of Object.keys(taken)){      // порядка нет — всё моё
     const q = by.get(nm); if (!q) continue;
-    const u = st[MY_SLOT - 1]; u[slotFor(q, u)]++;
+    const u = st[MY_SLOT - 1]; const sl = slotFor(q, u); if (sl) u[sl]++;
   }
 
   const gone = new Set(), out = [], byPos = {};
@@ -516,7 +520,7 @@ function futureFill(pool, taken, used){
       if (gone.has(q.name)) continue;
       if (bench){ if (q.isG) continue; pick = q; break; }
       const sl = slotFor(q, u);
-      if (sl === 'BN') continue;
+      if (sl === 'BN' || !sl) continue;
       pick = q; slot = sl; break;
     }
     if (!pick) continue;
@@ -555,7 +559,11 @@ function profile(pool, taken){
   const a = gMinOK(roster), b = LG.gk && LG.gk.minOK != null ? LG.gk.minOK : 1;
   for (const c of G_CATS) { p[c.k] = a * (1 - b) + a * b * pWin(c, z[c.k], true); exp += p[c.k]; }
   const nG = mine.filter(x=>x.isG).length;
-  return {z, p, pFull: p, expected: exp, used, at, free, fill, gs, roster,
+  // Главное число — не сумма категорий, а шанс взять большинство. Неделя
+  // выигрывается по счёту 7:5, и команда с ровными 6.2 в сумме может брать
+  // семёрку реже, чем команда с тем же средним, но без провалов.
+  const p7 = pAtLeast(SK_CATS.concat(G_CATS).map(c => p[c.k]), NEED);
+  return {z, p, pFull: p, expected: exp, p7, used, at, free, fill, gs, roster,
           nSk: mine.length - nG, nG};
 }
 
@@ -598,7 +606,23 @@ function bestSlot(p, pr){
 
 function catDelta(p, pr){
   const slot = bestSlot(p, pr);
-  const alt  = pr.fill.byPos[slot] || null;
+  // Кого он собой заменяет. Если слот уже полон своими, добор туда никого не
+  // ставит — и раньше игрок вписывался СВЕРХ состава, семнадцатым. Центры от
+  // этого раздувались: место занято, а цена считалась так, будто он пришёл
+  // бесплатно. Состав всегда 16, поэтому кто-то обязан уйти: слабейший из
+  // тех, кем я собирался добить остаток.
+  let alt = pr.fill.byPos[slot] || null;
+  if (!alt){
+    // Вытесняю со СКАМЕЙКИ, а не с чужого слота: если убрать запланированного
+    // защитника, слот D останется пустым и старт развалится. Новичок входит в
+    // старт, кто-то сдвигается, и по цепочке с лавки выпадает слабейший.
+    let worst = null;
+    for (const f of pr.fill.list){
+      if (f.pos !== 'BN' || f.p === p) continue;
+      if (!worst || (f.p.rank_pre ?? 9999) > (worst.rank_pre ?? 9999)) worst = f.p;
+    }
+    alt = worst;
+  }
   // Убираю и того, кем слот закрылся бы, и самого p: он может уже стоять в
   // прогнозе добора, и тогда concat вписывал его в состав ВТОРЫМ экземпляром —
   // одним объектом, который в weightOf считался за двух конкурентов и душил
@@ -614,11 +638,36 @@ function catDelta(p, pr){
   return out;
 }
 
+// Неделя выигрывается по большинству: нужно взять 7 категорий из 12, а не
+// набрать побольше в сумме. Разница не теоретическая: категория на 68% уже
+// почти моя, и лить в неё ещё — трата пика, тогда как четыре вратарские
+// висят на 46-48% и берутся все разом. Сумма этого не видит, а свёртка видит.
+const NEED = 7;
+function pAtLeast(ps, need){
+  let v = [1];
+  for (const q of ps){
+    const n = new Array(v.length + 1).fill(0);
+    for (let i = 0; i < v.length; i++){ n[i] += v[i] * (1 - q); n[i+1] += v[i] * q; }
+    v = n;
+  }
+  let s = 0;
+  for (let k = need; k < v.length; k++) s += v[k];
+  return s;
+}
+const ALL_CATS = () => SK_CATS.concat(G_CATS);
+
 function scoreAll(pool, taken){
   const pr = profile(pool, taken);
+  const cats = ALL_CATS();
+  const base = pAtLeast(cats.map(c => pr.p[c.k]), NEED);
   for (const p of pool){
     p.slot = bestSlot(p, pr);
-    const s = catDelta(p, pr).reduce((acc,x)=>acc + x.rel*x.d, 0);
+    const d = catDelta(p, pr);
+    const ps = cats.map(c => {
+      const x = d.find(y => y.k === c.k);
+      return Math.max(0, Math.min(1, pr.p[c.k] + (x ? x.d : 0)));
+    });
+    const s = pAtLeast(ps, NEED) - base;
     // ×100 — чтобы читалось как «сотые доли категории»
     // бонус за гибкость всегда в плюс: умножение делало слабого игрока с двумя
     // позициями ещё хуже слабого с одной, а нужно ровно наоборот
@@ -748,7 +797,7 @@ function runs(pool, taken, depth){
 
 function setOrder(o){ ORDER = Array.isArray(o) ? o : []; }
 
-const API = {TEAMS, MY_SLOT, ROUNDS, MY_PICKS, TEAM_NAMES, SLOTS, SK_CATS, G_CATS, weightOf, catSum, playShare, pDay, gMinOK,
+const API = {pAtLeast, NEED,TEAMS, MY_SLOT, ROUNDS, MY_PICKS, TEAM_NAMES, SLOTS, SK_CATS, G_CATS, weightOf, catSum, playShare, pDay, gMinOK,
              prepare, setOrder, scoreAll, profile, pWin, catDelta, simulate, assign, teamOf, rosters, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
              get LG(){return LG;}};
 if (typeof module !== 'undefined' && module.exports) module.exports = API;

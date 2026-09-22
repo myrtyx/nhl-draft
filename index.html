@@ -148,7 +148,7 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
       <div class="body">
         <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:10px">
           <span class="big" id="expNum">—</span>
-          <span class="sub" id="expSub">категорий из 12 · нужно 7</span>
+          <span class="sub" id="expSub">шанс взять 7 категорий из 12</span>
         </div>
         <div class="cats" id="cats"></div>
         <p class="note">Полоса — вероятность выиграть категорию у средней команды
@@ -249,7 +249,9 @@ const SEED = [
  ['Logan Thompson','X'],['Kyle Connor','X'],['Mitch Marner','X'],
  ['Matthew Schaefer','X'],['Moritz Seider','ME'],['Jakob Chychrun','X'],
  // R4 — снова прямым ходом, с первого слота
- ['Igor Shesterkin','X'],['Mika Zibanejad','ME'],
+ ['Igor Shesterkin','X'],['Mika Zibanejad','ME'],['William Nylander','X'],
+ ['Jeremy Swayman','X'],['Mark Scheifele','X'],['Sebastian Aho','X'],
+ ['Jake Guentzel','X'],
 ];
 const nextTeam = () => {
   const n = S.order.length + 1;
@@ -375,12 +377,12 @@ function render(){
     NHL.SK_CATS.map(catRow).join('') + '<div style="grid-column:1/-1;height:7px"></div>' +
     NHL.G_CATS.map(catRow).join('');
   const en = document.getElementById('expNum');
-  en.textContent = pr.expected.toFixed(1);
+  en.textContent = (pr.p7 * 100).toFixed(0) + '%';
   // пока набрано мало игроков, «темп» скачет и ничего не предсказывает —
   // не даём принять раннюю цифру за прогноз сезона
-  en.className = 'big' + (pr.expected < 7 ? ' low' : '');
+  en.className = 'big' + (pr.p7 < 0.5 ? ' low' : '');
   document.getElementById('expSub').innerHTML =
-    `категорий из 12 · нужно 7 · взято ${pr.nSk + pr.nG} из 16
+    `шанс взять 7 категорий из 12 · в сумме ${pr.expected.toFixed(1)} · взято ${pr.nSk + pr.nG} из 16
      <span style="color:var(--dim2)">· остальные слоты считаются средними</span>`;
 
   // соперники
@@ -429,9 +431,9 @@ function render(){
   document.getElementById('explain').innerHTML =
     `<b>ЦЕНА</b> — насколько игрок поднимает шанс выиграть категории
      <i>по сравнению с тем, кого я возьму следующим пиком</i>. Это и есть ответ «брать сейчас или ждать».<br><br>
-     <b>vs РАУНД</b> — насколько он лучше <i>среднего игрока на своём слоте</i>:
-     защитник сравнивается с защитником, центр — с центром. Слот D форвардом не закрыть,
-     поэтому штрафовать защитника за то, что он не забивает, неправильно.<br><br>
+     <b>vs РАУНД</b> — на сколько он поднимает <i>шанс взять 7 категорий из 12</i>.
+     Именно 7, а не сумму: категория на 68% уже почти моя, и лить в неё ещё — трата пика,
+     тогда как четыре вратарские висят под 50% и берутся все разом.<br><br>
      До пика #${sc.next || '—'} уйдёт ещё ${sc.gap} игроков. Дождутся, вероятно:
      <b>G</b> ${nm('G')} · <b>D</b> ${nm('D')} · <b>F</b> ${nm('F')}.<br><br>
      Отмечай пики подряд кнопкой <b>+</b> — чья команда, считается по номеру пика.`;
