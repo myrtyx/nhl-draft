@@ -747,6 +747,16 @@ function teamOf(n){
 // сыгранных пиках, а не «средней ошибкой ранга»: при σ=9 из тех, кому модель
 // давала 0-10% дожить, доживали 26%, а из «90-100%» — только 90%. При σ=24
 // средняя ошибка обещания 3.7 п.п. на 1400 наблюдениях. Проверка — calib2.js.
+// Проекции Yahoo не знают ни травм, ни отстранений, ни холдаутов: игрок числится
+// живым, висит наверху доски и портит любой расчёт — движок планирует состав с
+// тем, кого взять нельзя. Такие вычёркиваются из пула целиком. Список живёт
+// здесь, а не в сайте и не в pick.js, чтобы доска и консоль считали по одному.
+const OUT = [['Connor Hellebuyck','отстранён «Джетс»']];
+const dropOut = (pool, extra) => {
+  const out = new Set([...OUT.map(x => x[0]), ...(extra || [])]);
+  return pool.filter(p => !out.has(p.name));
+};
+
 const SD_RANK = 24;
 
 // Кто доживёт до моих ближайших ходов. Имя конкретного чужого пика назвать
@@ -870,7 +880,7 @@ function runs(pool, taken, depth){
 function setOrder(o){ ORDER = Array.isArray(o) ? o : []; }
 
 const API = {pAtLeast, NEED,TEAMS, MY_SLOT, ROUNDS, MY_PICKS, TEAM_NAMES, SLOTS, SK_CATS, G_CATS, weightOf, catSum, playShare, pDay, gMinOK,
-             prepare, setOrder, scoreAll, profile, standings, survive, SD_RANK, pWin, catDelta, simulate, assign, teamOf, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
+             prepare, dropOut, OUT, setOrder, scoreAll, profile, standings, survive, SD_RANK, pWin, catDelta, simulate, assign, teamOf, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
              get LG(){return LG;}};
 if (typeof module !== 'undefined' && module.exports) module.exports = API;
 root.NHL = API;
