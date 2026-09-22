@@ -20,6 +20,9 @@
 'use strict';
 
 const TEAMS = 12, MY_SLOT = 2, ROUNDS = 16;
+// Порядок колонок на доске Fantrax. myrtyx второй — отсюда и MY_SLOT.
+const TEAM_NAMES = ['Bacha2201','myrtyx','sergei87','TOMIKS','Kris282828','Tomashek',
+                    'AleksandrsZ','Dias','unwill','vlzsy','BATONS BAKERY','klavs'];
 const MY_PICKS = [];
 for (let r = 1; r <= ROUNDS; r++)
   MY_PICKS.push((r - 1) * TEAMS + (r % 2 ? MY_SLOT : TEAMS - MY_SLOT + 1));
@@ -320,6 +323,7 @@ function rosters(pool, order){
     for (const c of (p.isG ? G_CATS : SK_CATS)) t.z[c.k] += p.z[c.k];
   });
   for (const t of out){
+    t.name = TEAM_NAMES[t.slot-1] || ('K'+t.slot);
     const {used} = assign(t.players);
     t.used = used;
     t.need = {};
@@ -357,7 +361,7 @@ function runs(pool, taken, depth){
   return out;
 }
 
-const API = {TEAMS, MY_SLOT, ROUNDS, MY_PICKS, SLOTS, SK_CATS, G_CATS, MULTI_BONUS,
+const API = {TEAMS, MY_SLOT, ROUNDS, MY_PICKS, TEAM_NAMES, SLOTS, SK_CATS, G_CATS, MULTI_BONUS,
              prepare, scoreAll, profile, pWin, catDelta, assign, teamOf, rosters, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
              get LG(){return LG;}};
 if (typeof module !== 'undefined' && module.exports) module.exports = API;

@@ -49,7 +49,8 @@ th,td{padding:5px 7px;text-align:right;white-space:nowrap;border-bottom:1px soli
 th{position:sticky;top:0;background:var(--panel2);color:var(--dim);font-weight:600;
   cursor:pointer;user-select:none;z-index:2;font-size:11px}
 th:hover{color:var(--tx)} th.sorted{color:var(--acc)}
-.who{font-size:10px;color:var(--dim2);letter-spacing:.3px}
+.who{font-size:9px;color:var(--dim2);letter-spacing:.2px;max-width:56px;
+  display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}
 .who.me{color:var(--acc);font-weight:700}
 .slotmark{margin-left:6px;padding:0 4px;border:1px solid var(--ln);border-radius:3px;
   font-size:9px;color:var(--dim2)}
@@ -225,7 +226,7 @@ const SEED = [
 const nextTeam = () => {
   const n = S.order.length + 1;
   return n > NHL.TEAMS * NHL.ROUNDS ? '—'
-       : (NHL.teamOf(n) === NHL.MY_SLOT ? 'меня' : 'K' + NHL.teamOf(n));
+       : (NHL.teamOf(n) === NHL.MY_SLOT ? 'меня' : NHL.TEAM_NAMES[NHL.teamOf(n)-1]);
 };
 const seed = () => { S.order = SEED.map(x => Array.isArray(x) ? x[0] : x); };
 
@@ -282,7 +283,7 @@ function render(){
       <td class="l"><span class="pos ${p.pos.length>1?'multi':''}">${p.pos.join('/')}</span></td>
       ${cols().map(c=>`<td class="num ${c.k==='vorp'?'v '+(p.vorp>0?'pos_':'neg'):''}">${fmt(p[c.k],c.k)}</td>`).join('')}
       <td class="act">${st ? `<span class="who ${st==='ME'?'me':''}">${
-          st==='ME' ? 'я' : 'K'+NHL.teamOf(S.order.indexOf(p.name)+1)}</span>`
+          st==='ME' ? 'я' : NHL.TEAM_NAMES[NHL.teamOf(S.order.indexOf(p.name)+1)-1]}</span>`
         : `<button class="mini m" data-n="${encodeURIComponent(p.name)}"
              title="пик #${S.order.length+1} → ${nextTeam()}">+</button>`}
       </td></tr>`;
@@ -344,7 +345,7 @@ function render(){
     const need = Object.entries(t.need).filter(([,n])=>n>0)
       .map(([pos,n]) => `${pos}${n>1?'×'+n:''}`).join(' ') || '—';
     return `<tr class="${t.mine?'me':''}">
-      <td class="l">${t.mine?'я (K'+t.slot+')':'K'+t.slot}</td>
+      <td class="l">${t.mine?'я':t.name}</td>
       <td class="l">${t.players.length}</td>
       ${ALLC.map(c=>{
         const r = t.rank[c.k];
