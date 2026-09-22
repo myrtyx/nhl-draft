@@ -50,36 +50,20 @@ function solo(namesToTest){
 }
 
 // --- 2. дожитие: кого разберут раньше, чем дойдёт мой следующий пик ---------
-// Шум σ=9 — измеренная ошибка ранга Yahoo против реальных пиков этой лиги.
-function live(watch, N = 400, SD = 9){
-  const mine = C.MY_PICKS.filter(n => n > SEED.length);
-  const marks = mine.slice(0, 3);
-  const alive = {}; watch.forEach(w => alive[w] = marks.map(() => 0));
-  const last = marks[marks.length-1];
-  for (let it = 0; it < N; it++){
-    const noise = {}; POOL.forEach(p => noise[p.name] = SD*gauss());
-    const t = {...TAKEN}, o = [...SEED];
-    for (let n = SEED.length+1; n <= last; n++){
-      const own = o.filter((nm,i) => C.teamOf(i+1) === C.teamOf(n)).map(nm => by.get(nm)).filter(Boolean);
-      const { used } = C.assign(own);
-      const cand = POOL.filter(p => !t[p.name])
-        .sort((a,b) => ((a.rank_pre??9e9)+noise[a.name]) - ((b.rank_pre??9e9)+noise[b.name]));
-      let pick = cand[0];
-      for (const p of cand){
-        if (p.isG){ if (used.G < C.SLOT_COUNT.G){ pick = p; break; } continue; }
-        if (p.pos.some(x => (used[x]||0) < (C.SLOT_COUNT[x]||0))){ pick = p; break; }
-      }
-      const k = marks.indexOf(n);
-      if (k >= 0) watch.forEach(w => { if (!t[w]) alive[w][k]++; });
-      t[pick.name] = C.teamOf(n) === C.MY_SLOT ? 'ME' : 'X'; o.push(pick.name);
-    }
-  }
-  console.log('\nДОЖИТИЕ (' + N + ' прогонов, шум ранга σ=' + SD + ')\n');
+// Считает движок (`C.survive`), а не этот файл: две реализации одного и того
+// же шума уже разошлись на 6 п.п. по Кросби. Здесь только печать.
+function live(watch, N = 400){
+  const marks = C.MY_PICKS.filter(n => n > SEED.length).slice(0, 3);
+  const res = C.survive(POOL, TAKEN, marks, N);
+  const idx = new Map(res.map(r => [r.p.name, r]));
+  console.log('\nДОЖИТИЕ (' + N + ' прогонов, шум ранга σ=' + C.SD_RANK + ')\n');
   console.log('игрок                 ранг' + marks.map(m => ('до #'+m).padStart(8)).join(''));
-  watch.map(w => ({ w, a: alive[w] })).sort((x,y) => y.a[y.a.length-1] - x.a[x.a.length-1])
-    .forEach(r => console.log(r.w.padEnd(22) + String(by.get(r.w) ? by.get(r.w).rank_pre : '—').padStart(4) +
-      r.a.map(c => ((100*c/N).toFixed(0)+'%').padStart(8)).join('')));
-  console.log('\nПравило: среди кандидатов с близким вкладом бери того, кто до следующего пика не доживёт.');
+  watch.map(w => idx.get(w)).filter(Boolean)
+    .sort((x,y) => y.s[y.s.length-1] - x.s[x.s.length-1])
+    .forEach(r => console.log(r.p.name.padEnd(22) + String(r.p.rank_pre ?? '—').padStart(4) +
+      r.s.map(c => ((100*c).toFixed(0)+'%').padStart(8)).join('')));
+  console.log('\nПроверено назад по 59 сыгранным пикам: обещано 72% дожития — сбылось 73%,');
+  console.log('средняя ошибка обещания 3.7 п.п. Точное имя чужого пика не предсказуемо (17%).');
 }
 
 // --- 3. пара: два ближайших пика вместе ------------------------------------

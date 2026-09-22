@@ -137,16 +137,11 @@ nav.tabs .tab .n{font:600 10px/1 var(--mono);opacity:.65;margin-left:5px}
 .board .cell{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:4px 6px;
   overflow:hidden;white-space:nowrap;text-overflow:ellipsis;min-height:34px}
 .board .cell.me{background:#1f3b2a;border-color:#2f5c41}
-.board .cell.soon{background:#241f14;border-color:#4a3a1c;border-style:dashed}
 .board .cell.empty{background:transparent;border-style:dashed;border-color:#232a36}
 .board .cell .nm{display:block;overflow:hidden;text-overflow:ellipsis}
 .board .cell .sb{display:block;font:600 9px/1.3 var(--mono);color:var(--dim2)}
-.board .cell.soon .sb{color:#c9a227}
-.soonlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;font-size:12px}
-.soonlist .s{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:6px 9px}
-.soonlist .s.me{border-color:var(--acc);background:#132030}
-.soonlist .s .t{font:600 10px/1 var(--mono);color:var(--dim2)}
-.soonlist .s.me .t{color:var(--acc)}
+.board .cell.next{border-color:var(--acc);border-style:dashed}
+.board .cell.next .sb{color:var(--acc)}
 .note{color:var(--dim);font-size:11px;line-height:1.5;margin:8px 0 0}
 .note b{color:var(--tx)}
 .row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
@@ -263,12 +258,18 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
 
 <div id="view-picks" class="wide" hidden>
   <div class="card">
-    <h2>Кто пикнет дальше</h2>
+    <h2>Доживёт до моего хода</h2>
     <div class="body">
-      <div class="soonlist" id="soon"></div>
-      <p class="note">Прогноз по рангу Yahoo с учётом того, какие слоты у команды пусты.
-        Модель грубая — на прошедших пиках этой лиги средняя ошибка <b>8.8 пика</b>, — но
-        отвечает на нужный вопрос: доживёт ли игрок до моего хода. Мои пики подсвечены.</p>
+      <div class="tablewrap"><table class="opp">
+        <thead><tr id="svhead"></tr></thead><tbody id="svbody"></tbody>
+      </table></div>
+      <p class="note">Имя конкретного чужого пика назвать нельзя: обратная проверка по 59 уже
+        сыгранным пикам этой лиги даёт <b>17% попаданий</b> — пять названных из шести мимо.
+        Поэтому здесь не «кто пикнет», а единственное, что от прогноза вообще нужно:
+        <b>доживёт ли игрок до моего хода</b>. Лига разыгрывается 300 раз со случайным
+        отклонением от ранга Yahoo (σ=24). Это число подобрано калибровкой на тех же 59 пиках:
+        модель обещала 72% дожития — сбылось 73%, средняя ошибка обещания 3.7 п.п.
+        Зелёное — дождётся, красное — разберут.</p>
     </div>
   </div>
 
@@ -276,8 +277,8 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
     <h2>Лента драфта</h2>
     <div class="body">
       <div class="tablewrap"><div class="board" id="board"></div></div>
-      <p class="note">Раунды сверху вниз, змейкой. Зелёное — моё, пунктир с жёлтым —
-        предсказание, а не факт.</p>
+      <p class="note">Раунды сверху вниз, змейкой. Зелёное — мои пики, голубой пунктир — мои
+        ходы впереди. Будущие чужие пики пустые: имена там были бы выдумкой, см. 17% выше.</p>
     </div>
   </div>
 </div>
@@ -286,7 +287,7 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
 отметки хранятся в этом браузере</footer>
 </div>
 
-<script src="core.js?v=1790088133"></script>
+<script src="core.js?v=1790089406"></script>
 <script>
 const LS = 'nhl-draft-v2';
 let S = {order:[]};
@@ -584,7 +585,7 @@ function render(){
   }).join('');
   }
 
-  // вкладка «Пики»: ближайшие ходы и лента всей доски
+  // вкладка «Пики»: дожитие до моих ходов и лента того, что уже случилось
   if (view.tab === 'picks'){
     const byName = new Map(POOL.map(q => [q.name, q]));
     const posOf = q => (q.isG ? ['G'] : q.pos).join('/');
@@ -592,33 +593,38 @@ function render(){
     // с инициалом читается с одного взгляда.
     const short = nm => { const w = nm.split(' ');
       return w.length > 1 ? w[0][0] + '. ' + w.slice(1).join(' ') : nm; };
-
-    const soonN = NHL.nextPicks(POOL, S.taken, 14);
-    document.getElementById('soon').innerHTML = soonN.map(x => {
-      const left = Object.entries(x.need).filter(([,n]) => n > 0)
-        .map(([pos,n]) => pos + (n>1 ? '×'+n : '')).join(' ');
-      return `<div class="s ${x.mine ? 'me' : ''}">
-        <span class="t">#${x.n} · ${x.mine ? 'Я' : x.name}</span>
-        <div>${x.p.name} <span class="pos" style="color:var(--dim2)">${posOf(x.p)}</span></div>
-        <span class="t">${x.slot === 'BN' ? 'на лавку' : 'слот ' + x.slot}${
-          left ? ' · осталось ' + left : ''}</span></div>`;
-    }).join('');
-
     const dn = S.order.length;
-    const pred = new Map(soonN.map(x => [x.n, x]));
-    const lastN = Math.min(NHL.TEAMS * NHL.ROUNDS, dn + soonN.length);
-    const lastR = Math.max(1, Math.ceil(lastN / NHL.TEAMS));
+    const marks = NHL.MY_PICKS.filter(n => n > dn).slice(0, 3);
+
+    if (marks.length){
+      const sv = NHL.survive(POOL, S.taken, marks, 300);
+      const col = v => v >= .5 ? `rgba(58,190,120,${((v-.5)*.6).toFixed(2)})`
+                               : `rgba(255,107,107,${((.5-v)*.5).toFixed(2)})`;
+      document.getElementById('svhead').innerHTML =
+        '<th class="l">игрок</th><th class="l">поз</th><th>ранг</th>' +
+        marks.map(m => `<th title="мой пик #${m}">до #${m}</th>`).join('');
+      document.getElementById('svbody').innerHTML = sv.slice(0, 30).map(r => `
+        <tr><td class="l">${r.p.name}</td>
+            <td class="l"><span class="pos">${posOf(r.p)}</span></td>
+            <td class="c">${r.p.rank_pre ?? '—'}</td>
+            ${r.s.map(v => `<td class="c" style="background:${col(v)}">${(100*v).toFixed(0)}%</td>`).join('')}
+        </tr>`).join('');
+    }
+
+    // Лента: только то, что случилось. Будущие чужие ячейки пустые — имена в
+    // них угадываются в 17% случаев, и ставить их рядом с фактом нельзя.
+    const lastR = Math.max(1, Math.min(NHL.ROUNDS, Math.ceil((dn + 12) / NHL.TEAMS)));
     let bd = '<div class="rd"></div>' + NHL.TEAM_NAMES.map((nm, i) =>
       `<div class="hd" title="${nm}">${i + 1 === NHL.MY_SLOT ? 'Я' : nm}</div>`).join('');
     for (let r = 1; r <= lastR; r++){
       bd += `<div class="rd">${r}</div>`;
       // змейка: номер пика раскладываю по колонкам той же функцией, что и движок
-      const col = new Array(NHL.TEAMS);
+      const col2 = new Array(NHL.TEAMS);
       for (let k = 0; k < NHL.TEAMS; k++){
         const n = (r - 1) * NHL.TEAMS + k + 1;
-        col[NHL.teamOf(n) - 1] = n;
+        col2[NHL.teamOf(n) - 1] = n;
       }
-      bd += col.map(n => {
+      bd += col2.map(n => {
         const mine = NHL.teamOf(n) === NHL.MY_SLOT;
         if (n <= dn){
           const q = byName.get(S.order[n - 1]);
@@ -626,11 +632,8 @@ function render(){
             <span class="nm">${q ? short(q.name) : '—'}</span>
             <span class="sb">${n}${q ? ' · ' + posOf(q) : ''}</span></div>`;
         }
-        const x = pred.get(n);
-        if (!x) return `<div class="cell empty"><span class="sb">${n}</span></div>`;
-        return `<div class="cell soon" title="прогноз, не факт · пик #${n} · ${x.p.name}">
-          <span class="nm">${short(x.p.name)}</span>
-          <span class="sb">${n} · ${posOf(x.p)}</span></div>`;
+        return `<div class="cell empty ${mine ? 'next' : ''}"><span class="sb">${n}${
+          mine ? ' · мой' : ''}</span></div>`;
       }).join('');
     }
     document.getElementById('board').innerHTML = bd;

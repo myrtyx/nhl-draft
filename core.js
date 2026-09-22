@@ -743,6 +743,56 @@ function teamOf(n){
   return reversed(r) ? TEAMS - s : s + 1;
 }
 
+// Шум ранга для прогнозов чужих пиков. σ=24 подобран КАЛИБРОВКОЙ на 59
+// сыгранных пиках, а не «средней ошибкой ранга»: при σ=9 из тех, кому модель
+// давала 0-10% дожить, доживали 26%, а из «90-100%» — только 90%. При σ=24
+// средняя ошибка обещания 3.7 п.п. на 1400 наблюдениях. Проверка — calib2.js.
+const SD_RANK = 24;
+
+// Кто доживёт до моих ближайших ходов. Имя конкретного чужого пика назвать
+// нельзя: обратная проверка по этим же 59 пикам даёт 17% попаданий, то есть
+// пять названных из шести — мимо. А вопрос «доживёт ли до моего хода» решается,
+// и это единственное, что от прогноза чужих пиков вообще нужно.
+function survive(pool, taken, marks, runs){
+  runs = runs || 200;
+  const done = Object.keys(taken).length;
+  const by = new Map(pool.map(q => [q.name, q]));
+  const free = pool.filter(p => !taken[p.name]);
+  const last = marks[marks.length - 1];
+  const alive = new Map(free.map(p => [p.name, marks.map(() => 0)]));
+  const base = Array.from({length: TEAMS}, () => []);
+  ORDER.slice(0, done).forEach((nm, i) => { const q = by.get(nm); if (q) base[teamOf(i+1)-1].push(q); });
+  reseed();
+  // Нормальный шум через Бокса — Мюллера на своём генераторе. Именно на
+  // нормальном считалась калибровка, и сумма равномерных сюда не годится:
+  // хвосты короче, и Кросби доживал в 28% вместо 22%.
+  const noiseOf = () => { let u = 0; while (!u) u = rnd();
+    return Math.sqrt(-2*Math.log(u)) * Math.cos(2*Math.PI*rnd()) * SD_RANK; };
+  for (let it = 0; it < runs; it++){
+    const noise = new Map(pool.map(p => [p.name, noiseOf()]));
+    const order = free.slice().sort((a,b) =>
+      ((a.rank_pre ?? 9e9) + noise.get(a.name)) - ((b.rank_pre ?? 9e9) + noise.get(b.name)));
+    const gone = new Set(), own = base.map(a => a.slice());
+    for (let n = done + 1; n <= last; n++){
+      const k = marks.indexOf(n);
+      if (k >= 0) for (const p of free) if (!gone.has(p.name)) alive.get(p.name)[k]++;
+      if (k >= 0 && n === last) break;
+      const t = teamOf(n) - 1, {used} = assign(own[t]);
+      let pick = null;
+      for (const q of order){
+        if (gone.has(q.name)) continue;
+        if (!pick) pick = q;
+        if (q.isG){ if (used.G < SLOT_COUNT.G){ pick = q; break; } continue; }
+        if (q.pos.some(x => (used[x] || 0) < (SLOT_COUNT[x] || 0))){ pick = q; break; }
+      }
+      if (!pick) break;
+      gone.add(pick.name); own[t].push(pick);
+    }
+  }
+  return free.map(p => ({p, s: alive.get(p.name).map(c => c / runs)}))
+             .sort((a,b) => (a.p.rank_pre ?? 9e9) - (b.p.rank_pre ?? 9e9));
+}
+
 // Что у команд НАБРАНО НА ДАННЫЙ МОМЕНТ: сумма сезонных проекций Yahoo по
 // реально взятым игрокам. Без добора и без весов состава — эти числа можно
 // пересчитать руками по карточкам игроков, и они обязаны сойтись.
@@ -794,43 +844,6 @@ function standings(pool, taken){
   return teams;
 }
 
-// Кого возьмут ближайшие k пиков, если лига пойдёт по рангу Yahoo и будет
-// закрывать пустые слоты. Модель грубая — средняя ошибка 8.8 пика, — но она
-// отвечает на единственный нужный вопрос: доживёт ли игрок до моего хода.
-function nextPicks(pool, taken, k){
-  const by = new Map(pool.map(q => [q.name, q]));
-  const done = Object.keys(taken).length;
-  const byRank = pool.filter(q => !taken[q.name])
-                     .sort((a,b)=>(a.rank_pre??9999)-(b.rank_pre??9999));
-  const st = Array.from({length: TEAMS}, () => ({C:0,LW:0,RW:0,D:0,G:0,BN:0}));
-  ORDER.slice(0, done).forEach((nm, i) => {
-    const q = by.get(nm); if (!q) return;
-    const u = st[teamOf(i+1) - 1];
-    const sl = slotFor(q, u); if (sl) u[sl]++;
-  });
-  const gone = new Set(), out = [];
-  const last = Math.min(TEAMS * ROUNDS, done + (k || 12));
-  for (let n = done + 1; n <= last; n++){
-    const u = st[teamOf(n) - 1];
-    const bench = (u.C+u.LW+u.RW+u.D+u.G) >= STARTERS;
-    let pick = null, slot = 'BN';
-    for (const q of byRank){
-      if (gone.has(q.name)) continue;
-      if (bench){ if (q.isG) continue; pick = q; break; }
-      const sl = slotFor(q, u);
-      if (sl === 'BN' || !sl) continue;
-      pick = q; slot = sl; break;
-    }
-    if (!pick) continue;
-    gone.add(pick.name); u[slot]++;
-    out.push({n, team: teamOf(n), name: TEAM_NAMES[teamOf(n)-1], mine: teamOf(n) === MY_SLOT,
-              p: pick, slot,
-              need: Object.fromEntries(Object.entries(SLOT_COUNT)
-                      .map(([pos,c]) => [pos, Math.max(0, c - u[pos])]))});
-  }
-  return out;
-}
-
 // Сколько игроков каждой позиции ушло и сколько осталось в верхушке пула.
 // Нужно, чтобы поймать забег: если вратарей разбирают, ждать дороже.
 function runs(pool, taken, depth){
@@ -849,7 +862,7 @@ function runs(pool, taken, depth){
 function setOrder(o){ ORDER = Array.isArray(o) ? o : []; }
 
 const API = {pAtLeast, NEED,TEAMS, MY_SLOT, ROUNDS, MY_PICKS, TEAM_NAMES, SLOTS, SK_CATS, G_CATS, weightOf, catSum, playShare, pDay, gMinOK,
-             prepare, setOrder, scoreAll, profile, standings, nextPicks, pWin, catDelta, simulate, assign, teamOf, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
+             prepare, setOrder, scoreAll, profile, standings, survive, SD_RANK, pWin, catDelta, simulate, assign, teamOf, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
              get LG(){return LG;}};
 if (typeof module !== 'undefined' && module.exports) module.exports = API;
 root.NHL = API;
