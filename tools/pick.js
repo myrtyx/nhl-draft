@@ -4,7 +4,7 @@
 //   node tools/pick.js live          — только дожитие кандидатов
 //   node tools/pick.js solo Имя ...  — только чистый вклад игроков
 //   node tools/pick.js pair 'А+Б' ... — пара на два ближайших пика
-//   node tools/pick.js order G C  — что закрывать первым, что вторым
+//   node tools/pick.js order G C [W] — в каком порядке закрывать 2-3 позиции
 //   node tools/pick.js depth     — как пустеет рынок по позициям к моим ходам
 //
 // Зачем. Колонка ЦЕНА считает кандидата против плана добора, а план строится
@@ -114,50 +114,58 @@ const GFILT = g => g === 'G'  ? (q => !!q.isG)
 function order(groups, RUNS){
   RUNS = RUNS || 400;
   const done = Object.keys(TAKEN).length;
-  const marks = C.MY_PICKS.filter(n => n > done).slice(0, 2);
-  if (marks.length < 2){ console.log('остался один ход — сравнивать нечего'); return; }
+  const marks = C.MY_PICKS.filter(n => n > done).slice(0, groups.length);
+  if (marks.length < 2 || groups.length < 2){ console.log('нужны две позиции и два хода'); return; }
+  groups = groups.slice(0, marks.length);
   const filt = GFILT;
   const {mine, fill} = BASE();
   const free = POOL.filter(p => !TAKEN[p.name]);
   // кандидаты: 14 лучших по рангу в группе, каждому — чистый вклад (один раз)
   const cand = {};
-  for (const g of groups){
+  for (const g of new Set(groups)){
     cand[g] = free.filter(filt(g)).sort((a,b) => (a.rank_pre??9e9)-(b.rank_pre??9e9)).slice(0, 14)
       .map(q => ({q, v: P7([...mine, ...cutFrom(fill, [!!q.isG]), q])}))
       .sort((a,b) => b.v - a.v);
     if (!cand[g].length){ console.log('в группе ' + g + ' никого нет'); return; }
   }
-  for (const g of groups) console.log('\nчистый вклад, группа ' + g + ':  ' +
+  for (const g of new Set(groups)) console.log('\nчистый вклад, группа ' + g + ':  ' +
     cand[g].slice(0,5).map(x => x.q.name.split(' ').slice(-1)[0] +
       ' ' + (100*x.v).toFixed(1)).join(' · '));
-  const plans = [[groups[0], groups[1]], [groups[1], groups[0]]];
-  const acc = plans.map(() => ({sum: 0, n: 0, first: {}, second: {}}));
-  const seen = [null, null];
+  const perms = a => a.length <= 1 ? [a]
+    : a.flatMap((x,i) => perms([...a.slice(0,i), ...a.slice(i+1)]).map(r => [x, ...r]));
+  const plans = perms(groups).filter((a, i, all) =>   // W W G D даёт повторы
+    all.findIndex(b => b.join('|') === a.join('|')) === i);
+  const last = marks.length - 1;
+  const acc = plans.map(() => ({sum: 0, n: 0, who: marks.map(() => ({}))}));
+  const seen = marks.map(() => null);
   C.survive(POOL, TAKEN, marks, RUNS, (k, gone) => {
     seen[k] = new Set(gone);   // копия: движок мутирует один и тот же набор
-    if (k !== 1) return;                      // считаем, когда известны обе отметки
+    if (k !== last) return;              // считаем, когда известны все отметки
     plans.forEach((pl, i) => {
-      const a = cand[pl[0]].find(x => !seen[0].has(x.q.name));
-      const b = cand[pl[1]].find(x => !seen[1].has(x.q.name) && (!a || x.q.name !== a.q.name));
-      if (!a || !b) return;
-      const r = [...mine, ...cutFrom(fill, [!!a.q.isG, !!b.q.isG]), a.q, b.q];
+      const got = [], names = new Set();
+      for (let j = 0; j < pl.length; j++){
+        const x = cand[pl[j]].find(y => !seen[j].has(y.q.name) && !names.has(y.q.name));
+        if (!x) return;
+        got.push(x); names.add(x.q.name);
+      }
+      const r = [...mine, ...cutFrom(fill, got.map(x => !!x.q.isG)), ...got.map(x => x.q)];
       if (r.length !== 16) return;
       const o = acc[i]; o.sum += P7(r); o.n++;
-      o.first[a.q.name] = (o.first[a.q.name]||0) + 1;
-      o.second[b.q.name] = (o.second[b.q.name]||0) + 1;
+      got.forEach((x, j) => { o.who[j][x.q.name] = (o.who[j][x.q.name] || 0) + 1; });
     });
-  }, );
-  console.log('\nПОРЯДОК ДВУХ БЛИЖАЙШИХ ХОДОВ · #' + marks[0] + ' и #' + marks[1] +
+  });
+  console.log('\nПОРЯДОК БЛИЖАЙШИХ ХОДОВ · ' + marks.map(m => '#'+m).join(', ') +
               ' · ' + RUNS + ' прогонов, σ=' + C.SD_RANK + '\n');
-  const top = (o, n) => Object.entries(o).sort((x,y)=>y[1]-x[1]).slice(0,3)
+  const top = (o, n) => Object.entries(o).sort((x,y)=>y[1]-x[1]).slice(0,2)
     .map(([nm,c]) => nm.split(' ').slice(-1)[0] + ' ' + Math.round(100*c/n) + '%').join(', ');
-  plans.forEach((pl, i) => { const o = acc[i];
-    console.log(('сначала ' + pl[0] + ', потом ' + pl[1]).padEnd(26) +
-      'p7 ' + (100*o.sum/o.n).toFixed(1) + '%');
-    console.log('   #' + marks[0] + ': ' + top(o.first, o.n));
-    console.log('   #' + marks[1] + ': ' + top(o.second, o.n)); });
-  const d = Math.abs(100*acc[0].sum/acc[0].n - 100*acc[1].sum/acc[1].n);
-  console.log('\nразница ' + d.toFixed(1) + ' п.п.' +
+  const rows = plans.map((pl, i) => ({pl, o: acc[i], v: 100*acc[i].sum/acc[i].n}))
+    .sort((a,b) => b.v - a.v);
+  rows.forEach(({pl, o, v}) => {
+    console.log(pl.join(' → ').padEnd(16) + 'p7 ' + v.toFixed(1) + '%   ' +
+      marks.map((m, j) => '#' + m + ': ' + top(o.who[j], o.n)).join('   '));
+  });
+  const d = rows[0].v - rows[rows.length-1].v;
+  console.log('\nразмах ' + d.toFixed(1) + ' п.п.' +
     (d < 1 ? ' — это шум, порядок не решает; бери лучшего по чистому вкладу' : ''));
 }
 
@@ -208,7 +216,8 @@ function depth(RUNS){
 const args = process.argv.slice(2);
 const free = POOL.filter(p => !TAKEN[p.name]).sort((a,b) => (a.rank_pre??9e9) - (b.rank_pre??9e9));
 if (args[0] === 'pair') pair(args.slice(1));
-else if (args[0] === 'order') order(args.slice(1, 3), +args[3] || 0);
+else if (args[0] === 'order'){ const a = args.slice(1);
+  const n = a.length && /^\d+$/.test(a[a.length-1]) ? +a.pop() : 0; order(a, n); }
 else if (args[0] === 'depth') depth(+args[1] || 0);
 else if (args[0] === 'solo') solo(args.slice(1));
 else if (args[0] === 'live') live(args.length > 1 ? args.slice(1) : free.slice(0,14).map(p => p.name));
