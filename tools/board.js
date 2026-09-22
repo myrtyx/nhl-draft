@@ -1,11 +1,9 @@
-// Повторяет сайт один в один: SEED читается из index.html, метки ME/X
+// Повторяет сайт один в один: пики — с сайта через order.js, метки ME/X
 // ставит teamOf — ровно как derive() в браузере. Любой мой прогон должен
 // идти через этот файл, иначе счёт пойдёт от пустого состава.
 const C = require('/Users/martins/Desktop/dev/nhl-draft/core.js');
 const fs = require('fs');
-const html = fs.readFileSync('/Users/martins/Desktop/dev/nhl-draft/index.html','utf8');
-const block = html.slice(html.indexOf('const SEED = ['), html.indexOf('];', html.indexOf('const SEED = [')));
-const ORDER = [...block.matchAll(/\['([^']+)'/g)].map(m => m[1]);
+const ORDER = require('./order.js').order;   // сайт (hockey.json на lynx), запас — SEED
 // dropOut — как на сайте (POOL = NHL.dropOut(NHL.prepare(d))): пока OUT был
 // пуст, разницы не было, а с 22.09 без него план добора брал вычеркнутых.
 const P = C.dropOut(C.prepare(JSON.parse(fs.readFileSync('/Users/martins/Desktop/dev/nhl-draft/data/yahoo_proj.json','utf8'))));

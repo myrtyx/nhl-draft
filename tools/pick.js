@@ -24,8 +24,7 @@
 const C = require('../core.js');
 const fs = require('fs');
 const H = __dirname + '/..';
-const SEED = (() => { const m = fs.readFileSync(H+'/index.html','utf8').match(/const SEED\s*=\s*(\[[\s\S]*?\n\];)/);
-  return eval(m[1].replace(/;$/,'')).map(x => Array.isArray(x) ? x[0] : x); })();
+const SEED = require('./order.js').order;   // сайт (hockey.json на lynx), запас — SEED index.html
 const SKIP = (process.env.SKIP || '').split(';').map(x => x.trim()).filter(Boolean);
 const POOL0 = C.prepare(JSON.parse(fs.readFileSync(H+'/data/yahoo_proj.json','utf8')));
 const POOL = C.dropOut(POOL0, SKIP);
