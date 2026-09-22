@@ -6,6 +6,7 @@
 //   node tools/pick.js pair 'А+Б' ... — пара на два ближайших пика
 //   node tools/pick.js order G C [W] — в каком порядке закрывать 2-3 позиции
 //   node tools/pick.js depth     — как пустеет рынок по позициям к моим ходам
+//   node tools/pick.js queue 'А;Б;В' 'Б;А;В' — сравнить очереди из Fantrax
 //
 // SKIP='Имя;Имя' — вычеркнуть игроков, которых проекции Yahoo ещё считают
 // живыми: травма, отстранение, холдаут. Движок такого знать не может, а
@@ -226,12 +227,58 @@ function depth(RUNS){
   }
 }
 
+// --- 6. очередь: список имён по приоритету, как в Fantrax -------------------
+// `order` сравнивает позиции, а очередь — конкретные имена. Разница важна:
+// проигрыш решает не тот, кого берёшь, а тот, кто остаётся запасным вариантом,
+// когда первый номер уже разобран.
+function queue(specs, RUNS){
+  RUNS = RUNS || 1200;
+  const done = Object.keys(TAKEN).length;
+  const qs = specs.map(t => t.split(';').map(x => x.trim()).filter(Boolean));
+  const depthN = Math.max(...qs.map(q => q.length));
+  const marks = C.MY_PICKS.filter(n => n > done).slice(0, Math.min(depthN, 3));
+  const bad = [...new Set(qs.flat())].filter(n => !by.has(n));
+  if (bad.length){ console.log('нет в данных: ' + bad.join(', ')); return; }
+  const {mine, fill} = BASE();
+  const acc = qs.map(() => ({sum: 0, n: 0, who: marks.map(() => ({})), miss: 0}));
+  const last = marks.length - 1, seen = marks.map(() => null);
+  C.survive(POOL, TAKEN, marks, RUNS, (k, gone) => {
+    seen[k] = new Set(gone);
+    if (k !== last) return;
+    qs.forEach((q, i) => {
+      const got = [], used = new Set();
+      for (let j = 0; j < marks.length; j++){
+        const nm = q.find(x => !seen[j].has(x) && !used.has(x));
+        if (!nm){ acc[i].miss++; return; }
+        got.push(by.get(nm)); used.add(nm);
+      }
+      const r = [...mine, ...cutFrom(fill, got.map(x => !!x.isG)), ...got];
+      if (r.length !== 16) return;
+      const o = acc[i]; o.sum += P7(r); o.n++;
+      got.forEach((x, j) => { o.who[j][x.name] = (o.who[j][x.name] || 0) + 1; });
+    });
+  });
+  console.log('\nОЧЕРЕДЬ НА ' + marks.map(m => '#'+m).join(', ') +
+              ' · ' + RUNS + ' прогонов, σ=' + C.SD_RANK + '\n');
+  const top = (o, n) => Object.entries(o).sort((a,b)=>b[1]-a[1]).slice(0,3)
+    .map(([nm,c]) => nm.split(' ').slice(-1)[0] + ' ' + Math.round(100*c/n) + '%').join(', ');
+  qs.map((q, i) => ({q, o: acc[i], v: acc[i].n ? 100*acc[i].sum/acc[i].n : 0}))
+    .sort((a,b) => b.v - a.v)
+    .forEach(({q, o, v}) => {
+      console.log(q.map(n => n.split(' ').slice(-1)[0]).join(' → ') + '   p7 ' + v.toFixed(1) + '%' +
+        (o.miss ? '   очередь кончалась в ' + Math.round(100*o.miss/RUNS) + '% прогонов' : ''));
+      marks.forEach((m, j) => console.log('   #' + m + ': ' + top(o.who[j], o.n)));
+    });
+}
+
 const args = process.argv.slice(2);
 const free = POOL.filter(p => !TAKEN[p.name]).sort((a,b) => (a.rank_pre??9e9) - (b.rank_pre??9e9));
 if (args[0] === 'pair') pair(args.slice(1));
 else if (args[0] === 'order'){ const a = args.slice(1);
   const n = a.length && /^\d+$/.test(a[a.length-1]) ? +a.pop() : 0; order(a, n); }
 else if (args[0] === 'depth') depth(+args[1] || 0);
+else if (args[0] === 'queue'){ const a = args.slice(1);
+  const n = a.length && /^\d+$/.test(a[a.length-1]) ? +a.pop() : 0; queue(a, n); }
 else if (args[0] === 'solo') solo(args.slice(1));
 else if (args[0] === 'live') live(args.length > 1 ? args.slice(1) : free.slice(0,14).map(p => p.name));
 else { solo(free.slice(0,6).map(p => p.name).concat(free.filter(p=>p.isG).slice(0,3).map(p=>p.name)));
