@@ -77,7 +77,12 @@ function league(list, cats, perTeam){
   const out = {};
   for (const c of cats){
     const sums = teams.map(t=>t.reduce((s,p)=>s+p.z[c.k],0));
-    out[c.k] = {m: mean(sums), sd: std(sums), sorted:[...sums].sort((a,b)=>b-a)};
+    // cum[k] — сколько в среднем набирает команда первыми k пиками.
+    // Нужно, чтобы понимать, что мне ещё достанется на оставшихся пиках.
+    const cum = [];
+    for (let k = 0; k <= perTeam; k++)
+      cum.push(mean(teams.map(t => t.slice(0,k).reduce((s,p)=>s+p.z[c.k],0))));
+    out[c.k] = {m: mean(sums), sd: std(sums), cum, sorted:[...sums].sort((a,b)=>b-a)};
   }
   return out;
 }
@@ -94,16 +99,16 @@ function prepare(d){
   return [...d.skaters, ...d.goalies];
 }
 
-// Вероятность выиграть категорию при сумме z = v, когда у меня набрано n игроков.
-// Сравниваем не с полной командой соперника, а с соперником на той же стадии драфта:
-// иначе при полупустом ростере проценты не значат ничего.
+// Вероятность выиграть категорию по итогам сезона, когда у меня набрано n игроков
+// с суммой z = v. Пустые слоты добиваются тем, что в среднем достаётся команде
+// на оставшихся пиках — иначе ранний элитный игрок выглядит как уже выигранная
+// категория, и модель перестаёт ценить голы после первого же пика.
 function pWin(cat, v, isG, n){
   const L = (isG ? LG.gk : LG.sk)[cat.k];
   const full = isG ? G_PER_TEAM : SK_PER_TEAM;
-  const k = n == null ? full : n;
-  if (k <= 0) return 0.5;
-  const f = k / full;
-  return Phi((v - L.m * f) / (L.sd * Math.sqrt(f)));
+  const k = Math.max(0, Math.min(n == null ? full : n, full));
+  const rest = L.cum[full] - L.cum[k];     // что ещё доберу
+  return Phi((v + rest - L.m) / L.sd);
 }
 
 // суммарный z моего ростера по каждой категории

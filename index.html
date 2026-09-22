@@ -174,17 +174,23 @@ try { const r = localStorage.getItem(LS); if (r) S = JSON.parse(r); } catch(e){}
 const save = () => { try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} };
 
 // первый раунд из Fantrax
-const SEED = [['Connor McDavid','X'],['Nathan MacKinnon','ME'],['Nikita Kucherov','X'],
- ['Macklin Celebrini','X'],['Leon Draisaitl','X'],['Kirill Kaprizov','X'],['Cale Makar','X'],
- ['David Pastrnak','X'],['Auston Matthews','X'],['Nick Suzuki','X'],['Jason Robertson','X']];
+const SEED = [
+ // R1
+ ['Connor McDavid','X'],['Nathan MacKinnon','ME'],['Nikita Kucherov','X'],['Macklin Celebrini','X'],
+ ['Leon Draisaitl','X'],['Kirill Kaprizov','X'],['Cale Makar','X'],['David Pastrnak','X'],
+ ['Auston Matthews','X'],['Nick Suzuki','X'],['Jason Robertson','X'],['Jack Eichel','X'],
+ // R2 (идёт обратным ходом: 2-1 … 2-7)
+ ['Matt Boldy','X'],['Evan Bouchard','X'],['Cole Caufield','X'],['Jack Hughes','X'],
+ ['Brady Tkachuk','X'],['Tage Thompson','X'],['Zach Werenski','X'],
+];
 const seed = () => SEED.forEach(([n,w]) => S.taken[n] = w);
 
 let POOL = [], view = {pos:'ALL', free:true, multi:false, q:'', sort:'vorp', dir:-1};
 
-const COLS_SK = [{k:'vorp',n:'ЦЕНА'},{k:'score',n:'абс'},{k:'rank_pre',n:'Yahoo'},{k:'gp',n:'GP'},
+const COLS_SK = [{k:'vorp',n:'ЦЕНА'},{k:'score',n:'vs РАУНД'},{k:'rank_pre',n:'Yahoo'},{k:'gp',n:'GP'},
   {k:'g',n:'G'},{k:'a',n:'A'},{k:'ppp',n:'PPP'},{k:'sog',n:'SOG'},
   {k:'fw',n:'FW'},{k:'hit',n:'HIT'},{k:'blk',n:'BLK'},{k:'pm',n:'+/-'}];
-const COLS_G = [{k:'vorp',n:'ЦЕНА'},{k:'score',n:'абс'},{k:'rank_pre',n:'Yahoo'},{k:'gp',n:'GP'},
+const COLS_G = [{k:'vorp',n:'ЦЕНА'},{k:'score',n:'vs РАУНД'},{k:'rank_pre',n:'Yahoo'},{k:'gp',n:'GP'},
   {k:'w',n:'W'},{k:'sv',n:'SV'},{k:'sa',n:'SA'},{k:'svpct',n:'SV%'},{k:'sho',n:'SHO'}];
 const cols = () => view.pos === 'G' ? COLS_G : COLS_SK;
 
@@ -308,8 +314,10 @@ function render(){
 
   const nm = g => sc.repl[g][0] ? sc.repl[g][0].name : '—';
   document.getElementById('explain').innerHTML =
-    `<b>ЦЕНА</b> — на сколько игрок поднимает ожидаемое число выигранных категорий
-     <i>сверх того, кого я возьму следующим пиком</i>. <b>абс</b> — тот же прирост без поправки на очередь.<br><br>
+    `<b>ЦЕНА</b> — насколько игрок поднимает шанс выиграть категории
+     <i>по сравнению с тем, кого я возьму следующим пиком</i>. Это и есть ответ «брать сейчас или ждать».<br><br>
+     <b>vs РАУНД</b> — насколько он лучше типичного игрока этого раунда.
+     Минус значит «на таком пике обычно берут полезнее», а не «плохой игрок».<br><br>
      До пика #${sc.next || '—'} уйдёт ещё ${sc.gap} игроков. Дождутся, вероятно:
      <b>G</b> ${nm('G')} · <b>D</b> ${nm('D')} · <b>F</b> ${nm('F')}.<br><br>
      Отмечай чужие пики <b>×</b>, свои — <b>я</b>.`;
