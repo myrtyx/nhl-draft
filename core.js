@@ -753,8 +753,15 @@ const SD_RANK = 24;
 // нельзя: обратная проверка по этим же 59 пикам даёт 17% попаданий, то есть
 // пять названных из шести — мимо. А вопрос «доживёт ли до моего хода» решается,
 // и это единственное, что от прогноза чужих пиков вообще нужно.
-function survive(pool, taken, marks, runs){
+// onMark(k, gone) — если передан, зовётся на каждом прогоне у каждой отметки
+// и отдаёт множество уже разобранных в этом прогоне. Нужен инструментам,
+// которым мало средних: «кто именно остался на моём ходу в этом прогоне».
+function survive(pool, taken, marks, runs, onMark){
   runs = runs || 200;
+  // Сайт держит взятых объектом {имя:'ME'|'X'}, черновики норовят дать Set —
+  // и тогда Object.keys даёт ноль, драфт идёт с первого пика, а доживаемость
+  // выходит вдвое ниже правды. Принимаем оба вида.
+  if (taken instanceof Set){ const o = {}; taken.forEach(n => { o[n] = 'X'; }); taken = o; }
   const done = Object.keys(taken).length;
   const by = new Map(pool.map(q => [q.name, q]));
   const free = pool.filter(p => !taken[p.name]);
@@ -775,7 +782,8 @@ function survive(pool, taken, marks, runs){
     const gone = new Set(), own = base.map(a => a.slice());
     for (let n = done + 1; n <= last; n++){
       const k = marks.indexOf(n);
-      if (k >= 0) for (const p of free) if (!gone.has(p.name)) alive.get(p.name)[k]++;
+      if (k >= 0){ for (const p of free) if (!gone.has(p.name)) alive.get(p.name)[k]++;
+                   if (onMark) onMark(k, gone); }
       if (k >= 0 && n === last) break;
       const t = teamOf(n) - 1, {used} = assign(own[t]);
       let pick = null;
