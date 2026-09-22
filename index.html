@@ -198,7 +198,7 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
 отметки хранятся в этом браузере</footer>
 </div>
 
-<script src="core.js?v=1790071691"></script>
+<script src="core.js?v=1790071779"></script>
 <script>
 const LS = 'nhl-draft-v2';
 let S = {order:[]};
@@ -223,7 +223,9 @@ function pick(name){
   if (S.taken[name]) return;            // уже отмечен — значит клик лишний
   busy = true;
   S.order.push(name); save(); render();
-  requestAnimationFrame(() => { busy = false; });
+  // не requestAnimationFrame: в свёрнутой вкладке он не выполняется вовсе,
+  // и кнопки залипали бы навсегда после первого же клика
+  setTimeout(() => { busy = false; }, 220);
 }
 function unpick(){
   if (!POOL.length || !S.order.length) return;
