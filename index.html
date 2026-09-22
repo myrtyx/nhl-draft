@@ -28,9 +28,10 @@ header h1{font-size:17px}
 .layout>div:last-child{position:sticky;top:12px}
 /* на узком экране сводка по категориям важнее списка — поднимаем её наверх */
 @media(max-width:1100px){
-  .layout{grid-template-columns:1fr}
+  .layout{grid-template-columns:minmax(0,1fr)}
   .layout>div:last-child{order:-1;position:static}
 }
+.layout>div{min-width:0}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:12px}
 .card h2{font-size:11px;text-transform:uppercase;letter-spacing:.9px;color:var(--dim);
   padding:10px 12px;border-bottom:1px solid var(--line)}
@@ -85,7 +86,7 @@ button.mini.t:hover{background:#2a1c1c;color:var(--bad);border-color:var(--bad)}
 .bar .mid{position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--dim2);opacity:.6}
 .catval{font-family:var(--mono);text-align:right;font-size:10px;color:var(--dim)}
 .big{font:700 22px/1 var(--mono);color:var(--good)}
-.big.low{color:var(--warn)}
+.big.low{color:var(--warn)} .big.raw{color:var(--dim2)}
 .note{color:var(--dim);font-size:11px;line-height:1.5;margin:8px 0 0}
 .note b{color:var(--tx)}
 .row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
@@ -133,7 +134,7 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
       <div class="body">
         <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:10px">
           <span class="big" id="expNum">—</span>
-          <span class="sub">категорий из 12 по темпу · нужно 7</span>
+          <span class="sub" id="expSub">категорий из 12 по темпу · нужно 7</span>
         </div>
         <div class="cats" id="cats"></div>
         <p class="note">Полоса — вероятность выиграть категорию у средней команды
@@ -278,7 +279,14 @@ function render(){
     NHL.G_CATS.map(catRow).join('');
   const en = document.getElementById('expNum');
   en.textContent = pr.expected.toFixed(1);
-  en.className = 'big' + (pr.expected < 7 ? ' low' : '');
+  // пока набрано мало игроков, «темп» скачет и ничего не предсказывает —
+  // не даём принять раннюю цифру за прогноз сезона
+  const raw = pr.nSk + pr.nG < 6;
+  en.className = 'big' + (raw ? ' raw' : pr.expected < 7 ? ' low' : '');
+  document.getElementById('expSub').innerHTML = raw
+    ? `категорий из 12 по темпу · <b style="color:var(--warn)">рано судить</b>,
+       взято ${pr.nSk + pr.nG} из 16`
+    : `категорий из 12 по темпу · нужно 7 · взято ${pr.nSk + pr.nG} из 16`;
 
   // ростер
   document.getElementById('slots').innerHTML = NHL.fillRoster(POOL, S.taken).map(([s,p]) =>
