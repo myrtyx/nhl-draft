@@ -55,6 +55,18 @@ const W_BN = 0.35;
 // Процент отражённых — не сумма, а отношение. Складывать z двух вратарей
 // нельзя: у пары он равен общим сэйвам на общие броски, и добавить вратаря
 // хуже текущей пары значит ОПУСТИТЬ команду, хотя сумма z при этом растёт.
+// Категория решается за матчап, а не за сезон. Восемьдесят четыре игры при
+// трёх в неделю — это двадцать восемь матчапов; считаю в настоящих голах и
+// хитах за один такой отрезок, а не в отвлечённых долях сигмы.
+const MATCHUPS = 28;
+// Шум внутри матчапа: пуассоновский счёт плюс разброс числа игр (2-4 за
+// неделю). Сверено с замерами по боксскорам: хиты 10.2, блоки 8.0,
+// броски 18 — формула даёт 10.2, 8.1, 18.5.
+const CV_SK = 0.20, CV_G = 0.40;
+const PM_SD = 7.8;        // плюс-минус по Пуассону не считается — только замер
+let SHOTS = 110;          // броски по команде за матчап, для процента отражённых
+const noise = (mu, isG) => Math.max(mu, 0) + Math.pow((isG ? CV_G : CV_SK) * mu, 2);
+
 const RATIO = 'svpct';
 const ratioOf = gs => {
   let sv = 0, sa = 0;
@@ -78,11 +90,12 @@ function Phi(x){
   return x >= 0 ? 1-p : p;
 }
 
-function buildZ(list, cats, depth){
-  const pool = [...list].sort((a,b)=>(a.rank_pre??9999)-(b.rank_pre??9999)).slice(0, depth);
-  for (const c of cats){
-    const v = pool.map(p => +p[c.k] || 0), m = mean(v), s = std(v);
-    for (const p of list) (p.z ||= {})[c.k] = ((+p[c.k] || 0) - m) / s;
+// Никакой нормировки: доли сигмы прятали масштаб, а решает именно он.
+function buildZ(list, cats){
+  for (const p of list){
+    p.z = {};
+    for (const c of cats) p.z[c.k] = (+p[c.k] || 0) / MATCHUPS;
+    if (p.isG) p.z[RATIO] = +p.svpct || 0;
   }
 }
 
@@ -97,9 +110,16 @@ let ORDER = [];   // порядок уже сделанных пиков, ста
 // разброс сумм по лиге и средний уровень игрока на каждом слоте.
 const STARTERS = Object.values(SLOT_COUNT).reduce((s,n)=>s+n,0);   // 12
 
+// Свой генератор вместо Math.random: на нём лига пересчитывается восемьдесят
+// раз, и с настоящей случайностью цена игрока прыгала при каждой перезагрузке
+// страницы. Одинаковый сид — одинаковый ответ на один и тот же расклад.
+let seed = 1;
+const reseed = () => { seed = 20260922; };
+const rnd = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
+
 function simulate(all, jitter){
   const key = p => (p.rank_pre ?? 9999) +
-    (jitter ? (Math.random()+Math.random()+Math.random()-1.5) * jitter : 0);
+    (jitter ? (rnd()+rnd()+rnd()-1.5) * jitter : 0);
   const byRank = [...all].map(p=>[p, key(p)]).sort((a,b)=>a[1]-b[1]).map(x=>x[0]);
   const teams = Array.from({length:TEAMS}, ()=>({
     used:{C:0,LW:0,RW:0,D:0,G:0,BN:0}, at:{C:[],LW:[],RW:[],D:[],G:[],BN:[]},
@@ -185,13 +205,16 @@ function slotFor(p, used){
 function prepare(d){
   d.skaters.forEach(p => { p.isG = false; });
   d.goalies.forEach(p => { p.isG = true; if (!p.pos || !p.pos.length) p.pos = ['G']; });
-  buildZ(d.skaters, SK_CATS, SK_DEPTH);
-  buildZ(d.goalies, G_CATS, G_DEPTH);
+  buildZ(d.skaters, SK_CATS);
+  buildZ(d.goalies, G_CATS);
+  const top = [...d.goalies].sort((a,b)=>(a.rank_pre??9999)-(b.rank_pre??9999)).slice(0, 24);
+  SHOTS = top.length ? 2 * mean(top.map(g => (+g.sa || 0) / MATCHUPS)) : 110;
   const all = [...d.skaters, ...d.goalies];
   // Одна раздача строго по рангу — это одна точка, а не разброс. Живой драфт
   // тасует порядок: соперники тянутся, ошибаются, добирают по нужде. Поэтому
   // гоняю раздачу много раз с шумом и усредняю — иначе узкие категории
   // (PPP, голевые передачи) выглядят решаемыми, а они шумные.
+  reseed();
   const runs = [];
   for (let i = 0; i < 80; i++) runs.push(simulate(all, i ? 25 : 0));
   LG   = {sk: pool(runs, SK_CATS, 'sk'), gk: pool(runs, G_CATS, 'gk')};
@@ -202,9 +225,20 @@ function prepare(d){
 // Вероятность выиграть категорию по итогам сезона, если моя финальная сумма
 // по ней будет v. Сравнение всегда между готовыми составами: незаполненные
 // слоты заранее добиты средним уровнем этого слота (см. profile).
+// Сравниваю не с разбросом по лиге за сезон, а со случайностью одной недели:
+// сильнейший по категории всё равно проигрывает её примерно в трети случаев.
 function pWin(cat, v, isG){
   const L = (isG ? LG.gk : LG.sk)[cat.k];
-  return Phi((v - L.m) / L.sd);
+  let sd;
+  if (cat.k === RATIO){
+    const q = (v + L.m) / 2;
+    sd = Math.sqrt(2 * q * (1 - q) / Math.max(SHOTS, 1));
+  } else if (cat.k === 'pm'){
+    sd = PM_SD * Math.SQRT2;
+  } else {
+    sd = Math.sqrt(noise(v, isG) + noise(L.m, isG));
+  }
+  return sd > 0 ? Phi((v - L.m) / sd) : 0.5;
 }
 
 // Разложить моих игроков по слотам Yahoo. Негибких ставим первыми — иначе
@@ -473,7 +507,7 @@ function runs(pool, taken, depth){
 function setOrder(o){ ORDER = Array.isArray(o) ? o : []; }
 
 const API = {TEAMS, MY_SLOT, ROUNDS, MY_PICKS, TEAM_NAMES, SLOTS, SK_CATS, G_CATS, MULTI_BONUS,
-             prepare, setOrder, scoreAll, profile, pWin, catDelta, assign, teamOf, rosters, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
+             prepare, setOrder, scoreAll, profile, pWin, catDelta, simulate, assign, teamOf, rosters, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
              get LG(){return LG;}};
 if (typeof module !== 'undefined' && module.exports) module.exports = API;
 root.NHL = API;
