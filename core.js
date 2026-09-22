@@ -53,10 +53,60 @@ const G_CATS = [
   {k:'sho',   n:'SHO', rel:0.5},
 ];
 
-const MULTI_BONUS = 0.08;
-// Запасной выходит только вместо стартера: за неделю это примерно треть игр.
-// Раньше он считался наравне со стартером — отсюда и лез шестой вратарь.
-const W_BN = 0.35;
+// Клуб НХЛ играет 3.5 раза за 7 дней; вратарь выходит примерно в 60% игр.
+const P_DAY_SK = 0.5, P_DAY_G = 0.3;
+
+// Игрок попадает в состав, только если на его позиции есть свободный слот,
+// а сильнейших ставят первыми. Значит его доля игр — это шанс, что сегодня
+// играет меньше сильных конкурентов, чем у него слотов.
+// Сверено с прямой симуляцией расстановки по дням (алгоритм Куна, 5000
+// недель): третий центр 0.750 против 0.740, четвёртый 0.500 против 0.486,
+// шестой защитник 0.813 против 0.800.
+function playShare(slots, better, pd){
+  if (slots <= 0) return 0;
+  if (better <= 0) return 1;
+  let s = 0, c = 1;
+  for (let j = 0; j < slots && j <= better; j++){
+    s += c * Math.pow(pd, j) * Math.pow(1 - pd, better - j);
+    c = c * (better - j) / (j + 1);
+  }
+  return s;
+}
+
+// Вес игрока внутри конкретного состава. Заменил сразу два выдуманных числа:
+// плоский бонус за вторую позицию и фиксированный вес скамейки. Вторая
+// позиция стоит ровно столько, насколько забита первая: первому центру она
+// не даёт ничего, четвёртому удваивает выход на лёд.
+function weightOf(p, roster){
+  const rk = q => q.rank_pre ?? 9999;
+  if (p.isG){
+    let better = 0;
+    for (const q of roster) if (q !== p && q.isG && rk(q) < rk(p)) better++;
+    return playShare(SLOT_COUNT.G, better, P_DAY_G);
+  }
+  const pos = p.pos || [];
+  let slots = 0;
+  for (const s of pos) slots += SLOT_COUNT[s] || 0;
+  let better = 0;
+  for (const q of roster){
+    if (q === p || q.isG || rk(q) >= rk(p)) continue;
+    const qp = q.pos || [];
+    for (const s of qp) if (pos.includes(s)){ better++; break; }
+  }
+  return playShare(slots, better, P_DAY_SK);
+}
+
+// Сумма категории по составу с честными весами.
+function catSum(roster, c, isG){
+  if (c.k === RATIO)
+    return ratioOf(roster.filter(q => q.isG).map(q => [q, weightOf(q, roster)]));
+  let v = 0;
+  for (const q of roster){
+    if (!!q.isG !== isG) continue;
+    v += weightOf(q, roster) * q.z[c.k];
+  }
+  return v;
+}
 // Процент отражённых — не сумма, а отношение. Складывать z двух вратарей
 // нельзя: у пары он равен общим сэйвам на общие броски, и добавить вратаря
 // хуже текущей пары значит ОПУСТИТЬ команду, хотя сумма z при этом растёт.
@@ -160,7 +210,7 @@ function spread(teams, cats, key){
       let v = 0;
       for (const sl of (key === 'gk' ? ['G'] : ['C','LW','RW','D']))
         for (const q of t.at[sl]) v += q.z[c.k];
-      if (key === 'sk') for (const q of t.at.BN) v += W_BN * q.z[c.k];
+      if (key === 'sk') for (const q of t.at.BN) v += 0.35 * q.z[c.k];
       if (c.k === RATIO) return ratioOf(t.at.G.map(q => [q, 1]));
       return v;
     });
@@ -171,18 +221,15 @@ function spread(teams, cats, key){
 
 // Свести много раздач в одно распределение: среднее по всем, разброс — тоже
 // по всем сразу, так что в него входит и случайность самого драфта.
+// Команды лиги считаю ровно тем же весом, что и свою, иначе сравнивать нечего.
 function pool(runs, cats, key){
-  const start = key === 'gk' ? ['G'] : ['C','LW','RW','D'];
+  const isG = key === 'gk';
+  const rosters = [];
+  for (const teams of runs) for (const t of teams)
+    rosters.push(['C','LW','RW','D','G','BN'].flatMap(sl => t.at[sl] || []));
   const out = {};
   for (const c of cats){
-    const sums = [];
-    for (const teams of runs) for (const t of teams){
-      let v = 0;
-      for (const sl of start) for (const q of t.at[sl]) v += q.z[c.k];
-      if (key === 'sk') for (const q of t.at.BN) v += W_BN * q.z[c.k];
-      if (c.k === RATIO) v = ratioOf(t.at.G.map(q => [q, 1]));
-      sums.push(v);
-    }
+    const sums = rosters.map(r => catSum(r, c, isG));
     out[c.k] = {m: mean(sums), sd: std(sums), sorted:[...sums].sort((a,b)=>b-a)};
   }
   return out;
@@ -319,67 +366,44 @@ function futureFill(pool, taken, used){
 function profile(pool, taken){
   const mine = pool.filter(p => taken[p.name] === 'ME');
   const {used, at} = assign(mine);
-  const z = {};
-  for (const c of [...SK_CATS, ...G_CATS]) z[c.k] = 0;
-  for (const p of mine){
-    const cats = p.isG ? G_CATS : SK_CATS;
-    const w = at.get(p.name) === 'BN' ? W_BN : 1;
-    for (const c of cats) z[c.k] += w * p.z[c.k];
-  }
   const fill = futureFill(pool, taken, used);
-  for (const {pos, p} of fill.list){
-    const cats = p.isG ? G_CATS : SK_CATS;
-    const w = pos === 'BN' ? W_BN : 1;
-    for (const c of cats) z[c.k] += w * p.z[c.k];
-  }
+  // считаю по итоговому составу: и уже взятые, и те, кем добью пустые слоты
+  const roster = [...mine, ...fill.list.map(f => f.p)];
+  const z = {};
+  for (const c of SK_CATS) z[c.k] = catSum(roster, c, false);
+  for (const c of G_CATS)  z[c.k] = catSum(roster, c, true);
   const free = {};
   for (const [pos, n] of Object.entries(SLOT_COUNT))
     free[pos] = Math.max(0, n - used[pos]);
   free.BN = benchFree(used);
-  // вратари, что реально встанут в ворота, плюс третий со скамейки
-  const gs = [];
-  for (const q of mine) if (q.isG) gs.push([q, at.get(q.name) === 'G' ? 1 : W_BN]);
-  for (const {pos, p: q} of fill.list) if (q.isG) gs.push([q, pos === 'G' ? 1 : W_BN]);
-  z[RATIO] = ratioOf(gs);
+  const gs = roster.filter(q => q.isG).map(q => [q, weightOf(q, roster)]);
   const p = {};
   let exp = 0;
   for (const c of SK_CATS){ p[c.k] = pWin(c, z[c.k], false); exp += p[c.k]; }
   for (const c of G_CATS) { p[c.k] = pWin(c, z[c.k], true ); exp += p[c.k]; }
   const nG = mine.filter(x=>x.isG).length;
-  return {z, p, pFull: p, expected: exp, used, at, free, fill, gs,
+  return {z, p, pFull: p, expected: exp, used, at, free, fill, gs, roster,
           nSk: mine.length - nG, nG};
 }
 
 // Прирост вероятностей по категориям, если игрок встанет на свой слот вместо
 // среднего игрока, который занял бы это место. Защитник сравнивается с
 // защитником: слот D форвардом не закрыть, его всё равно кто-то займёт.
+// Что даёт игрок: ставлю его на место того, кем этот слот закрылся бы без
+// него, и пересчитываю состав целиком. Веса при этом меняются у всех, кого
+// он теснит — иначе четвёртый центр выглядел бы бесплатным.
 function catDelta(p, pr){
   const slot = slotFor(p, pr.used);
-  const w = slot === 'BN' ? W_BN : 1;
-  const alt = pr.fill.byPos[slot] || null;   // кто занял бы этот слот без меня
+  const alt  = pr.fill.byPos[slot] || null;
+  const next = pr.roster.filter(q => q !== alt).concat(p);
   const out = [];
-  const push = (cats, isG, mine) => {
-    for (const c of cats)
-      out.push({n:c.n, k:c.k, rel:c.rel,
-                d: pWin(c, pr.z[c.k] + mine(c), isG) - pWin(c, pr.z[c.k], isG)});
-  };
-  if (p.isG){
-    // третий вратарь садится на скамейку: выходит редко и сгоняет оттуда полевого
-    push(G_CATS.filter(c => c.k !== RATIO), true,
-         c => w * (p.z[c.k] - (alt && alt.isG ? alt.z[c.k] : 0)));
-    const gs = pr.gs.filter(([q]) => !(alt && alt.isG && q === alt));
-    const c = G_CATS.find(x => x.k === RATIO);
-    out.push({n:c.n, k:c.k, rel:c.rel,
-              d: pWin(c, ratioOf([...gs, [p, w]]), true) - pWin(c, pr.z[RATIO], true)});
-    if (slot !== 'G' && alt && !alt.isG)
-      push(SK_CATS, false, c => -w * alt.z[c.k]);
-  } else {
-    push(SK_CATS, false, c => w * (p.z[c.k] - (alt && !alt.isG ? alt.z[c.k] : 0)));
-  }
+  for (const c of SK_CATS)
+    out.push({n:c.n, k:c.k, rel:c.rel, d: pWin(c, catSum(next,c,false), false) - pr.p[c.k]});
+  for (const c of G_CATS)
+    out.push({n:c.n, k:c.k, rel:c.rel, d: pWin(c, catSum(next,c,true), true) - pr.p[c.k]});
   return out;
 }
 
-// ценность игрока = прирост ожидаемого числа выигранных категорий
 function scoreAll(pool, taken){
   const pr = profile(pool, taken);
   for (const p of pool){
@@ -388,8 +412,7 @@ function scoreAll(pool, taken){
     // ×100 — чтобы читалось как «сотые доли категории»
     // бонус за гибкость всегда в плюс: умножение делало слабого игрока с двумя
     // позициями ещё хуже слабого с одной, а нужно ровно наоборот
-    const base = 100 * s;
-    p.score = base + Math.abs(base) * MULTI_BONUS * ((p.pos ? p.pos.length : 1) - 1);
+    p.score = 100 * s;
   }
   return pr;
 }
@@ -511,7 +534,7 @@ function runs(pool, taken, depth){
 
 function setOrder(o){ ORDER = Array.isArray(o) ? o : []; }
 
-const API = {TEAMS, MY_SLOT, ROUNDS, MY_PICKS, TEAM_NAMES, SLOTS, SK_CATS, G_CATS, MULTI_BONUS,
+const API = {TEAMS, MY_SLOT, ROUNDS, MY_PICKS, TEAM_NAMES, SLOTS, SK_CATS, G_CATS, weightOf, catSum,
              prepare, setOrder, scoreAll, profile, pWin, catDelta, simulate, assign, teamOf, rosters, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
              get LG(){return LG;}};
 if (typeof module !== 'undefined' && module.exports) module.exports = API;
