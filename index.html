@@ -49,6 +49,18 @@ th,td{padding:5px 7px;text-align:right;white-space:nowrap;border-bottom:1px soli
 th{position:sticky;top:0;background:var(--panel2);color:var(--dim);font-weight:600;
   cursor:pointer;user-select:none;z-index:2;font-size:11px}
 th:hover{color:var(--tx)} th.sorted{color:var(--acc)}
+.who{font-size:10px;color:var(--dim2);letter-spacing:.3px}
+.who.me{color:var(--acc);font-weight:700}
+.slotmark{margin-left:6px;padding:0 4px;border:1px solid var(--ln);border-radius:3px;
+  font-size:9px;color:var(--dim2)}
+table.opp{font-size:11px} table.opp td,table.opp th{padding:2px 4px;text-align:center}
+table.opp td.l,table.opp th.l{text-align:left;white-space:nowrap}
+table.opp tr.me{background:rgba(93,169,255,.09)}
+table.opp tr.me td.l{color:var(--acc);font-weight:700}
+.rk{display:inline-block;min-width:15px;border-radius:3px;padding:1px 0}
+.rk.hi{background:rgba(58,190,120,.22);color:#8fe3b2}
+.rk.lo{background:rgba(255,255,255,.04);color:var(--dim2)}
+.need{color:var(--dim2)} .need b{color:var(--warn);font-weight:600}
 td.l,th.l{text-align:left}
 tbody tr:hover{background:#1c222c}
 tr.mine{background:#1f3b2a} tr.mine:hover{background:#274a35}
@@ -138,10 +150,24 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
         </div>
         <div class="cats" id="cats"></div>
         <p class="note">Полоса — вероятность выиграть категорию у средней команды
-          <b>по итогам сезона</b>: пустые слоты добиваются тем, что в среднем достаётся
-          на оставшихся пиках. Поэтому на старте везде ровно 50%, и цифра меняется только
-          от того, лучше или хуже мои игроки типичных для этих пиков.
+          <b>по итогам сезона</b>. Каждый ещё пустой слот считается средним игроком,
+          который обычно этот слот занимает: пустой D — средним защитником, пустой C —
+          средним центром. Поэтому на старте ровно 50% везде, и цифра двигается только
+          там, где мои игроки лучше или хуже типичных <i>для своей позиции</i>.
           Жёлтая — вот тут и решается, серая — сдана.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Соперники <span id="runline" style="text-transform:none;letter-spacing:0;color:var(--dim2)"></span></h2>
+      <div class="body">
+        <div class="tablewrap"><table class="opp">
+          <thead><tr id="ophead"></tr></thead><tbody id="opbody"></tbody>
+        </table></div>
+        <p class="note">Место команды в каждой категории <b>среди двенадцати</b> на сегодняшний
+          день. Зелёное — забирают, серое — сдают. Смотреть надо на свои жёлтые категории:
+          если в них у многих зелёное, ждать нельзя. «Надо» — сколько стартовых слотов
+          команде ещё закрывать; отсюда видно, кто скоро побежит за вратарями.</p>
       </div>
     </div>
 
@@ -157,6 +183,7 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
         <div class="row">
           <span class="chip" id="exp">экспорт</span>
           <span class="chip" id="imp">импорт</span>
+          <span class="chip" id="undo">отменить последний</span>
           <span class="chip" id="rst">сброс</span>
         </div>
       </div>
@@ -171,8 +198,18 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
 <script src="core.js"></script>
 <script>
 const LS = 'nhl-draft-v2';
-let S = {taken:{}};
+let S = {order:[]};
 try { const r = localStorage.getItem(LS); if (r) S = JSON.parse(r); } catch(e){}
+// раньше хранился объект отметок; порядок ключей и есть порядок пиков
+if (!S.order) S.order = Object.keys(S.taken || {});
+// Чья команда взяла игрока — выводится из номера пика, а не отмечается руками.
+// Меньше кликов и, главное, видно ростеры всех одиннадцати соперников.
+function derive(){
+  const t = {};
+  S.order.forEach((n,i) => { t[n] = NHL.teamOf(i+1) === NHL.MY_SLOT ? 'ME' : 'X'; });
+  S.taken = t;
+  return t;
+}
 const save = () => { try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} };
 
 // первый раунд из Fantrax
@@ -185,7 +222,12 @@ const SEED = [
  ['Matt Boldy','X'],['Evan Bouchard','X'],['Cole Caufield','X'],['Jack Hughes','X'],
  ['Brady Tkachuk','X'],['Tage Thompson','X'],['Zach Werenski','X'],
 ];
-const seed = () => SEED.forEach(([n,w]) => S.taken[n] = w);
+const nextTeam = () => {
+  const n = S.order.length + 1;
+  return n > NHL.TEAMS * NHL.ROUNDS ? '—'
+       : (NHL.teamOf(n) === NHL.MY_SLOT ? 'меня' : 'K' + NHL.teamOf(n));
+};
+const seed = () => { S.order = SEED.map(x => Array.isArray(x) ? x[0] : x); };
 
 let POOL = [], view = {pos:'ALL', free:true, multi:false, q:'', sort:'vorp', dir:-1};
 
@@ -204,6 +246,7 @@ function fmt(v,k){
 }
 
 function render(){
+  derive();
   const pr = NHL.scoreAll(POOL, S.taken);
   const sc = NHL.withScarcity(POOL, S.taken);
 
@@ -238,25 +281,21 @@ function render(){
         <span class="pos" style="margin-left:5px;color:var(--dim2)">${p.team||''}</span></td>
       <td class="l"><span class="pos ${p.pos.length>1?'multi':''}">${p.pos.join('/')}</span></td>
       ${cols().map(c=>`<td class="num ${c.k==='vorp'?'v '+(p.vorp>0?'pos_':'neg'):''}">${fmt(p[c.k],c.k)}</td>`).join('')}
-      <td class="act">
-        <button class="mini m" data-n="${encodeURIComponent(p.name)}" data-a="ME">я</button>
-        <button class="mini t" data-n="${encodeURIComponent(p.name)}" data-a="X">×</button>
+      <td class="act">${st ? `<span class="who ${st==='ME'?'me':''}">${
+          st==='ME' ? 'я' : 'K'+NHL.teamOf(S.order.indexOf(p.name)+1)}</span>`
+        : `<button class="mini m" data-n="${encodeURIComponent(p.name)}"
+             title="пик #${S.order.length+1} → ${nextTeam()}">+</button>`}
       </td></tr>`;
   }).join('');
 
   document.querySelectorAll('#tbody button').forEach(b => b.onclick = () => {
-    const n = decodeURIComponent(b.dataset.n), a = b.dataset.a;
-    if (S.taken[n] === a) delete S.taken[n]; else S.taken[n] = a;
-    save(); render();
+    S.order.push(decodeURIComponent(b.dataset.n)); save(); render();
   });
 
   // брать сейчас — поверх позиций, включая вратарей
   const best = POOL.filter(p => !S.taken[p.name]).sort((a,b)=>b.vorp-a.vorp).slice(0,5);
   const why = p => {
-    const cats = p.isG ? NHL.G_CATS : NHL.SK_CATS;
-    const top = cats.filter(c=>c.rel>=1)
-      .map(c=>({n:c.n, d: NHL.pWin(c, pr.z[c.k]+p.z[c.k], !!p.isG, (p.isG?pr.nG:pr.nSk)+1)
-                            - NHL.pWin(c, pr.z[c.k], !!p.isG, p.isG?pr.nG:pr.nSk)}))
+    const top = NHL.catDelta(p, pr).filter(x=>x.rel>=1)
       .sort((a,b)=>b.d-a.d).slice(0,3).filter(x=>x.d>0.01);
     return top.length ? top.map(x=>`${x.n} +${(x.d*100).toFixed(0)}`).join(' · ') : 'добор глубины';
   };
@@ -264,12 +303,13 @@ function render(){
     `<div class="bc ${i===0?'top':''}">
       <div class="bv">${p.vorp.toFixed(0)}</div>
       <div class="bn">${p.name}${p.inj?`<span class="inj">${p.inj}</span>`:''}</div>
-      <div class="bp">${p.isG?'G':p.pos.join('/')} · ${p.team} · ${p.gp} GP · Yahoo ${p.rank_pre}</div>
+      <div class="bp">${p.isG?'G':p.pos.join('/')} · ${p.team} · ${p.gp} GP · Yahoo ${p.rank_pre}
+        <span class="slotmark">слот ${p.slot}</span></div>
       <div class="bw">${why(p)}</div>
       <button data-n="${encodeURIComponent(p.name)}">взял</button>
     </div>`).join('');
   document.querySelectorAll('#best button').forEach(b => b.onclick = () => {
-    S.taken[decodeURIComponent(b.dataset.n)] = 'ME'; save(); render(); });
+    S.order.push(decodeURIComponent(b.dataset.n)); save(); render(); });
   document.getElementById('bestPick').textContent =
     sc.cur ? `— пик #${sc.cur}` : '';
 
@@ -289,12 +329,34 @@ function render(){
   en.textContent = pr.expected.toFixed(1);
   // пока набрано мало игроков, «темп» скачет и ничего не предсказывает —
   // не даём принять раннюю цифру за прогноз сезона
-  const raw = pr.nSk + pr.nG < 6;
-  en.className = 'big' + (raw ? ' raw' : pr.expected < 7 ? ' low' : '');
-  document.getElementById('expSub').innerHTML = raw
-    ? `категорий из 12 · <b style="color:var(--warn)">рано судить</b>,
-       взято ${pr.nSk + pr.nG} из 16`
-    : `категорий из 12 · нужно 7 · взято ${pr.nSk + pr.nG} из 16`;
+  en.className = 'big' + (pr.expected < 7 ? ' low' : '');
+  document.getElementById('expSub').innerHTML =
+    `категорий из 12 · нужно 7 · взято ${pr.nSk + pr.nG} из 16
+     <span style="color:var(--dim2)">· остальные слоты считаются средними</span>`;
+
+  // соперники
+  const OPP = NHL.rosters(POOL, S.order);
+  const ALLC = [...NHL.SK_CATS, ...NHL.G_CATS];
+  document.getElementById('ophead').innerHTML =
+    '<th class="l">команда</th><th class="l">игроков</th>' +
+    ALLC.map(c=>`<th title="${c.n}">${c.n}</th>`).join('') + '<th class="l">надо</th>';
+  document.getElementById('opbody').innerHTML = OPP.map(t => {
+    const need = Object.entries(t.need).filter(([,n])=>n>0)
+      .map(([pos,n]) => `${pos}${n>1?'×'+n:''}`).join(' ') || '—';
+    return `<tr class="${t.mine?'me':''}">
+      <td class="l">${t.mine?'я (K'+t.slot+')':'K'+t.slot}</td>
+      <td class="l">${t.players.length}</td>
+      ${ALLC.map(c=>{
+        const r = t.rank[c.k];
+        if (!r) return '<td><span style="color:var(--dim2)">·</span></td>';
+        return `<td><span class="rk ${r<=3?'hi':r>=10?'lo':''}">${r}</span></td>`;
+      }).join('')}
+      <td class="l need">${need}</td></tr>`;
+  }).join('');
+  const rn = NHL.runs(POOL, S.taken, 60);
+  document.getElementById('runline').textContent =
+    'ушло / осталось в топ-60: ' +
+    ['C','LW','RW','D','G'].map(k=>`${k} ${rn[k].gone}/${rn[k].left}`).join(' · ');
 
   // ростер
   document.getElementById('slots').innerHTML = NHL.fillRoster(POOL, S.taken).map(([s,p]) =>
@@ -303,26 +365,27 @@ function render(){
   ).join('');
 
   // шапка
-  const done = Object.keys(S.taken).length, cur = sc.cur;
+  const done = S.order.length, cur = sc.cur;
   const away = cur ? cur - done - 1 : null;
   const b = document.getElementById('badge');
   if (!cur) { b.textContent = 'драфт пройден'; b.className = 'badge'; }
   else if (away <= 0) { b.textContent = `ТВОЙ ПИК #${cur}`; b.className = 'badge now'; }
   else { b.textContent = `пик #${cur} · через ${away}`; b.className = 'badge' + (away<=2?' soon':''); }
 
-  const mine = Object.values(S.taken).filter(v=>v==='ME').length;
+  const mine = S.order.filter((n,i)=>NHL.teamOf(i+1)===NHL.MY_SLOT).length;
   document.getElementById('meta').textContent =
-    `отмечено ${done} · у меня ${mine} · мои пики: ${NHL.MY_PICKS.join(', ')}`;
+    `отмечено ${done} · сейчас пикает ${nextTeam()} · у меня ${mine} · мои пики: ${NHL.MY_PICKS.join(', ')}`;
 
   const nm = g => sc.repl[g][0] ? sc.repl[g][0].name : '—';
   document.getElementById('explain').innerHTML =
     `<b>ЦЕНА</b> — насколько игрок поднимает шанс выиграть категории
      <i>по сравнению с тем, кого я возьму следующим пиком</i>. Это и есть ответ «брать сейчас или ждать».<br><br>
-     <b>vs РАУНД</b> — насколько он лучше типичного игрока этого раунда.
-     Минус значит «на таком пике обычно берут полезнее», а не «плохой игрок».<br><br>
+     <b>vs РАУНД</b> — насколько он лучше <i>среднего игрока на своём слоте</i>:
+     защитник сравнивается с защитником, центр — с центром. Слот D форвардом не закрыть,
+     поэтому штрафовать защитника за то, что он не забивает, неправильно.<br><br>
      До пика #${sc.next || '—'} уйдёт ещё ${sc.gap} игроков. Дождутся, вероятно:
      <b>G</b> ${nm('G')} · <b>D</b> ${nm('D')} · <b>F</b> ${nm('F')}.<br><br>
-     Отмечай чужие пики <b>×</b>, свои — <b>я</b>.`;
+     Отмечай пики подряд кнопкой <b>+</b> — чья команда, считается по номеру пика.`;
 }
 
 document.querySelectorAll('.chip[data-pos]').forEach(c => c.onclick = () => {
@@ -341,11 +404,12 @@ document.getElementById('imp').onclick = () => {
   const v = prompt('Вставь состояние:'); if (!v) return;
   try { S = JSON.parse(v); save(); render(); } catch(e){ alert('не разобрал'); } };
 document.getElementById('rst').onclick = () => {
-  if (confirm('Сбросить все отметки?')){ S = {taken:{}}; seed(); save(); render(); } };
+  if (confirm('Сбросить все отметки?')){ S = {order:[]}; seed(); save(); render(); } };
+document.getElementById('undo').onclick = () => { S.order.pop(); save(); render(); };
 
 fetch('data/yahoo_proj.json?v=' + Date.now()).then(r=>r.json()).then(d=>{
   POOL = NHL.prepare(d);
-  if (!Object.keys(S.taken).length){ seed(); save(); }
+  if (!S.order.length){ seed(); save(); }
   render();
 }).catch(e => {
   document.getElementById('meta').textContent = 'не загрузились данные: ' + e;
