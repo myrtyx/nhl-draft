@@ -185,6 +185,7 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
         <div class="row">
           <span class="chip" id="exp">экспорт</span>
           <span class="chip" id="imp">импорт</span>
+          <span class="chip" id="skip">чужой пик, игрока нет в списке</span>
           <span class="chip" id="undo">отменить последний</span>
           <span class="chip" id="rst">сброс</span>
         </div>
@@ -197,7 +198,7 @@ footer{margin-top:16px;color:var(--dim2);font-size:11px}
 отметки хранятся в этом браузере</footer>
 </div>
 
-<script src="core.js?v=1790069980"></script>
+<script src="core.js?v=1790071691"></script>
 <script>
 const LS = 'nhl-draft-v2';
 let S = {order:[]};
@@ -210,9 +211,24 @@ function derive(){
   const t = {};
   S.order.forEach((n,i) => { t[n] = NHL.teamOf(i+1) === NHL.MY_SLOT ? 'ME' : 'X'; });
   S.taken = t;
+  NHL.setOrder(S.order);
   return t;
 }
-const save = () => { try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} };
+const save = () => { try{ localStorage.setItem(LS, JSON.stringify({order:S.order, seeded:S.seeded})); }catch(e){} };
+const LIMIT = 12 * 16;
+let busy = false;
+function pick(name){
+  if (busy || !POOL.length || !name) return;
+  if (S.order.length >= LIMIT) return;
+  if (S.taken[name]) return;            // уже отмечен — значит клик лишний
+  busy = true;
+  S.order.push(name); save(); render();
+  requestAnimationFrame(() => { busy = false; });
+}
+function unpick(){
+  if (!POOL.length || !S.order.length) return;
+  S.order.pop(); save(); render();
+}
 
 // первый раунд из Fantrax
 const SEED = [
@@ -313,7 +329,7 @@ function render(){
   }).join('');
 
   document.querySelectorAll('#tbody button').forEach(b => b.onclick = () => {
-    S.order.push(decodeURIComponent(b.dataset.n)); save(); render();
+    pick(decodeURIComponent(b.dataset.n));
   });
 
   // брать сейчас — поверх позиций, включая вратарей
@@ -328,7 +344,7 @@ function render(){
       <button data-n="${encodeURIComponent(p.name)}">взял</button>
     </div>`).join('');
   document.querySelectorAll('#best button').forEach(b => b.onclick = () => {
-    S.order.push(decodeURIComponent(b.dataset.n)); save(); render(); });
+    pick(decodeURIComponent(b.dataset.n)); });
   document.getElementById('bestPick').textContent =
     sc.cur ? `— пик #${sc.cur}` : '';
 
@@ -421,15 +437,26 @@ document.getElementById('q').oninput = e => { view.q = e.target.value.trim(); re
 document.getElementById('exp').onclick = () => prompt('Состояние:', JSON.stringify(S));
 document.getElementById('imp').onclick = () => {
   const v = prompt('Вставь состояние:'); if (!v) return;
-  try { S = JSON.parse(v); save(); render(); } catch(e){ alert('не разобрал'); } };
+  let o; try { o = JSON.parse(v); } catch(e){ return alert('не разобрал'); }
+  const list = Array.isArray(o) ? o : (o && Array.isArray(o.order) ? o.order
+             : (o && o.taken ? Object.keys(o.taken) : null));
+  if (!list || !list.every(x => typeof x === 'string')) return alert('не разобрал');
+  if (!confirm('Заменить ' + S.order.length + ' отметок на ' + list.length + '?')) return;
+  S = {order: list.slice(0, LIMIT)}; save(); render(); };
 document.getElementById('rst').onclick = () => {
+  if (!POOL.length) return;
   if (confirm('Сбросить все отметки?')){ S = {order:[]}; seed(); save(); render(); } };
-document.getElementById('undo').onclick = () => { S.order.pop(); save(); render(); };
+document.getElementById('undo').onclick = unpick;
+// Игрока может не быть в списке: пул — 492 имени, а в драфте берут и глубже.
+// Тогда важно не кто ушёл, а что пик состоялся — иначе съедет вся змейка.
+document.getElementById('skip').onclick = () =>
+  pick('— пик #' + (S.order.length + 1));
 
 fetch('data/yahoo_proj.json?v=' + Date.now()).then(r=>r.json()).then(d=>{
   POOL = NHL.prepare(d);
   if (!S.order.length) seed();
-  topUp();
+  else if (!S.seeded) topUp();
+  S.seeded = true;
   save();
   render();
 }).catch(e => {

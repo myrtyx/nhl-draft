@@ -48,7 +48,19 @@ const G_CATS = [
   {k:'sho',   n:'SHO', rel:0.5},
 ];
 
-const MULTI_BONUS = 0.08;             // за каждую позицию сверх первой
+const MULTI_BONUS = 0.08;
+// Запасной выходит только вместо стартера: за неделю это примерно треть игр.
+// Раньше он считался наравне со стартером — отсюда и лез шестой вратарь.
+const W_BN = 0.35;
+// Процент отражённых — не сумма, а отношение. Складывать z двух вратарей
+// нельзя: у пары он равен общим сэйвам на общие броски, и добавить вратаря
+// хуже текущей пары значит ОПУСТИТЬ команду, хотя сумма z при этом растёт.
+const RATIO = 'svpct';
+const ratioOf = gs => {
+  let sv = 0, sa = 0;
+  for (const [g, w] of gs){ sv += w * (g.sv || 0); sa += w * (g.sa || 0); }
+  return sa ? sv / sa : 0;
+};             // за каждую позицию сверх первой
 // Сколько игроков каждой позиции реально нужно лиге: слотов × 12 команд.
 // Отсюда берётся уровень «кто займёт этот слот, если я его не усилю».
 const SLOT_COUNT = {C:2, LW:2, RW:2, D:4, G:2};
@@ -75,7 +87,8 @@ function buildZ(list, cats, depth){
 }
 
 let LG = null;   // разброс сумм по лиге: {sk:{...}, gk:{...}}
-let BASE = null; // средний z игрока на каждом слоте
+let BASE = null;
+let ORDER = [];   // порядок уже сделанных пиков, ставится страницей // средний z игрока на каждом слоте
 
 // Симуляция лиги. Раньше топ-игроков просто раздавали змейкой по рангу, но
 // так команда могла остаться без вратаря, а слоты — без хозяев. Теперь каждая
@@ -84,8 +97,10 @@ let BASE = null; // средний z игрока на каждом слоте
 // разброс сумм по лиге и средний уровень игрока на каждом слоте.
 const STARTERS = Object.values(SLOT_COUNT).reduce((s,n)=>s+n,0);   // 12
 
-function simulate(all){
-  const byRank = [...all].sort((a,b)=>(a.rank_pre??9999)-(b.rank_pre??9999));
+function simulate(all, jitter){
+  const key = p => (p.rank_pre ?? 9999) +
+    (jitter ? (Math.random()+Math.random()+Math.random()-1.5) * jitter : 0);
+  const byRank = [...all].map(p=>[p, key(p)]).sort((a,b)=>a[1]-b[1]).map(x=>x[0]);
   const teams = Array.from({length:TEAMS}, ()=>({
     used:{C:0,LW:0,RW:0,D:0,G:0,BN:0}, at:{C:[],LW:[],RW:[],D:[],G:[],BN:[]},
     sk:[], gk:[]
@@ -116,7 +131,33 @@ function simulate(all){
 function spread(teams, cats, key){
   const out = {};
   for (const c of cats){
-    const sums = teams.map(t => t[key].reduce((s,p)=>s+p.z[c.k],0));
+    const sums = teams.map(t => {
+      let v = 0;
+      for (const sl of (key === 'gk' ? ['G'] : ['C','LW','RW','D']))
+        for (const q of t.at[sl]) v += q.z[c.k];
+      if (key === 'sk') for (const q of t.at.BN) v += W_BN * q.z[c.k];
+      if (c.k === RATIO) return ratioOf(t.at.G.map(q => [q, 1]));
+      return v;
+    });
+    out[c.k] = {m: mean(sums), sd: std(sums), sorted:[...sums].sort((a,b)=>b-a)};
+  }
+  return out;
+}
+
+// Свести много раздач в одно распределение: среднее по всем, разброс — тоже
+// по всем сразу, так что в него входит и случайность самого драфта.
+function pool(runs, cats, key){
+  const start = key === 'gk' ? ['G'] : ['C','LW','RW','D'];
+  const out = {};
+  for (const c of cats){
+    const sums = [];
+    for (const teams of runs) for (const t of teams){
+      let v = 0;
+      for (const sl of start) for (const q of t.at[sl]) v += q.z[c.k];
+      if (key === 'sk') for (const q of t.at.BN) v += W_BN * q.z[c.k];
+      if (c.k === RATIO) v = ratioOf(t.at.G.map(q => [q, 1]));
+      sums.push(v);
+    }
     out[c.k] = {m: mean(sums), sd: std(sums), sorted:[...sums].sort((a,b)=>b-a)};
   }
   return out;
@@ -146,9 +187,15 @@ function prepare(d){
   d.goalies.forEach(p => { p.isG = true; if (!p.pos || !p.pos.length) p.pos = ['G']; });
   buildZ(d.skaters, SK_CATS, SK_DEPTH);
   buildZ(d.goalies, G_CATS, G_DEPTH);
-  const teams = simulate([...d.skaters, ...d.goalies]);
-  LG   = {sk: spread(teams, SK_CATS, 'sk'), gk: spread(teams, G_CATS, 'gk')};
-  BASE = slotBase(teams);
+  const all = [...d.skaters, ...d.goalies];
+  // Одна раздача строго по рангу — это одна точка, а не разброс. Живой драфт
+  // тасует порядок: соперники тянутся, ошибаются, добирают по нужде. Поэтому
+  // гоняю раздачу много раз с шумом и усредняю — иначе узкие категории
+  // (PPP, голевые передачи) выглядят решаемыми, а они шумные.
+  const runs = [];
+  for (let i = 0; i < 80; i++) runs.push(simulate(all, i ? 25 : 0));
+  LG   = {sk: pool(runs, SK_CATS, 'sk'), gk: pool(runs, G_CATS, 'gk')};
+  BASE = slotBase(runs[0]);
   return [...d.skaters, ...d.goalies];
 }
 
@@ -177,9 +224,59 @@ function assign(mine){
 // платишь одним полевым — это учитывается само собой.
 function benchFree(used){ return Math.max(0, 4 - used.BN); }
 
-// Профиль = прогноз состава на конец драфта: мои игроки плюс средний уровень
-// слота на каждом ещё пустом месте. Именно поэтому сравнение честное: два
-// разных пика сравниваются как два готовых ростера, а не как два полуфабриката.
+// Чем реально закроется пустой слот, если не брать игрока прямо сейчас.
+// Раньше сюда подставлялся средний стартер лиги — и слот выходил бесплатно
+// лучше любого живого игрока позднего раунда: модель переставала брать
+// крайних вовсе. Теперь слот закрывает тот, кто доживёт до моего пика,
+// а если пики кончились — слот остаётся пустым и не даёт ничего.
+// Досимулировать остаток драфта за все двенадцать команд сразу и вернуть то,
+// что достанется мне. Иначе прогноз выходит оптимистичным: если считать, что
+// на пике N доступен игрок ранга N, то к концу драфта я «беру» 191-го, а в
+// живой раздаче к этому моменту разобраны ранги до 245 — слоты вынуждают
+// команды пропускать и уходить глубже по списку.
+function futureFill(pool, taken, used){
+  const done  = Object.keys(taken).length;
+  const byRank = pool.filter(q => !taken[q.name])
+                     .sort((a,b)=>(a.rank_pre??9999)-(b.rank_pre??9999));
+  const by = new Map(pool.map(q => [q.name, q]));
+
+  // чем заняты слоты у каждой команды на текущий момент
+  const st = Array.from({length: TEAMS}, () => ({C:0,LW:0,RW:0,D:0,G:0,BN:0}));
+  ORDER.slice(0, done).forEach((nm, i) => {
+    const q = by.get(nm); if (!q) return;
+    const u = st[teamOf(i + 1) - 1];
+    u[slotFor(q, u)]++;
+  });
+  if (!ORDER.length) for (const nm of Object.keys(taken)){      // порядка нет — всё моё
+    const q = by.get(nm); if (!q) continue;
+    const u = st[MY_SLOT - 1]; u[slotFor(q, u)]++;
+  }
+
+  const gone = new Set(), out = [], byPos = {};
+  for (let n = done + 1; n <= TEAMS * ROUNDS; n++){
+    const u = st[teamOf(n) - 1];
+    const bench = (u.C+u.LW+u.RW+u.D+u.G) >= STARTERS;
+    let pick = null, slot = 'BN';
+    for (const q of byRank){
+      if (gone.has(q.name)) continue;
+      if (bench){ if (q.isG) continue; pick = q; break; }
+      const sl = slotFor(q, u);
+      if (sl === 'BN') continue;
+      pick = q; slot = sl; break;
+    }
+    if (!pick) continue;
+    gone.add(pick.name); u[slot]++;
+    if (teamOf(n) === MY_SLOT){
+      out.push({pos: slot, p: pick});
+      if (!byPos[slot]) byPos[slot] = pick;
+    }
+  }
+  return {list: out, byPos};
+}
+
+// Профиль = прогноз состава на конец драфта: мои игроки плюс то, чем реально
+// добьются пустые места. Сравнение честное: два пика сравниваются как два
+// готовых ростера, а не как два полуфабриката.
 function profile(pool, taken){
   const mine = pool.filter(p => taken[p.name] === 'ME');
   const {used, at} = assign(mine);
@@ -187,23 +284,30 @@ function profile(pool, taken){
   for (const c of [...SK_CATS, ...G_CATS]) z[c.k] = 0;
   for (const p of mine){
     const cats = p.isG ? G_CATS : SK_CATS;
-    for (const c of cats) z[c.k] += p.z[c.k];
+    const w = at.get(p.name) === 'BN' ? W_BN : 1;
+    for (const c of cats) z[c.k] += w * p.z[c.k];
+  }
+  const fill = futureFill(pool, taken, used);
+  for (const {pos, p} of fill.list){
+    const cats = p.isG ? G_CATS : SK_CATS;
+    const w = pos === 'BN' ? W_BN : 1;
+    for (const c of cats) z[c.k] += w * p.z[c.k];
   }
   const free = {};
   for (const [pos, n] of Object.entries(SLOT_COUNT))
     free[pos] = Math.max(0, n - used[pos]);
   free.BN = benchFree(used);
-  for (const [pos, n] of Object.entries(free)){
-    if (!n) continue;
-    const cats = pos === 'G' ? G_CATS : SK_CATS;
-    for (const c of cats) z[c.k] += BASE[pos][c.k] * n;
-  }
+  // вратари, что реально встанут в ворота, плюс третий со скамейки
+  const gs = [];
+  for (const q of mine) if (q.isG) gs.push([q, at.get(q.name) === 'G' ? 1 : W_BN]);
+  for (const {pos, p: q} of fill.list) if (q.isG) gs.push([q, pos === 'G' ? 1 : W_BN]);
+  z[RATIO] = ratioOf(gs);
   const p = {};
   let exp = 0;
   for (const c of SK_CATS){ p[c.k] = pWin(c, z[c.k], false); exp += p[c.k]; }
   for (const c of G_CATS) { p[c.k] = pWin(c, z[c.k], true ); exp += p[c.k]; }
   const nG = mine.filter(x=>x.isG).length;
-  return {z, p, pFull: p, expected: exp, used, at, free,
+  return {z, p, pFull: p, expected: exp, used, at, free, fill, gs,
           nSk: mine.length - nG, nG};
 }
 
@@ -212,24 +316,26 @@ function profile(pool, taken){
 // защитником: слот D форвардом не закрыть, его всё равно кто-то займёт.
 function catDelta(p, pr){
   const slot = slotFor(p, pr.used);
+  const w = slot === 'BN' ? W_BN : 1;
+  const alt = pr.fill.byPos[slot] || null;   // кто занял бы этот слот без меня
   const out = [];
+  const push = (cats, isG, mine) => {
+    for (const c of cats)
+      out.push({n:c.n, k:c.k, rel:c.rel,
+                d: pWin(c, pr.z[c.k] + mine(c), isG) - pWin(c, pr.z[c.k], isG)});
+  };
   if (p.isG){
-    for (const c of G_CATS){
-      // на слоте G меняю средний уровень вратаря на этого; третий вратарь
-      // садится на скамейку и ничего не вытесняет из вратарских категорий
-      const base = slot === 'G' ? BASE.G[c.k] : 0;
-      out.push({n:c.n, k:c.k, rel:c.rel,
-                d: pWin(c, pr.z[c.k] - base + p.z[c.k], true) - pWin(c, pr.z[c.k], true)});
-    }
-    if (slot !== 'G')   // третьим вратарём плачу одним полевым со скамейки
-      for (const c of SK_CATS)
-        out.push({n:c.n, k:c.k, rel:c.rel,
-                  d: pWin(c, pr.z[c.k] - BASE.BN[c.k], false) - pWin(c, pr.z[c.k], false)});
+    // третий вратарь садится на скамейку: выходит редко и сгоняет оттуда полевого
+    push(G_CATS.filter(c => c.k !== RATIO), true,
+         c => w * (p.z[c.k] - (alt && alt.isG ? alt.z[c.k] : 0)));
+    const gs = pr.gs.filter(([q]) => !(alt && alt.isG && q === alt));
+    const c = G_CATS.find(x => x.k === RATIO);
+    out.push({n:c.n, k:c.k, rel:c.rel,
+              d: pWin(c, ratioOf([...gs, [p, w]]), true) - pWin(c, pr.z[RATIO], true)});
+    if (slot !== 'G' && alt && !alt.isG)
+      push(SK_CATS, false, c => -w * alt.z[c.k]);
   } else {
-    const base = BASE[slot];
-    for (const c of SK_CATS)
-      out.push({n:c.n, k:c.k, rel:c.rel,
-                d: pWin(c, pr.z[c.k] - base[c.k] + p.z[c.k], false) - pWin(c, pr.z[c.k], false)});
+    push(SK_CATS, false, c => w * (p.z[c.k] - (alt && !alt.isG ? alt.z[c.k] : 0)));
   }
   return out;
 }
@@ -241,7 +347,10 @@ function scoreAll(pool, taken){
     p.slot = slotFor(p, pr.used);
     const s = catDelta(p, pr).reduce((acc,x)=>acc + x.rel*x.d, 0);
     // ×100 — чтобы читалось как «сотые доли категории»
-    p.score = 100 * s * (1 + MULTI_BONUS * ((p.pos ? p.pos.length : 1) - 1));
+    // бонус за гибкость всегда в плюс: умножение делало слабого игрока с двумя
+    // позициями ещё хуже слабого с одной, а нужно ровно наоборот
+    const base = 100 * s;
+    p.score = base + Math.abs(base) * MULTI_BONUS * ((p.pos ? p.pos.length : 1) - 1);
   }
   return pr;
 }
@@ -361,8 +470,10 @@ function runs(pool, taken, depth){
   return out;
 }
 
+function setOrder(o){ ORDER = Array.isArray(o) ? o : []; }
+
 const API = {TEAMS, MY_SLOT, ROUNDS, MY_PICKS, TEAM_NAMES, SLOTS, SK_CATS, G_CATS, MULTI_BONUS,
-             prepare, scoreAll, profile, pWin, catDelta, assign, teamOf, rosters, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
+             prepare, setOrder, scoreAll, profile, pWin, catDelta, assign, teamOf, rosters, runs, SLOT_COUNT, fillRoster, withScarcity, groupOf,
              get LG(){return LG;}};
 if (typeof module !== 'undefined' && module.exports) module.exports = API;
 root.NHL = API;
