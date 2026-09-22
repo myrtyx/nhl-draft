@@ -429,13 +429,48 @@ function pWin(cat, v, isG){
 
 // Разложить моих игроков по слотам Yahoo. Негибких ставим первыми — иначе
 // мультипозиционный займёт слот, который больше некому закрыть.
-function assign(mine){
-  const used = {C:0, LW:0, RW:0, D:0, G:0, BN:0}, at = new Map();
+// Раскладка состава по слотам. Жадность здесь врала: Зибанейд (C/RW) садился
+// на C просто потому, что C идёт первым в его списке, и второй слот центра
+// оказывался занят. После этого Кросби показывался скамейкой — хотя в Yahoo
+// я бы просто сдвинул Зибанейда на RW и поставил обоих. Теперь ищу
+// аугментирующий путь: новый игрок вытесняет соседа, если тому есть куда уйти.
+const SEATS = ['C','LW','RW','D','G'];
+function seatIn(p, at, taken, seen){
+  for (const sl of (p.isG ? ['G'] : p.pos)){
+    if ((taken[sl] || 0) < (SLOT_COUNT[sl] || 0)){ taken[sl]++; at.set(p, sl); return true; }
+  }
+  for (const sl of (p.isG ? ['G'] : p.pos)){
+    if (seen.has(sl)) continue;
+    seen.add(sl);
+    for (const [q, qs] of at){
+      if (qs !== sl || q === p) continue;
+      at.delete(q);
+      if (seatIn(q, at, taken, seen)){ at.set(p, sl); return true; }
+      at.set(q, sl);
+    }
+  }
+  return false;
+}
+
+// Кого сажаю первым: сперва негибких, потом сильных. Порядок на размер
+// раскладки не влияет — аугментирующий путь всё равно найдёт максимум.
+function seatAll(mine){
+  const at = new Map(), taken = {C:0, LW:0, RW:0, D:0, G:0};
   const order = [...mine].sort((a,b)=>
     (a.pos.length - b.pos.length) || ((a.rank_pre??9999)-(b.rank_pre??9999)));
-  for (const p of order){
-    const slot = slotFor(p, used);
-    used[slot]++; at.set(p.name, slot);
+  const out = [];
+  for (const p of order) if (!seatIn(p, at, taken, new Set())) out.push(p);
+  return {at, taken, out};
+}
+
+function assign(mine){
+  const {at: seat, taken, out} = seatAll(mine);
+  const used = {C:taken.C, LW:taken.LW, RW:taken.RW, D:taken.D, G:taken.G, BN:0};
+  const at = new Map();
+  for (const [p, sl] of seat) at.set(p.name, sl);
+  for (const p of out){
+    if (used.BN < BENCH){ used.BN++; at.set(p.name, 'BN'); }
+    else at.set(p.name, 'OUT');
   }
   return {used, at};
 }
@@ -537,8 +572,18 @@ function profile(pool, taken){
 // состав выставляю я, и поставлю туда же.
 function bestSlot(p, pr){
   if (p.isG) return slotFor(p, pr.used);
-  const free = p.pos.filter(sl => (pr.used[sl] || 0) < (SLOT_COUNT[sl] || 0));
-  if (!free.length) return slotFor(p, pr.used);
+  let free = p.pos.filter(sl => (pr.used[sl] || 0) < (SLOT_COUNT[sl] || 0));
+  // Прямо свободного слота нет — но сосед с двумя позициями может подвинуться.
+  // Кросби (чистый C) при занятых центрах садился на скамейку, хотя Зибанейд
+  // уходит на RW и освобождает ему место.
+  if (!free.length){
+    const mine = [...pr.at.keys()];
+    const now = pr.roster.filter(q => mine.includes(q.name));
+    const s2 = seatAll(now.concat(p));
+    const got = [...s2.at].find(([q]) => q === p);
+    if (!got) return slotFor(p, pr.used);
+    free = [got[1]];
+  }
   if (free.length === 1) return free[0];
   let best = free[0], bv = -Infinity;
   for (const sl of free){
