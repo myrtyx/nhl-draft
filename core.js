@@ -149,23 +149,80 @@ function playShare(slots, better, hp){
 // плоский бонус за вторую позицию и фиксированный вес скамейки. Вторая
 // позиция стоит ровно столько, насколько забита первая: первому центру она
 // не даёт ничего, четвёртому удваивает выход на лёд.
+// Веса всего состава сразу, точным перебором состояний. Считать игрока в
+// одиночку нельзя: раньше крайний с двумя позициями числился занятым сразу на
+// обеих, и чистый правый крайний выходил 0.48 вместо настоящих 0.85 — модель
+// душила именно тех, кем живёт эта лига. Состояние — сколько слотов каждого
+// вида занято (135 штук), игроки идут по рангу, как их и ставит тренер.
+const SLOT_ORDER = ['C','LW','RW','D'];
+const stIdx = (c,l,r,d) => ((c*3+l)*3+r)*5+d;
+let wCacheKey = null, wCache = null;
+
+function rosterWeights(roster){
+  const sk = roster.filter(q => !q.isG)
+                   .sort((a,b)=>(a.rank_pre??9999)-(b.rank_pre??9999));
+  const n = sk.length;
+  // предрасчёт: позиции числами и сколько желающих придёт следом
+  const POS = {C:0, LW:1, RW:2, D:3}, CAP = [SLOT_COUNT.C, SLOT_COUNT.LW, SLOT_COUNT.RW, SLOT_COUNT.D];
+  const myPos = sk.map(q => q.pos.map(x => POS[x]).filter(x => x !== undefined));
+  const rest = [];
+  for (let i = 0; i < n; i++){
+    const r = [0,0,0,0];
+    for (let j = i + 1; j < n; j++) for (const x of myPos[j]) r[x]++;
+    rest.push(r);
+  }
+  const hp = sk.map(q => pDay(q));
+  const num = new Float64Array(n), den = new Float64Array(n);
+  let st = new Float64Array(135), nx = new Float64Array(135);
+  for (const [f, w] of DAY_BINS){
+    st.fill(0); st[0] = 1;
+    for (let pi = 0; pi < n; pi++){
+      const q = Math.min(1, f * hp[pi]), pp = myPos[pi], rr = rest[pi];
+      nx.fill(0);
+      let fit = 0;
+      for (let i = 0; i < 135; i++){
+        const v = st[i]; if (!v) continue;
+        const d = i % 5, r = ((i/5)|0) % 3, l = ((i/15)|0) % 3, c = (i/45)|0;
+        nx[i] += v * (1 - q);
+        // Куда его поставить: туда, где свободных мест больше, чем желающих
+        // занять их следом. Иначе игрок с двумя позициями садится на слот,
+        // который больше некому закрыть, и вытесняет того, у кого позиция одна.
+        let best = -1, bs = -1e9;
+        for (let k = 0; k < pp.length; k++){
+          const sl = pp[k];
+          const used = sl === 0 ? c : sl === 1 ? l : sl === 2 ? r : d;
+          const free = CAP[sl] - used;
+          if (free <= 0) continue;
+          const sc = free - rr[sl];
+          if (sc > bs){ bs = sc; best = sl; }
+        }
+        if (best >= 0){
+          const j = best === 0 ? i + 45 : best === 1 ? i + 15 : best === 2 ? i + 5 : i + 1;
+          nx[j] += v * q; fit += v * q;
+        } else nx[i] += v * q;      // мест нет — сидит на скамейке
+      }
+      num[pi] += w * fit;
+      den[pi] += w * q;
+      const t = st; st = nx; nx = t;
+    }
+  }
+  const out = new Map();
+  for (let i = 0; i < n; i++) out.set(sk[i], den[i] > 0 ? num[i] / den[i] : 0);
+  // вратари живут отдельно: позиция одна, формула для неё точна
+  const gs = roster.filter(q => q.isG)
+                   .sort((a,b)=>(a.rank_pre??9999)-(b.rank_pre??9999));
+  gs.forEach((g, i) => out.set(g, playShare(SLOT_COUNT.G, i, pDay(g))));
+  return out;
+}
+
 function weightOf(p, roster){
-  const rk = q => q.rank_pre ?? 9999;
-  if (p.isG){
-    let better = 0;
-    for (const q of roster) if (q !== p && q.isG && rk(q) < rk(p)) better++;
-    return playShare(SLOT_COUNT.G, better, pDay(p));
-  }
-  const pos = p.pos || [];
-  let slots = 0;
-  for (const s of pos) slots += SLOT_COUNT[s] || 0;
-  let better = 0;
-  for (const q of roster){
-    if (q === p || q.isG || rk(q) >= rk(p)) continue;
-    const qp = q.pos || [];
-    for (const s of qp) if (pos.includes(s)){ better++; break; }
-  }
-  return playShare(slots, better, pDay(p));
+  // Состав приходит одним и тем же для всех двенадцати категорий подряд,
+  // поэтому держу разбор последнего.
+  let hit = wCache && wCacheKey && wCacheKey.length === roster.length;
+  if (hit) for (let i = 0; i < roster.length; i++)
+    if (wCacheKey[i] !== roster[i]){ hit = false; break; }
+  if (!hit){ wCacheKey = roster.slice(); wCache = rosterWeights(roster); }
+  return wCache.get(p) ?? 0;
 }
 
 // Сумма категории по составу с честными весами.
@@ -242,7 +299,10 @@ const STARTERS = Object.values(SLOT_COUNT).reduce((s,n)=>s+n,0);   // 12
 // страницы. Одинаковый сид — одинаковый ответ на один и тот же расклад.
 let seed = 1;
 const reseed = () => { seed = 20260922; };
-const rnd = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
+// Math.imul, а не обычное умножение: seed * 1103515245 доходит до 2.4e18, это
+// выше предела точности числа, младшие биты терялись ещё до маскирования и
+// период падал до десяти тысяч вместо двух миллиардов.
+const rnd = () => { seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
 
 function simulate(all, jitter){
   const key = p => (p.rank_pre ?? 9999) +
@@ -470,10 +530,35 @@ function profile(pool, taken){
 // Что даёт игрок: ставлю его на место того, кем этот слот закрылся бы без
 // него, и пересчитываю состав целиком. Веса при этом меняются у всех, кого
 // он теснит — иначе четвёртый центр выглядел бы бесплатным.
+// Куда ставить игрока с двумя-тремя позициями. Раньше брался первый слот из
+// p.pos, а там первым идёт C — самая забитая группа: добор и так закроет её
+// кем-то сильным, поэтому C/LW/RW выглядел пустышкой. Гаутье на C давал −7.5,
+// он же на LW даёт +20.3. Считаю по тому слоту, где выгода больше: в Yahoo
+// состав выставляю я, и поставлю туда же.
+function bestSlot(p, pr){
+  if (p.isG) return slotFor(p, pr.used);
+  const free = p.pos.filter(sl => (pr.used[sl] || 0) < (SLOT_COUNT[sl] || 0));
+  if (!free.length) return slotFor(p, pr.used);
+  if (free.length === 1) return free[0];
+  let best = free[0], bv = -Infinity;
+  for (const sl of free){
+    const alt  = pr.fill.byPos[sl] || null;
+    const next = pr.roster.filter(q => q !== alt && q !== p).concat(p);
+    let v = 0;
+    for (const c of SK_CATS) v += c.rel * pWin(c, catSum(next, c, false), false);
+    if (v > bv){ bv = v; best = sl; }
+  }
+  return best;
+}
+
 function catDelta(p, pr){
-  const slot = slotFor(p, pr.used);
+  const slot = bestSlot(p, pr);
   const alt  = pr.fill.byPos[slot] || null;
-  const next = pr.roster.filter(q => q !== alt).concat(p);
+  // Убираю и того, кем слот закрылся бы, и самого p: он может уже стоять в
+  // прогнозе добора, и тогда concat вписывал его в состав ВТОРЫМ экземпляром —
+  // одним объектом, который в weightOf считался за двух конкурентов и душил
+  // веса остальных.
+  const next = pr.roster.filter(q => q !== alt && q !== p).concat(p);
   const out = [];
   for (const c of SK_CATS)
     out.push({n:c.n, k:c.k, rel:c.rel, d: pWin(c, catSum(next,c,false), false) - pr.p[c.k]});
@@ -487,7 +572,7 @@ function catDelta(p, pr){
 function scoreAll(pool, taken){
   const pr = profile(pool, taken);
   for (const p of pool){
-    p.slot = slotFor(p, pr.used);
+    p.slot = bestSlot(p, pr);
     const s = catDelta(p, pr).reduce((acc,x)=>acc + x.rel*x.d, 0);
     // ×100 — чтобы читалось как «сотые доли категории»
     // бонус за гибкость всегда в плюс: умножение делало слабого игрока с двумя
@@ -514,11 +599,15 @@ function withScarcity(pool, taken){
   const done = Object.keys(taken).length;
   const cur  = MY_PICKS.find(x => x >= done + 1);     // мой ближайший пик
   const next = MY_PICKS.find(x => x > cur);           // и следующий за ним
-  const gap  = (cur && next) ? next - cur - 1 : 0;    // чужих пиков между ними
+  // Считаю ВСЕ чужие пики до моего следующего хода, а не только те, что между
+  // моими двумя. Раньше пики от текущего момента до моего хода выпадали, и
+  // сразу после своего пика доска обещала, что до меня доживёт игрок, которого
+  // разберут за двадцать ходов до того.
+  const gap  = (cur && next) ? (next - done - 1) - 1 : 0;
 
   // кого соперники, вероятно, заберут за это время (берут по рангу Yahoo)
   const byRank = [...free].sort((a,b)=>(a.rank_pre??9999)-(b.rank_pre??9999));
-  const gone = new Set(byRank.slice(0, gap).map(p=>p.name));
+  const gone = new Set(byRank.slice(0, Math.max(0, gap)).map(p=>p.name));
 
   // Для каждой группы — двое лучших доживающих. Второй нужен затем, что
   // сам игрок не может быть себе заменой: если я беру лучшего, на следующем
