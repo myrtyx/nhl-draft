@@ -27,7 +27,7 @@ LEAGUE = "105022"
 BASE = f"https://hockey.fantasysports.yahoo.com/hockey/{LEAGUE}/players"
 SEASON_GP = 84
 GOALIE_CLUB_GP = 88   # выходов вратарей клуба за сезон: 84 игры + замены (предсезонка Yahoo: медиана 88)
-GOALIE_MAX_GP = 70    # больше в НХЛ не играет никто: вторые игры back-to-back отдают сменщику
+GOALIE_MAX_GP = 65    # потолок основного: 2022/23–2025/26 никто не сыграл больше 64 из 82 (≈ 65 из 84)
 PAUSE = 4.0
 
 SKATER_COLS = ["gp","rank_pre","rank_cur","ros_pct","g","a","pm","ppp","sog","fw","hit","blk"]

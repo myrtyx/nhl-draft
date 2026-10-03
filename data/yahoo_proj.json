@@ -8630,15 +8630,15 @@
     "G"
    ],
    "status": "V poryadke",
-   "gp": 68.8,
+   "gp": 65.0,
    "rank_pre": 10,
    "rank_cur": 4,
    "ros_pct": 100,
-   "w": 40.4,
-   "sv": 1694.7,
-   "sa": 1849.9,
+   "w": 38.2,
+   "sv": 1601.7,
+   "sa": 1748.3,
    "svpct": 0.917,
-   "sho": 5.1
+   "sho": 4.8
   },
   {
    "name": "Logan Thompson",
@@ -8664,15 +8664,15 @@
     "G"
    ],
    "status": "Martins's Choice Team",
-   "gp": 70.0,
+   "gp": 65.0,
    "rank_pre": 26,
    "rank_cur": 9,
    "ros_pct": 99,
-   "w": 36.5,
-   "sv": 1720.1,
-   "sa": 1899.4,
+   "w": 33.9,
+   "sv": 1597.3,
+   "sa": 1763.7,
    "svpct": 0.906,
-   "sho": 7.7
+   "sho": 7.1
   },
   {
    "name": "Jake Oettinger",
@@ -8681,15 +8681,15 @@
     "G"
    ],
    "status": "HC Lokomotiv Yaroslavl",
-   "gp": 69.0,
+   "gp": 65.0,
    "rank_pre": 30,
    "rank_cur": 25,
    "ros_pct": 99,
-   "w": 42.1,
-   "sv": 1539.5,
-   "sa": 1704.9,
+   "w": 39.6,
+   "sv": 1450.0,
+   "sa": 1605.8,
    "svpct": 0.903,
-   "sho": 3.5
+   "sho": 3.3
   },
   {
    "name": "Scott Wedgewood",
@@ -8732,15 +8732,15 @@
     "G"
    ],
    "status": "97 Problems",
-   "gp": 66.4,
+   "gp": 65.0,
    "rank_pre": 47,
    "rank_cur": 51,
    "ros_pct": 99,
-   "w": 30.3,
-   "sv": 1653.1,
-   "sa": 1812.2,
+   "w": 29.7,
+   "sv": 1618.9,
+   "sa": 1774.7,
    "svpct": 0.911,
-   "sho": 2.5
+   "sho": 2.4
   },
   {
    "name": "Jacob Markstrom",
@@ -8766,15 +8766,15 @@
     "G"
    ],
    "status": "KS",
-   "gp": 70.0,
+   "gp": 65.0,
    "rank_pre": 62,
    "rank_cur": 21,
    "ros_pct": 98,
-   "w": 36.3,
-   "sv": 1532.2,
-   "sa": 1705.1,
+   "w": 33.7,
+   "sv": 1422.8,
+   "sa": 1583.3,
    "svpct": 0.899,
-   "sho": 3.1
+   "sho": 2.8
   },
   {
    "name": "Jeremy Swayman",
@@ -8783,15 +8783,15 @@
     "G"
    ],
    "status": "Skanstes Rebels",
-   "gp": 70.0,
+   "gp": 65.0,
    "rank_pre": 64,
    "rank_cur": 28,
    "ros_pct": 98,
-   "w": 37.2,
-   "sv": 1755.9,
-   "sa": 1937.4,
+   "w": 34.6,
+   "sv": 1630.5,
+   "sa": 1799.0,
    "svpct": 0.906,
-   "sho": 4.9
+   "sho": 4.6
   },
   {
    "name": "Connor Hellebuyck",
@@ -8954,15 +8954,15 @@
     "G"
    ],
    "status": "Martins's Choice Team",
-   "gp": 67.7,
+   "gp": 65.0,
    "rank_pre": 162,
    "rank_cur": 61,
    "ros_pct": 76,
-   "w": 23.3,
-   "sv": 1662.9,
-   "sa": 1846.3,
+   "w": 22.4,
+   "sv": 1596.0,
+   "sa": 1772.0,
    "svpct": 0.901,
-   "sho": 3.5
+   "sho": 3.3
   },
   {
    "name": "Jet Greaves",
@@ -8971,15 +8971,15 @@
     "G"
    ],
    "status": "BATON'S BAKERY",
-   "gp": 69.5,
+   "gp": 65.0,
    "rank_pre": 174,
    "rank_cur": 86,
    "ros_pct": 79,
-   "w": 33.5,
-   "sv": 1737.9,
-   "sa": 1923.3,
+   "w": 31.3,
+   "sv": 1626.3,
+   "sa": 1799.8,
    "svpct": 0.904,
-   "sho": 2.8
+   "sho": 2.6
   },
   {
    "name": "Jacob Fowler",
@@ -9435,15 +9435,15 @@
     "G"
    ],
    "status": "V poryadke",
-   "gp": 19.0,
+   "gp": 23.0,
    "rank_pre": 352,
    "rank_cur": 309,
    "ros_pct": 13,
-   "w": 8.8,
-   "sv": 404.3,
-   "sa": 447.1,
+   "w": 10.6,
+   "sv": 489.7,
+   "sa": 541.6,
    "svpct": 0.906,
-   "sho": 0.6
+   "sho": 0.7
   },
   {
    "name": "Trent Miner",
@@ -9488,15 +9488,15 @@
     "G"
    ],
    "status": "BATON'S BAKERY",
-   "gp": 2.0,
+   "gp": 2.1,
    "rank_pre": 358,
    "rank_cur": 506,
    "ros_pct": 6,
-   "w": 0.7,
-   "sv": 50.7,
-   "sa": 55.7,
+   "w": 0.8,
+   "sv": 53.9,
+   "sa": 59.2,
    "svpct": 0.91,
-   "sho": 0.2
+   "sho": 0.3
   },
   {
    "name": "David Rittich",
@@ -9595,15 +9595,15 @@
     "G"
    ],
    "status": "FA",
-   "gp": 14.3,
+   "gp": 17.1,
    "rank_pre": 365,
    "rank_cur": 361,
    "ros_pct": 2,
-   "w": 5.3,
-   "sv": 343.9,
-   "sa": 382.7,
+   "w": 6.3,
+   "sv": 411.5,
+   "sa": 457.9,
    "svpct": 0.9,
-   "sho": 0.5
+   "sho": 0.6
   },
   {
    "name": "Nico Daws",
@@ -9737,13 +9737,13 @@
     "G"
    ],
    "status": "FA",
-   "gp": 18.0,
+   "gp": 23.0,
    "rank_pre": 388,
    "rank_cur": 458,
    "ros_pct": 2,
-   "w": 8.4,
-   "sv": 458.4,
-   "sa": 504.0,
+   "w": 10.7,
+   "sv": 585.7,
+   "sa": 644.0,
    "svpct": 0.909,
    "sho": 0.0
   },
@@ -9755,15 +9755,15 @@
    ],
    "status": "FA",
    "inj": "NA",
-   "gp": 4.7,
+   "gp": 6.0,
    "rank_pre": 390,
    "rank_cur": 421,
    "ros_pct": 0,
-   "w": 1.6,
-   "sv": 112.5,
-   "sa": 125.8,
+   "w": 2.0,
+   "sv": 143.8,
+   "sa": 160.8,
    "svpct": 0.893,
-   "sho": 1.4
+   "sho": 1.8
   },
   {
    "name": "Matt Villalta",
@@ -9790,15 +9790,15 @@
     "G"
    ],
    "status": "FA",
-   "gp": 13.3,
+   "gp": 17.0,
    "rank_pre": 392,
    "rank_cur": 352,
    "ros_pct": 3,
-   "w": 5.8,
-   "sv": 330.3,
-   "sa": 367.0,
+   "w": 7.4,
+   "sv": 422.0,
+   "sa": 468.9,
    "svpct": 0.901,
-   "sho": 0.5
+   "sho": 0.7
   },
   {
    "name": "Ilya Nabokov",
@@ -10149,15 +10149,15 @@
    ],
    "status": "FA",
    "inj": "NA",
-   "gp": 4.9,
+   "gp": 5.9,
    "rank_pre": 449,
    "rank_cur": 429,
    "ros_pct": 0,
-   "w": 1.6,
-   "sv": 115.7,
-   "sa": 129.6,
+   "w": 1.9,
+   "sv": 138.4,
+   "sa": 155.1,
    "svpct": 0.892,
-   "sho": 1.4
+   "sho": 1.7
   },
   {
    "name": "Domenic DiVincentiis",
@@ -10255,13 +10255,13 @@
     "G"
    ],
    "status": "FA",
-   "gp": 18.0,
+   "gp": 23.0,
    "rank_pre": 465,
    "rank_cur": 467,
    "ros_pct": 1,
-   "w": 9.8,
-   "sv": 434.3,
-   "sa": 485.2,
+   "w": 12.5,
+   "sv": 555.0,
+   "sa": 620.0,
    "svpct": 0.894,
    "sho": 0.0
   },
@@ -10364,15 +10364,15 @@
    ],
    "status": "FA",
    "inj": "IR",
-   "gp": 19.6,
+   "gp": 20.9,
    "rank_pre": 472,
    "rank_cur": 427,
    "ros_pct": 1,
-   "w": 7.2,
-   "sv": 447.5,
-   "sa": 502.1,
+   "w": 7.7,
+   "sv": 475.9,
+   "sa": 534.0,
    "svpct": 0.893,
-   "sho": 0.7
+   "sho": 0.8
   },
   {
    "name": "Brandon Halverson",
@@ -10611,13 +10611,13 @@
     "G"
    ],
    "status": "FA",
-   "gp": 18.5,
+   "gp": 23.0,
    "rank_pre": 547,
    "rank_cur": 481,
    "ros_pct": 1,
-   "w": 7.2,
-   "sv": 417.9,
-   "sa": 470.4,
+   "w": 8.9,
+   "sv": 518.4,
+   "sa": 583.6,
    "svpct": 0.892,
    "sho": 0.0
   },
@@ -10754,15 +10754,15 @@
     "G"
    ],
    "status": "FA",
-   "gp": 20.3,
+   "gp": 23.0,
    "rank_pre": 675,
    "rank_cur": 407,
    "ros_pct": 1,
-   "w": 5.4,
-   "sv": 515.5,
-   "sa": 578.0,
+   "w": 6.1,
+   "sv": 584.8,
+   "sa": 655.7,
    "svpct": 0.892,
-   "sho": 0.6
+   "sho": 0.7
   },
   {
    "name": "Kevin Lankinen",
