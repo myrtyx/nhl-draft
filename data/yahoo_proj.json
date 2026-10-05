@@ -1,7 +1,7 @@
 {
  "league": "105022",
  "source": "yahoo S_PSR → полный сезон",
- "fetched": "2026-10-05T08:38:43+00:00",
+ "fetched": "2026-10-05T12:07:44+00:00",
  "skaters": [
   {
    "name": "Connor McDavid",
@@ -1343,7 +1343,7 @@
    "gp": 57.0,
    "rank_pre": 77,
    "rank_cur": 141,
-   "ros_pct": 88,
+   "ros_pct": 87,
    "g": 20.1,
    "a": 25.5,
    "pm": 9.5,
@@ -1797,7 +1797,7 @@
    "gp": 66.8,
    "rank_pre": 101,
    "rank_cur": 83,
-   "ros_pct": 86,
+   "ros_pct": 85,
    "g": 24.8,
    "a": 26.4,
    "pm": 10.2,
@@ -1838,7 +1838,7 @@
    "gp": 62.5,
    "rank_pre": 104,
    "rank_cur": 393,
-   "ros_pct": 86,
+   "ros_pct": 85,
    "g": 13.6,
    "a": 16.4,
    "pm": -9.4,
@@ -2352,7 +2352,7 @@
    "gp": 62.5,
    "rank_pre": 131,
    "rank_cur": 96,
-   "ros_pct": 50,
+   "ros_pct": 49,
    "g": 14.9,
    "a": 31.5,
    "pm": -10.3,
@@ -2421,6 +2421,26 @@
    "fw": 448.3,
    "hit": 195.3,
    "blk": 26.8
+  },
+  {
+   "name": "Ivar Stenberg",
+   "team": "SJ",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 33.0,
+   "rank_pre": 135,
+   "rank_cur": 631,
+   "ros_pct": 59,
+   "g": 5.6,
+   "a": 8.6,
+   "pm": -4.3,
+   "ppp": 4.6,
+   "sog": 51.5,
+   "fw": 0.6,
+   "hit": 24.9,
+   "blk": 27.1
   },
   {
    "name": "Shea Theodore",
@@ -2721,7 +2741,7 @@
    "gp": 72.9,
    "rank_pre": 152,
    "rank_cur": 306,
-   "ros_pct": 33,
+   "ros_pct": 34,
    "g": 19.3,
    "a": 18.4,
    "pm": -3.8,
@@ -2885,7 +2905,7 @@
    "gp": 61.1,
    "rank_pre": 161,
    "rank_cur": 303,
-   "ros_pct": 77,
+   "ros_pct": 76,
    "g": 6.0,
    "a": 18.9,
    "pm": -9.0,
@@ -2967,7 +2987,7 @@
    "gp": 79.2,
    "rank_pre": 166,
    "rank_cur": 243,
-   "ros_pct": 83,
+   "ros_pct": 82,
    "g": 8.6,
    "a": 26.7,
    "pm": 7.9,
@@ -3047,7 +3067,7 @@
    "gp": 66.8,
    "rank_pre": 170,
    "rank_cur": 191,
-   "ros_pct": 82,
+   "ros_pct": 81,
    "g": 7.5,
    "a": 26.7,
    "pm": 6.9,
@@ -3129,7 +3149,7 @@
    "gp": 71.3,
    "rank_pre": 175,
    "rank_cur": 315,
-   "ros_pct": 33,
+   "ros_pct": 32,
    "g": 22.3,
    "a": 24.9,
    "pm": -35.3,
@@ -3293,7 +3313,7 @@
    "gp": 58.3,
    "rank_pre": 186,
    "rank_cur": 186,
-   "ros_pct": 49,
+   "ros_pct": 50,
    "g": 20.6,
    "a": 21.2,
    "pm": 29.4,
@@ -3378,7 +3398,7 @@
    "gp": 65.5,
    "rank_pre": 190,
    "rank_cur": 201,
-   "ros_pct": 17,
+   "ros_pct": 16,
    "g": 16.7,
    "a": 13.4,
    "pm": 9.3,
@@ -3471,26 +3491,45 @@
    "blk": 17.7
   },
   {
+   "name": "Konsta Helenius",
+   "team": "BUF",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 35.3,
+   "rank_pre": 196,
+   "rank_cur": 627,
+   "ros_pct": 8,
+   "g": 4.1,
+   "a": 10.4,
+   "pm": 3.8,
+   "ppp": 0.0,
+   "sog": 55.6,
+   "fw": 34.8,
+   "hit": 37.8,
+   "blk": 10.6
+  },
+  {
    "name": "Alexander Nikishin",
    "team": "CAR",
    "pos": [
     "D"
    ],
    "status": "FA",
-   "gp": 55,
-   "rank_pre": 196,
-   "rank_cur": 358,
-   "ros_pct": 47,
-   "g": 7,
-   "a": 16,
-   "pm": 12.0,
-   "ppp": 8,
-   "sog": 83,
-   "fw": 0,
-   "hit": 89,
-   "blk": 62,
    "inj": "NA",
-   "stale": true
+   "gp": 33.7,
+   "rank_pre": 197,
+   "rank_cur": 557,
+   "ros_pct": 33,
+   "g": 3.9,
+   "a": 9.0,
+   "pm": 7.3,
+   "ppp": 4.5,
+   "sog": 47.1,
+   "fw": 0.0,
+   "hit": 49.8,
+   "blk": 34.8
   },
   {
    "name": "James Hagens",
@@ -3543,7 +3582,7 @@
    "gp": 77.5,
    "rank_pre": 202,
    "rank_cur": 127,
-   "ros_pct": 44,
+   "ros_pct": 43,
    "g": 17.5,
    "a": 29.9,
    "pm": 14.0,
@@ -3604,7 +3643,7 @@
    "gp": 66.9,
    "rank_pre": 205,
    "rank_cur": 281,
-   "ros_pct": 21,
+   "ros_pct": 20,
    "g": 18.0,
    "a": 26.6,
    "pm": -22.4,
@@ -3686,7 +3725,7 @@
    "gp": 53.2,
    "rank_pre": 209,
    "rank_cur": 236,
-   "ros_pct": 54,
+   "ros_pct": 56,
    "g": 6.9,
    "a": 22.0,
    "pm": 9.1,
@@ -3703,19 +3742,18 @@
     "D"
    ],
    "status": "FA",
-   "gp": 64.1,
+   "gp": 63.8,
    "rank_pre": 210,
-   "rank_cur": 498,
-   "ros_pct": 33,
-   "g": 7.6,
-   "a": 12.5,
-   "pm": -12.4,
+   "rank_cur": 527,
+   "ros_pct": 31,
+   "g": 7.3,
+   "a": 12.1,
+   "pm": -16.8,
    "ppp": 1.7,
-   "sog": 90.9,
+   "sog": 90.6,
    "fw": 0.0,
-   "hit": 18.2,
-   "blk": 93.8,
-   "stale": true
+   "hit": 17.7,
+   "blk": 92.2
   },
   {
    "name": "Matt Savoie",
@@ -3725,20 +3763,19 @@
     "RW"
    ],
    "status": "FA",
-   "gp": 76,
-   "rank_pre": 211,
-   "rank_cur": 434,
-   "ros_pct": 11,
-   "g": 16,
-   "a": 16,
-   "pm": 5.0,
-   "ppp": 7,
-   "sog": 126,
-   "fw": 30,
-   "hit": 13,
-   "blk": 34,
-   "inj": "O",
-   "stale": true
+   "inj": "IR-LT",
+   "gp": 48.7,
+   "rank_pre": 212,
+   "rank_cur": 583,
+   "ros_pct": 9,
+   "g": 9.3,
+   "a": 9.3,
+   "pm": 3.1,
+   "ppp": 4.0,
+   "sog": 73.8,
+   "fw": 17.6,
+   "hit": 7.6,
+   "blk": 19.8
   },
   {
    "name": "Anders Lee",
@@ -3800,6 +3837,26 @@
    "fw": 8.6,
    "hit": 20.1,
    "blk": 27.6
+  },
+  {
+   "name": "Ilya Protas",
+   "team": "WSH",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 13.5,
+   "rank_pre": 217,
+   "rank_cur": 740,
+   "ros_pct": 6,
+   "g": 1.0,
+   "a": 2.6,
+   "pm": 1.5,
+   "ppp": 0.3,
+   "sog": 22.4,
+   "fw": 58.1,
+   "hit": 0.0,
+   "blk": 6.5
   },
   {
    "name": "Jack Quinn",
@@ -3924,6 +3981,46 @@
    "blk": 24.8
   },
   {
+   "name": "Zayne Parekh",
+   "team": "CGY",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 45.2,
+   "rank_pre": 225,
+   "rank_cur": 639,
+   "ros_pct": 35,
+   "g": 4.6,
+   "a": 10.6,
+   "pm": -15.7,
+   "ppp": 6.6,
+   "sog": 77.9,
+   "fw": 0.0,
+   "hit": 15.8,
+   "blk": 35.5
+  },
+  {
+   "name": "Sam Rinzel",
+   "team": "CHI",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 61.2,
+   "rank_pre": 226,
+   "rank_cur": 516,
+   "ros_pct": 13,
+   "g": 3.9,
+   "a": 11.7,
+   "pm": -9.3,
+   "ppp": 1.6,
+   "sog": 94.3,
+   "fw": 0.0,
+   "hit": 53.2,
+   "blk": 68.2
+  },
+  {
    "name": "Tyler Bertuzzi",
    "team": "CHI",
    "pos": [
@@ -3995,7 +4092,7 @@
    "gp": 72.8,
    "rank_pre": 231,
    "rank_cur": 199,
-   "ros_pct": 46,
+   "ros_pct": 45,
    "g": 5.9,
    "a": 15.3,
    "pm": -5.3,
@@ -4024,6 +4121,26 @@
    "fw": 15.3,
    "hit": 67.3,
    "blk": 17.6
+  },
+  {
+   "name": "Zeev Buium",
+   "team": "VAN",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 72.9,
+   "rank_pre": 233,
+   "rank_cur": 633,
+   "ros_pct": 33,
+   "g": 5.0,
+   "a": 16.9,
+   "pm": -32.8,
+   "ppp": 11.0,
+   "sog": 68.5,
+   "fw": 0.0,
+   "hit": 24.6,
+   "blk": 52.6
   },
   {
    "name": "Connor McMichael",
@@ -4108,6 +4225,47 @@
    "blk": 23.3
   },
   {
+   "name": "Matvei Gridin",
+   "team": "CGY",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 42.7,
+   "rank_pre": 238,
+   "rank_cur": 628,
+   "ros_pct": 5,
+   "g": 6.3,
+   "a": 15.3,
+   "pm": -19.9,
+   "ppp": 8.4,
+   "sog": 75.5,
+   "fw": 2.5,
+   "hit": 11.4,
+   "blk": 30.6
+  },
+  {
+   "name": "Artyom Levshunov",
+   "team": "CHI",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 77.6,
+   "rank_pre": 239,
+   "rank_cur": 548,
+   "ros_pct": 11,
+   "g": 2.6,
+   "a": 19.3,
+   "pm": -48.9,
+   "ppp": 11.5,
+   "sog": 90.8,
+   "fw": 0.0,
+   "hit": 101.7,
+   "blk": 82.3
+  },
+  {
    "name": "Colton Parayko",
    "team": "STL",
    "pos": [
@@ -4137,7 +4295,7 @@
    "gp": 82.3,
    "rank_pre": 243,
    "rank_cur": 140,
-   "ros_pct": 15,
+   "ros_pct": 14,
    "g": 18.3,
    "a": 26.5,
    "pm": -3.5,
@@ -4238,7 +4396,7 @@
    "gp": 48.0,
    "rank_pre": 248,
    "rank_cur": 338,
-   "ros_pct": 7,
+   "ros_pct": 6,
    "g": 11.0,
    "a": 13.1,
    "pm": 5.8,
@@ -4278,7 +4436,7 @@
    "gp": 67.0,
    "rank_pre": 250,
    "rank_cur": 160,
-   "ros_pct": 9,
+   "ros_pct": 10,
    "g": 18.8,
    "a": 19.6,
    "pm": 7.9,
@@ -4287,6 +4445,47 @@
    "fw": 352.2,
    "hit": 80.3,
    "blk": 43.4
+  },
+  {
+   "name": "Sean Durzi",
+   "team": "NYR",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 41.8,
+   "rank_pre": 251,
+   "rank_cur": 565,
+   "ros_pct": 11,
+   "g": 4.4,
+   "a": 13.8,
+   "pm": -4.6,
+   "ppp": 3.2,
+   "sog": 55.3,
+   "fw": 0.0,
+   "hit": 25.4,
+   "blk": 62.9
+  },
+  {
+   "name": "Logan Mailloux",
+   "team": "STL",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "IR",
+   "gp": 47.6,
+   "rank_pre": 253,
+   "rank_cur": 630,
+   "ros_pct": 5,
+   "g": 3.9,
+   "a": 5.5,
+   "pm": -8.4,
+   "ppp": 1.5,
+   "sog": 56.9,
+   "fw": 0.0,
+   "hit": 62.8,
+   "blk": 38.2
   },
   {
    "name": "Mike Matheson",
@@ -4338,7 +4537,7 @@
    "gp": 82.3,
    "rank_pre": 256,
    "rank_cur": 165,
-   "ros_pct": 42,
+   "ros_pct": 43,
    "g": 3.5,
    "a": 18.7,
    "pm": 16.9,
@@ -4358,7 +4557,7 @@
    "gp": 76.0,
    "rank_pre": 257,
    "rank_cur": 151,
-   "ros_pct": 38,
+   "ros_pct": 37,
    "g": 18.6,
    "a": 32.4,
    "pm": 20.9,
@@ -4401,7 +4600,7 @@
    "gp": 84.0,
    "rank_pre": 259,
    "rank_cur": 84,
-   "ros_pct": 46,
+   "ros_pct": 45,
    "g": 18.1,
    "a": 22.0,
    "pm": 4.9,
@@ -4463,7 +4662,7 @@
    "gp": 71.3,
    "rank_pre": 262,
    "rank_cur": 167,
-   "ros_pct": 39,
+   "ros_pct": 38,
    "g": 22.1,
    "a": 29.3,
    "pm": -4.4,
@@ -4569,7 +4768,7 @@
    "gp": 62.5,
    "rank_pre": 267,
    "rank_cur": 358,
-   "ros_pct": 22,
+   "ros_pct": 24,
    "g": 11.7,
    "a": 20.4,
    "pm": -5.1,
@@ -4598,6 +4797,26 @@
    "fw": 10.5,
    "hit": 40.3,
    "blk": 34.1
+  },
+  {
+   "name": "Carter Yakemchuk",
+   "team": "OTT",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 55.9,
+   "rank_pre": 269,
+   "rank_cur": 549,
+   "ros_pct": 6,
+   "g": 3.8,
+   "a": 11.6,
+   "pm": -8.2,
+   "ppp": 0.0,
+   "sog": 88.1,
+   "fw": 0.0,
+   "hit": 55.5,
+   "blk": 54.7
   },
   {
    "name": "Morgan Rielly",
@@ -4903,7 +5122,7 @@
    "gp": 82.4,
    "rank_pre": 295,
    "rank_cur": 89,
-   "ros_pct": 16,
+   "ros_pct": 18,
    "g": 13.9,
    "a": 34.4,
    "pm": 13.0,
@@ -4999,6 +5218,27 @@
    "blk": 42.7
   },
   {
+   "name": "Kent Johnson",
+   "team": "CBJ",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 71.3,
+   "rank_pre": 300,
+   "rank_cur": 509,
+   "ros_pct": 4,
+   "g": 9.4,
+   "a": 16.2,
+   "pm": -5.3,
+   "ppp": 5.0,
+   "sog": 106.5,
+   "fw": 1.7,
+   "hit": 11.2,
+   "blk": 34.2
+  },
+  {
    "name": "Dmitri Voronkov",
    "team": "CBJ",
    "pos": [
@@ -5017,6 +5257,27 @@
    "fw": 29.1,
    "hit": 78.6,
    "blk": 25.0
+  },
+  {
+   "name": "Andrei Kuzmenko",
+   "team": "PIT",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 39.7,
+   "rank_pre": 302,
+   "rank_cur": 632,
+   "ros_pct": 1,
+   "g": 8.7,
+   "a": 9.3,
+   "pm": -4.8,
+   "ppp": 8.7,
+   "sog": 50.1,
+   "fw": 0.0,
+   "hit": 11.3,
+   "blk": 10.0
   },
   {
    "name": "Phillip Danault",
@@ -5048,7 +5309,7 @@
    "gp": 80.7,
    "rank_pre": 305,
    "rank_cur": 305,
-   "ros_pct": 4,
+   "ros_pct": 3,
    "g": 12.2,
    "a": 21.8,
    "pm": -11.0,
@@ -5164,6 +5425,70 @@
    "blk": 49.2
   },
   {
+   "name": "Matias Maccelli",
+   "team": "NYI",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 61.1,
+   "rank_pre": 312,
+   "rank_cur": 585,
+   "ros_pct": 1,
+   "g": 11.2,
+   "a": 20.7,
+   "pm": -15.2,
+   "ppp": 6.4,
+   "sog": 80.5,
+   "fw": 3.2,
+   "hit": 19.5,
+   "blk": 13.6
+  },
+  {
+   "name": "Zachary Bolduc",
+   "team": "MTL",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 22.6,
+   "rank_pre": 313,
+   "rank_cur": 691,
+   "ros_pct": 2,
+   "g": 3.7,
+   "a": 4.6,
+   "pm": 0.1,
+   "ppp": 1.8,
+   "sog": 27.0,
+   "fw": 4.1,
+   "hit": 40.3,
+   "blk": 10.1
+  },
+  {
+   "name": "Evan Rodrigues",
+   "team": "NJ",
+   "pos": [
+    "C",
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 30.9,
+   "rank_pre": 314,
+   "rank_cur": 650,
+   "ros_pct": 1,
+   "g": 3.8,
+   "a": 8.7,
+   "pm": -6.7,
+   "ppp": 2.8,
+   "sog": 62.5,
+   "fw": 126.0,
+   "hit": 30.8,
+   "blk": 9.8
+  },
+  {
    "name": "Alex Killorn",
    "team": "ANA",
    "pos": [
@@ -5214,7 +5539,7 @@
    "gp": 82.3,
    "rank_pre": 318,
    "rank_cur": 156,
-   "ros_pct": 5,
+   "ros_pct": 4,
    "g": 15.2,
    "a": 23.3,
    "pm": 2.5,
@@ -5288,6 +5613,28 @@
    "blk": 21.9
   },
   {
+   "name": "Yegor Sharangovich",
+   "team": "CGY",
+   "pos": [
+    "C",
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 65.2,
+   "rank_pre": 323,
+   "rank_cur": 553,
+   "ros_pct": 1,
+   "g": 12.7,
+   "a": 12.8,
+   "pm": -16.1,
+   "ppp": 6.3,
+   "sog": 108.9,
+   "fw": 50.2,
+   "hit": 15.1,
+   "blk": 24.6
+  },
+  {
    "name": "Mattias Ekholm",
    "team": "EDM",
    "pos": [
@@ -5306,6 +5653,28 @@
    "fw": 0.0,
    "hit": 68.2,
    "blk": 111.0
+  },
+  {
+   "name": "Max Domi",
+   "team": "TOR",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "inj": "IR-LT",
+   "gp": 36.0,
+   "rank_pre": 325,
+   "rank_cur": 692,
+   "ros_pct": 1,
+   "g": 3.7,
+   "a": 9.6,
+   "pm": -7.5,
+   "ppp": 2.7,
+   "sog": 40.8,
+   "fw": 81.1,
+   "hit": 13.9,
+   "blk": 11.9
   },
   {
    "name": "Seth Jarvis",
@@ -5349,6 +5718,26 @@
    "fw": 186.7,
    "hit": 38.2,
    "blk": 45.7
+  },
+  {
+   "name": "Anthony Duclair",
+   "team": "NYI",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 46.6,
+   "rank_pre": 329,
+   "rank_cur": 593,
+   "ros_pct": 1,
+   "g": 8.3,
+   "a": 9.7,
+   "pm": -1.4,
+   "ppp": 4.9,
+   "sog": 58.6,
+   "fw": 3.5,
+   "hit": 12.0,
+   "blk": 29.6
   },
   {
    "name": "Pavel Mintyukov",
@@ -5411,6 +5800,48 @@
    "blk": 29.4
   },
   {
+   "name": "Andrew Mangiapane",
+   "team": "CHI",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "DTD",
+   "gp": 55.7,
+   "rank_pre": 335,
+   "rank_cur": 664,
+   "ros_pct": 1,
+   "g": 6.8,
+   "a": 8.3,
+   "pm": -12.9,
+   "ppp": 0.7,
+   "sog": 56.0,
+   "fw": 3.0,
+   "hit": 54.3,
+   "blk": 22.7
+  },
+  {
+   "name": "Isaac Howard",
+   "team": "EDM",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 52.8,
+   "rank_pre": 336,
+   "rank_cur": 662,
+   "ros_pct": 1,
+   "g": 7.8,
+   "a": 13.5,
+   "pm": -9.7,
+   "ppp": 0.0,
+   "sog": 84.9,
+   "fw": 0.0,
+   "hit": 12.0,
+   "blk": 7.8
+  },
+  {
    "name": "Danila Yurov",
    "team": "MIN",
    "pos": [
@@ -5462,7 +5893,7 @@
    "gp": 54.3,
    "rank_pre": 339,
    "rank_cur": 410,
-   "ros_pct": 17,
+   "ros_pct": 16,
    "g": 2.2,
    "a": 18.3,
    "pm": -0.1,
@@ -5491,6 +5922,27 @@
    "fw": 0.0,
    "hit": 62.5,
    "blk": 94.1
+  },
+  {
+   "name": "Nick Paul",
+   "team": "TOR",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 43.0,
+   "rank_pre": 341,
+   "rank_cur": 567,
+   "ros_pct": 1,
+   "g": 6.7,
+   "a": 8.1,
+   "pm": -9.5,
+   "ppp": 3.4,
+   "sog": 64.1,
+   "fw": 251.0,
+   "hit": 59.5,
+   "blk": 20.6
   },
   {
    "name": "Vladimir Tarasenko",
@@ -5545,7 +5997,7 @@
    "gp": 61.3,
    "rank_pre": 346,
    "rank_cur": 295,
-   "ros_pct": 18,
+   "ros_pct": 20,
    "g": 3.1,
    "a": 24.8,
    "pm": -1.4,
@@ -5616,28 +6068,6 @@
    "blk": 75.4
   },
   {
-   "name": "Eeli Tolvanen",
-   "team": "NYR",
-   "pos": [
-    "LW",
-    "RW"
-   ],
-   "status": "FA",
-   "gp": 53,
-   "rank_pre": 350,
-   "rank_cur": 401,
-   "ros_pct": 3,
-   "g": 9,
-   "a": 16,
-   "pm": -10.0,
-   "ppp": 8,
-   "sog": 95,
-   "fw": 2,
-   "hit": 133,
-   "blk": 53,
-   "stale": true
-  },
-  {
    "name": "Yakov Trenin",
    "team": "MIN",
    "pos": [
@@ -5678,6 +6108,27 @@
    "fw": 315.3,
    "hit": 65.0,
    "blk": 35.3
+  },
+  {
+   "name": "Eeli Tolvanen",
+   "team": "NYR",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 34.1,
+   "rank_pre": 356,
+   "rank_cur": 554,
+   "ros_pct": 6,
+   "g": 7.0,
+   "a": 9.0,
+   "pm": -4.1,
+   "ppp": 4.5,
+   "sog": 57.6,
+   "fw": 1.2,
+   "hit": 80.4,
+   "blk": 32.8
   },
   {
    "name": "Josh Manson",
@@ -5946,30 +6397,6 @@
    "blk": 23.8
   },
   {
-   "name": "Ridly Greig",
-   "team": "OTT",
-   "pos": [
-    "C",
-    "LW",
-    "RW"
-   ],
-   "status": "FA",
-   "gp": 57,
-   "rank_pre": 457,
-   "rank_cur": 424,
-   "ros_pct": 2,
-   "g": 9,
-   "a": 16,
-   "pm": 6.0,
-   "ppp": 3,
-   "sog": 93,
-   "fw": 183,
-   "hit": 78,
-   "blk": 36,
-   "inj": "O",
-   "stale": true
-  },
-  {
    "name": "Morgan Frost",
    "team": "CGY",
    "pos": [
@@ -5988,6 +6415,49 @@
    "fw": 565.2,
    "hit": 59.5,
    "blk": 44.8
+  },
+  {
+   "name": "Ridly Greig",
+   "team": "OTT",
+   "pos": [
+    "C",
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 36.5,
+   "rank_pre": 468,
+   "rank_cur": 571,
+   "ros_pct": 1,
+   "g": 5.3,
+   "a": 9.3,
+   "pm": 3.7,
+   "ppp": 1.7,
+   "sog": 54.5,
+   "fw": 107.3,
+   "hit": 45.9,
+   "blk": 21.2
+  },
+  {
+   "name": "Michael Carcone",
+   "team": "UTA",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 50.4,
+   "rank_pre": 472,
+   "rank_cur": 508,
+   "ros_pct": 1,
+   "g": 10.2,
+   "a": 9.4,
+   "pm": 2.4,
+   "ppp": 2.2,
+   "sog": 89.3,
+   "fw": 7.2,
+   "hit": 83.7,
+   "blk": 10.1
   },
   {
    "name": "Fraser Minten",
@@ -6010,25 +6480,24 @@
    "blk": 38.8
   },
   {
-   "name": "Michael Carcone",
-   "team": "UTA",
+   "name": "Anthony Beauvillier",
+   "team": "WSH",
    "pos": [
     "LW"
    ],
    "status": "FA",
-   "gp": 50.7,
-   "rank_pre": 473,
-   "rank_cur": 500,
+   "gp": 53.0,
+   "rank_pre": 479,
+   "rank_cur": 519,
    "ros_pct": 0,
-   "g": 10.4,
-   "a": 9.7,
-   "pm": 3.3,
-   "ppp": 2.2,
-   "sog": 87.8,
-   "fw": 7.4,
-   "hit": 83.5,
-   "blk": 10.3,
-   "stale": true
+   "g": 8.0,
+   "a": 7.3,
+   "pm": 2.4,
+   "ppp": 0.7,
+   "sog": 93.8,
+   "fw": 23.2,
+   "hit": 60.0,
+   "blk": 27.7
   },
   {
    "name": "Alex Iafallo",
@@ -6050,6 +6519,27 @@
    "fw": 13.8,
    "hit": 90.9,
    "blk": 53.4
+  },
+  {
+   "name": "Mark Kastelic",
+   "team": "BOS",
+   "pos": [
+    "C",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 20.9,
+   "rank_pre": 486,
+   "rank_cur": 675,
+   "ros_pct": 4,
+   "g": 2.7,
+   "a": 3.2,
+   "pm": 1.5,
+   "ppp": 0.4,
+   "sog": 22.7,
+   "fw": 74.6,
+   "hit": 52.6,
+   "blk": 15.9
   },
   {
    "name": "J.J. Moser",
@@ -6257,6 +6747,27 @@
    "blk": 61.2
   },
   {
+   "name": "Connor Dewar",
+   "team": "PIT",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 35.3,
+   "rank_pre": 500,
+   "rank_cur": 613,
+   "ros_pct": 0,
+   "g": 5.1,
+   "a": 5.7,
+   "pm": 3.6,
+   "ppp": 0.0,
+   "sog": 42.4,
+   "fw": 29.7,
+   "hit": 61.5,
+   "blk": 20.3
+  },
+  {
    "name": "Jordan Martinook",
    "team": "CAR",
    "pos": [
@@ -6318,6 +6829,27 @@
    "blk": 34.4
   },
   {
+   "name": "Pius Suter",
+   "team": "STL",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 32.0,
+   "rank_pre": 505,
+   "rank_cur": 607,
+   "ros_pct": 0,
+   "g": 6.9,
+   "a": 8.0,
+   "pm": 6.0,
+   "ppp": 1.1,
+   "sog": 46.6,
+   "fw": 120.9,
+   "hit": 22.2,
+   "blk": 11.3
+  },
+  {
    "name": "Esa Lindell",
    "team": "DAL",
    "pos": [
@@ -6336,6 +6868,27 @@
    "fw": 0.0,
    "hit": 38.6,
    "blk": 171.1
+  },
+  {
+   "name": "Justin Brazeau",
+   "team": "PIT",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "IR",
+   "gp": 26.8,
+   "rank_pre": 507,
+   "rank_cur": 644,
+   "ros_pct": 1,
+   "g": 6.9,
+   "a": 6.4,
+   "pm": 1.1,
+   "ppp": 2.2,
+   "sog": 40.2,
+   "fw": 0.0,
+   "hit": 38.6,
+   "blk": 17.1
   },
   {
    "name": "Connor Brown",
@@ -6410,7 +6963,7 @@
    "gp": 74.5,
    "rank_pre": 513,
    "rank_cur": 288,
-   "ros_pct": 7,
+   "ros_pct": 11,
    "g": 15.5,
    "a": 23.2,
    "pm": 2.0,
@@ -6419,6 +6972,26 @@
    "fw": 174.1,
    "hit": 9.4,
    "blk": 31.2
+  },
+  {
+   "name": "Brendan Gallagher",
+   "team": "VAN",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 61.1,
+   "rank_pre": 514,
+   "rank_cur": 528,
+   "ros_pct": 0,
+   "g": 6.2,
+   "a": 12.5,
+   "pm": -4.3,
+   "ppp": 4.7,
+   "sog": 94.3,
+   "fw": 5.6,
+   "hit": 72.2,
+   "blk": 18.2
   },
   {
    "name": "Simon Holmstrom",
@@ -6452,7 +7025,7 @@
    "gp": 71.3,
    "rank_pre": 516,
    "rank_cur": 245,
-   "ros_pct": 4,
+   "ros_pct": 3,
    "g": 8.3,
    "a": 26.6,
    "pm": 1.6,
@@ -6484,26 +7057,25 @@
    "blk": 52.6
   },
   {
-   "name": "Justin Sourdif",
-   "team": "WSH",
+   "name": "Tanner Jeannot",
+   "team": "BOS",
    "pos": [
-    "C",
+    "LW",
     "RW"
    ],
    "status": "FA",
-   "gp": 59,
-   "rank_pre": 518,
-   "rank_cur": 414,
+   "gp": 20.9,
+   "rank_pre": 521,
+   "rank_cur": 702,
    "ros_pct": 1,
-   "g": 10,
-   "a": 15,
-   "pm": 13.0,
-   "ppp": 2,
-   "sog": 82,
-   "fw": 239,
-   "hit": 75,
-   "blk": 30,
-   "stale": true
+   "g": 2.3,
+   "a": 3.0,
+   "pm": -1.5,
+   "ppp": 0.4,
+   "sog": 17.8,
+   "fw": 2.2,
+   "hit": 61.7,
+   "blk": 13.2
   },
   {
    "name": "Joel Edmundson",
@@ -6544,6 +7116,27 @@
    "fw": 0.0,
    "hit": 51.2,
    "blk": 113.4
+  },
+  {
+   "name": "Justin Sourdif",
+   "team": "WSH",
+   "pos": [
+    "C",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 41.8,
+   "rank_pre": 524,
+   "rank_cur": 523,
+   "ros_pct": 1,
+   "g": 7.2,
+   "a": 9.7,
+   "pm": 9.0,
+   "ppp": 1.3,
+   "sog": 53.8,
+   "fw": 154.7,
+   "hit": 48.9,
+   "blk": 19.5
   },
   {
    "name": "Dmitry Orlov",
@@ -6627,6 +7220,27 @@
    "blk": 29.8
   },
   {
+   "name": "Beck Malenstyn",
+   "team": "BUF",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 39.7,
+   "rank_pre": 529,
+   "rank_cur": 606,
+   "ros_pct": 1,
+   "g": 3.0,
+   "a": 3.0,
+   "pm": -2.0,
+   "ppp": 0.0,
+   "sog": 32.3,
+   "fw": 5.3,
+   "hit": 118.8,
+   "blk": 32.5
+  },
+  {
    "name": "Keegan Kolesar",
    "team": "DET",
    "pos": [
@@ -6657,7 +7271,7 @@
    "gp": 74.4,
    "rank_pre": 531,
    "rank_cur": 184,
-   "ros_pct": 3,
+   "ros_pct": 2,
    "g": 2.7,
    "a": 15.8,
    "pm": 17.8,
@@ -6708,6 +7322,26 @@
    "blk": 158.8
   },
   {
+   "name": "Adam Klapka",
+   "team": "CGY",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 36.0,
+   "rank_pre": 534,
+   "rank_cur": 641,
+   "ros_pct": 2,
+   "g": 2.3,
+   "a": 4.5,
+   "pm": -6.1,
+   "ppp": 1.1,
+   "sog": 33.2,
+   "fw": 4.5,
+   "hit": 118.2,
+   "blk": 20.8
+  },
+  {
    "name": "Alexander Wennberg",
    "team": "SJ",
    "pos": [
@@ -6726,27 +7360,6 @@
    "fw": 596.2,
    "hit": 30.1,
    "blk": 85.6
-  },
-  {
-   "name": "Zemgus Girgensons",
-   "team": "TB",
-   "pos": [
-    "LW"
-   ],
-   "status": "FA",
-   "gp": 67,
-   "rank_pre": 537,
-   "rank_cur": 438,
-   "ros_pct": 0,
-   "g": 7,
-   "a": 9,
-   "pm": 0.0,
-   "ppp": 0,
-   "sog": 78,
-   "fw": 84,
-   "hit": 168,
-   "blk": 41,
-   "stale": true
   },
   {
    "name": "Damon Severson",
@@ -6800,7 +7413,7 @@
    "gp": 71.4,
    "rank_pre": 540,
    "rank_cur": 462,
-   "ros_pct": 8,
+   "ros_pct": 9,
    "g": 14.0,
    "a": 11.5,
    "pm": -5.8,
@@ -6831,25 +7444,45 @@
    "blk": 30.8
   },
   {
-   "name": "Cole Koepke",
-   "team": "WPG",
+   "name": "Zemgus Girgensons",
+   "team": "TB",
    "pos": [
     "LW"
    ],
    "status": "FA",
-   "gp": 62.2,
-   "rank_pre": 544,
-   "rank_cur": 499,
+   "gp": 54.3,
+   "rank_pre": 543,
+   "rank_cur": 512,
    "ros_pct": 0,
-   "g": 7.0,
-   "a": 7.0,
-   "pm": 0.8,
+   "g": 5.2,
+   "a": 6.7,
+   "pm": -0.9,
    "ppp": 0.0,
-   "sog": 71.3,
-   "fw": 0.0,
-   "hit": 151.8,
-   "blk": 16.3,
-   "stale": true
+   "sog": 58.5,
+   "fw": 70.9,
+   "hit": 130.1,
+   "blk": 32.6
+  },
+  {
+   "name": "Jaden Schwartz",
+   "team": "COL",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 39.5,
+   "rank_pre": 545,
+   "rank_cur": 556,
+   "ros_pct": 1,
+   "g": 8.4,
+   "a": 11.8,
+   "pm": -0.8,
+   "ppp": 4.6,
+   "sog": 71.5,
+   "fw": 24.9,
+   "hit": 24.2,
+   "blk": 27.0
   },
   {
    "name": "Parker Wotherspoon",
@@ -6870,6 +7503,46 @@
    "fw": 0.0,
    "hit": 113.0,
    "blk": 83.6
+  },
+  {
+   "name": "Nick Cousins",
+   "team": "OTT",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 42.2,
+   "rank_pre": 547,
+   "rank_cur": 614,
+   "ros_pct": 0,
+   "g": 4.4,
+   "a": 6.2,
+   "pm": 2.6,
+   "ppp": 0.0,
+   "sog": 38.7,
+   "fw": 5.7,
+   "hit": 75.9,
+   "blk": 20.0
+  },
+  {
+   "name": "Cole Koepke",
+   "team": "WPG",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 61.3,
+   "rank_pre": 548,
+   "rank_cur": 502,
+   "ros_pct": 0,
+   "g": 6.9,
+   "a": 6.9,
+   "pm": 0.8,
+   "ppp": 0.0,
+   "sog": 70.1,
+   "fw": 0.0,
+   "hit": 148.5,
+   "blk": 15.9
   },
   {
    "name": "Jared Spurgeon",
@@ -6921,7 +7594,7 @@
    "gp": 82.4,
    "rank_pre": 551,
    "rank_cur": 276,
-   "ros_pct": 15,
+   "ros_pct": 16,
    "g": 7.1,
    "a": 25.2,
    "pm": 5.7,
@@ -6930,27 +7603,6 @@
    "fw": 0.0,
    "hit": 29.6,
    "blk": 91.2
-  },
-  {
-   "name": "Tony DeAngelo",
-   "team": "NYI",
-   "pos": [
-    "D"
-   ],
-   "status": "FA",
-   "gp": 67,
-   "rank_pre": 551,
-   "rank_cur": 446,
-   "ros_pct": 2,
-   "g": 5,
-   "a": 27,
-   "pm": -7.0,
-   "ppp": 7,
-   "sog": 129,
-   "fw": 0,
-   "hit": 29,
-   "blk": 62,
-   "stale": true
   },
   {
    "name": "Artem Zub",
@@ -6994,6 +7646,68 @@
    "blk": 117.6
   },
   {
+   "name": "Rasmus Sandin",
+   "team": "WSH",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "IR-NR",
+   "gp": 12.8,
+   "rank_pre": 555,
+   "rank_cur": 724,
+   "ros_pct": 1,
+   "g": 0.8,
+   "a": 4.0,
+   "pm": 0.6,
+   "ppp": 0.5,
+   "sog": 14.1,
+   "fw": 0.0,
+   "hit": 14.1,
+   "blk": 19.9
+  },
+  {
+   "name": "Yanni Gourde",
+   "team": "TB",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "IR-NR",
+   "gp": 25.1,
+   "rank_pre": 556,
+   "rank_cur": 683,
+   "ros_pct": 0,
+   "g": 2.6,
+   "a": 5.9,
+   "pm": -1.8,
+   "ppp": 0.0,
+   "sog": 33.5,
+   "fw": 112.7,
+   "hit": 34.9,
+   "blk": 9.7
+  },
+  {
+   "name": "Tony DeAngelo",
+   "team": "NYI",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 54.3,
+   "rank_pre": 557,
+   "rank_cur": 511,
+   "ros_pct": 1,
+   "g": 3.6,
+   "a": 19.6,
+   "pm": -5.4,
+   "ppp": 5.1,
+   "sog": 95.8,
+   "fw": 0.0,
+   "hit": 21.3,
+   "blk": 47.0
+  },
+  {
    "name": "Ben Kindel",
    "team": "PIT",
    "pos": [
@@ -7003,7 +7717,7 @@
    "gp": 74.5,
    "rank_pre": 558,
    "rank_cur": 262,
-   "ros_pct": 5,
+   "ros_pct": 6,
    "g": 15.4,
    "a": 15.3,
    "pm": -7.6,
@@ -7012,6 +7726,26 @@
    "fw": 253.0,
    "hit": 29.0,
    "blk": 51.2
+  },
+  {
+   "name": "William Carrier",
+   "team": "CAR",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 50.5,
+   "rank_pre": 559,
+   "rank_cur": 558,
+   "ros_pct": 0,
+   "g": 4.9,
+   "a": 7.9,
+   "pm": 3.0,
+   "ppp": 0.0,
+   "sog": 56.0,
+   "fw": 4.9,
+   "hit": 122.4,
+   "blk": 13.3
   },
   {
    "name": "Ryan Poehling",
@@ -7053,6 +7787,27 @@
    "fw": 54.9,
    "hit": 132.1,
    "blk": 39.8
+  },
+  {
+   "name": "Eric Robinson",
+   "team": "CAR",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 57.1,
+   "rank_pre": 563,
+   "rank_cur": 563,
+   "ros_pct": 0,
+   "g": 8.4,
+   "a": 6.8,
+   "pm": 4.9,
+   "ppp": 0.0,
+   "sog": 69.2,
+   "fw": 1.6,
+   "hit": 80.3,
+   "blk": 9.9
   },
   {
    "name": "Drew O'Connor",
@@ -7097,6 +7852,27 @@
    "blk": 37.2
   },
   {
+   "name": "Sam Steel",
+   "team": "DAL",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 63.9,
+   "rank_pre": 566,
+   "rank_cur": 503,
+   "ros_pct": 0,
+   "g": 7.9,
+   "a": 16.5,
+   "pm": -0.1,
+   "ppp": 2.4,
+   "sog": 68.7,
+   "fw": 105.5,
+   "hit": 58.3,
+   "blk": 21.9
+  },
+  {
    "name": "Adam Lowry",
    "team": "WPG",
    "pos": [
@@ -7138,25 +7914,24 @@
    "blk": 24.6
   },
   {
-   "name": "Jake McCabe",
-   "team": "TOR",
+   "name": "Ryan Shea",
+   "team": "EDM",
    "pos": [
     "D"
    ],
    "status": "FA",
-   "gp": 79,
+   "gp": 33.8,
    "rank_pre": 569,
-   "rank_cur": 218,
-   "ros_pct": 13,
-   "g": 5,
-   "a": 20,
-   "pm": 7.0,
-   "ppp": 0,
-   "sog": 78,
-   "fw": 0,
-   "hit": 121,
-   "blk": 180,
-   "stale": true
+   "rank_cur": 621,
+   "ros_pct": 3,
+   "g": 2.3,
+   "a": 10.7,
+   "pm": 12.7,
+   "ppp": 0.0,
+   "sog": 25.0,
+   "fw": 0.0,
+   "hit": 16.7,
+   "blk": 33.9
   },
   {
    "name": "Jack Drury",
@@ -7177,6 +7952,26 @@
    "fw": 376.0,
    "hit": 33.0,
    "blk": 39.2
+  },
+  {
+   "name": "Joel Armia",
+   "team": "LA",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 56.8,
+   "rank_pre": 572,
+   "rank_cur": 514,
+   "ros_pct": 0,
+   "g": 11.3,
+   "a": 9.7,
+   "pm": 0.8,
+   "ppp": 0.7,
+   "sog": 75.9,
+   "fw": 20.8,
+   "hit": 57.6,
+   "blk": 32.6
   },
   {
    "name": "Casey Cizikas",
@@ -7238,6 +8033,26 @@
    "fw": 0.0,
    "hit": 114.7,
    "blk": 105.5
+  },
+  {
+   "name": "Jake McCabe",
+   "team": "TOR",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 74.4,
+   "rank_pre": 577,
+   "rank_cur": 510,
+   "ros_pct": 12,
+   "g": 2.4,
+   "a": 9.3,
+   "pm": 3.5,
+   "ppp": 0.0,
+   "sog": 38.3,
+   "fw": 0.0,
+   "hit": 60.4,
+   "blk": 89.2
   },
   {
    "name": "Brayden McNabb",
@@ -7322,6 +8137,48 @@
    "blk": 36.5
   },
   {
+   "name": "Arseny Gritsyuk",
+   "team": "NJ",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 45.4,
+   "rank_pre": 584,
+   "rank_cur": 579,
+   "ros_pct": 1,
+   "g": 8.0,
+   "a": 10.8,
+   "pm": -4.5,
+   "ppp": 3.4,
+   "sog": 95.0,
+   "fw": 2.7,
+   "hit": 38.2,
+   "blk": 12.3
+  },
+  {
+   "name": "Sean Kuraly",
+   "team": "BOS",
+   "pos": [
+    "C",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 46.6,
+   "rank_pre": 585,
+   "rank_cur": 592,
+   "ros_pct": 0,
+   "g": 3.3,
+   "a": 7.3,
+   "pm": -1.5,
+   "ppp": 0.0,
+   "sog": 58.5,
+   "fw": 179.4,
+   "hit": 60.1,
+   "blk": 25.4
+  },
+  {
    "name": "Mario Ferraro",
    "team": "WPG",
    "pos": [
@@ -7403,6 +8260,27 @@
    "blk": 38.1
   },
   {
+   "name": "Cody Glass",
+   "team": "NJ",
+   "pos": [
+    "C",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 43.0,
+   "rank_pre": 590,
+   "rank_cur": 587,
+   "ros_pct": 0,
+   "g": 8.8,
+   "a": 4.4,
+   "pm": -0.7,
+   "ppp": 1.2,
+   "sog": 59.3,
+   "fw": 234.6,
+   "hit": 25.5,
+   "blk": 21.5
+  },
+  {
    "name": "Nicolas Roy",
    "team": "COL",
    "pos": [
@@ -7422,6 +8300,28 @@
    "fw": 309.4,
    "hit": 62.6,
    "blk": 34.4
+  },
+  {
+   "name": "Adam Gaudette",
+   "team": "SJ",
+   "pos": [
+    "C",
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "IR",
+   "gp": 46.7,
+   "rank_pre": 593,
+   "rank_cur": 596,
+   "ros_pct": 0,
+   "g": 10.9,
+   "a": 4.8,
+   "pm": -3.6,
+   "ppp": 2.8,
+   "sog": 59.8,
+   "fw": 87.7,
+   "hit": 34.6,
+   "blk": 20.4
   },
   {
    "name": "Mikey Anderson",
@@ -7444,27 +8344,6 @@
    "blk": 119.9
   },
   {
-   "name": "Nic Dowd",
-   "team": "VGK",
-   "pos": [
-    "C"
-   ],
-   "status": "FA",
-   "gp": 63,
-   "rank_pre": 594,
-   "rank_cur": 447,
-   "ros_pct": 0,
-   "g": 6,
-   "a": 12,
-   "pm": -2.0,
-   "ppp": 0,
-   "sog": 59,
-   "fw": 420,
-   "hit": 115,
-   "blk": 48,
-   "stale": true
-  },
-  {
    "name": "Brady Skjei",
    "team": "NSH",
    "pos": [
@@ -7483,6 +8362,48 @@
    "fw": 0.0,
    "hit": 64.9,
    "blk": 82.3
+  },
+  {
+   "name": "Connor Zary",
+   "team": "CGY",
+   "pos": [
+    "C",
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 63.8,
+   "rank_pre": 596,
+   "rank_cur": 544,
+   "ros_pct": 1,
+   "g": 10.8,
+   "a": 12.5,
+   "pm": -8.1,
+   "ppp": 5.0,
+   "sog": 94.9,
+   "fw": 64.5,
+   "hit": 35.5,
+   "blk": 17.3
+  },
+  {
+   "name": "Nic Dowd",
+   "team": "VGK",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 48.0,
+   "rank_pre": 597,
+   "rank_cur": 538,
+   "ros_pct": 0,
+   "g": 4.1,
+   "a": 9.7,
+   "pm": -2.3,
+   "ppp": 0.0,
+   "sog": 41.8,
+   "fw": 294.5,
+   "hit": 79.6,
+   "blk": 32.6
   },
   {
    "name": "Mason Lohrei",
@@ -7505,6 +8426,48 @@
    "blk": 72.6
   },
   {
+   "name": "Louis Crevier",
+   "team": "BUF",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 43.2,
+   "rank_pre": 599,
+   "rank_cur": 576,
+   "ros_pct": 1,
+   "g": 3.3,
+   "a": 9.0,
+   "pm": -1.5,
+   "ppp": 0.0,
+   "sog": 55.0,
+   "fw": 0.0,
+   "hit": 64.3,
+   "blk": 50.6
+  },
+  {
+   "name": "Dakota Joshua",
+   "team": "TOR",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "inj": "IR-LT",
+   "gp": 19.4,
+   "rank_pre": 600,
+   "rank_cur": 734,
+   "ros_pct": 0,
+   "g": 2.1,
+   "a": 1.6,
+   "pm": -0.3,
+   "ppp": 0.0,
+   "sog": 11.1,
+   "fw": 2.2,
+   "hit": 41.8,
+   "blk": 6.7
+  },
+  {
    "name": "Radko Gudas",
    "team": "FLA",
    "pos": [
@@ -7525,26 +8488,25 @@
    "blk": 76.8
   },
   {
-   "name": "Alex Newhook",
-   "team": "MTL",
+   "name": "Marat Khusnutdinov",
+   "team": "BOS",
    "pos": [
     "C",
     "LW"
    ],
    "status": "FA",
-   "gp": 62,
+   "gp": 49.1,
    "rank_pre": 602,
-   "rank_cur": 435,
-   "ros_pct": 3,
-   "g": 14,
-   "a": 13,
-   "pm": 4.0,
-   "ppp": 5,
-   "sog": 91,
-   "fw": 192,
-   "hit": 66,
-   "blk": 26,
-   "stale": true
+   "rank_cur": 602,
+   "ros_pct": 0,
+   "g": 7.6,
+   "a": 9.7,
+   "pm": 5.2,
+   "ppp": 0.7,
+   "sog": 41.9,
+   "fw": 47.7,
+   "hit": 27.3,
+   "blk": 23.5
   },
   {
    "name": "Ben Chiarot",
@@ -7587,28 +8549,6 @@
    "blk": 107.6
   },
   {
-   "name": "Nick Foligno",
-   "team": "MIN",
-   "pos": [
-    "C",
-    "LW"
-   ],
-   "status": "FA",
-   "gp": 63,
-   "rank_pre": 604,
-   "rank_cur": 409,
-   "ros_pct": 1,
-   "g": 7,
-   "a": 13,
-   "pm": -4.0,
-   "ppp": 4,
-   "sog": 72,
-   "fw": 241,
-   "hit": 155,
-   "blk": 36,
-   "stale": true
-  },
-  {
    "name": "Jalen Chatfield",
    "team": "CAR",
    "pos": [
@@ -7629,6 +8569,88 @@
    "blk": 54.4
   },
   {
+   "name": "Nick Foligno",
+   "team": "MIN",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 48.0,
+   "rank_pre": 606,
+   "rank_cur": 505,
+   "ros_pct": 0,
+   "g": 5.6,
+   "a": 9.0,
+   "pm": -1.3,
+   "ppp": 2.8,
+   "sog": 51.9,
+   "fw": 168.0,
+   "hit": 106.5,
+   "blk": 24.9
+  },
+  {
+   "name": "Tye Kartye",
+   "team": "NYR",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 32.0,
+   "rank_pre": 607,
+   "rank_cur": 659,
+   "ros_pct": 0,
+   "g": 3.4,
+   "a": 6.8,
+   "pm": -2.3,
+   "ppp": 0.0,
+   "sog": 28.0,
+   "fw": 3.5,
+   "hit": 84.8,
+   "blk": 17.4
+  },
+  {
+   "name": "Garnet Hathaway",
+   "team": "FLA",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 25.3,
+   "rank_pre": 608,
+   "rank_cur": 679,
+   "ros_pct": 1,
+   "g": 1.0,
+   "a": 1.5,
+   "pm": -1.6,
+   "ppp": 0.0,
+   "sog": 16.2,
+   "fw": 5.0,
+   "hit": 95.1,
+   "blk": 19.9
+  },
+  {
+   "name": "Alex Newhook",
+   "team": "MTL",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 46.6,
+   "rank_pre": 609,
+   "rank_cur": 520,
+   "ros_pct": 2,
+   "g": 9.6,
+   "a": 8.9,
+   "pm": 2.2,
+   "ppp": 3.4,
+   "sog": 64.7,
+   "fw": 142.4,
+   "hit": 47.9,
+   "blk": 20.3
+  },
+  {
    "name": "Paul Cotter",
    "team": "VAN",
    "pos": [
@@ -7638,7 +8660,7 @@
    "gp": 68.4,
    "rank_pre": 610,
    "rank_cur": 518,
-   "ros_pct": 24,
+   "ros_pct": 25,
    "g": 10.5,
    "a": 8.0,
    "pm": -13.8,
@@ -7647,6 +8669,27 @@
    "fw": 64.0,
    "hit": 162.8,
    "blk": 19.7
+  },
+  {
+   "name": "Michael Eyssimont",
+   "team": "BOS",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 39.2,
+   "rank_pre": 611,
+   "rank_cur": 638,
+   "ros_pct": 0,
+   "g": 5.0,
+   "a": 5.6,
+   "pm": -0.6,
+   "ppp": 1.9,
+   "sog": 70.0,
+   "fw": 2.5,
+   "hit": 42.7,
+   "blk": 13.7
   },
   {
    "name": "Matthew Wood",
@@ -7710,6 +8753,26 @@
    "blk": 150.4
   },
   {
+   "name": "Ondrej Palat",
+   "team": "NYI",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 57.0,
+   "rank_pre": 616,
+   "rank_cur": 561,
+   "ros_pct": 0,
+   "g": 5.2,
+   "a": 8.1,
+   "pm": -5.4,
+   "ppp": 1.5,
+   "sog": 61.2,
+   "fw": 3.7,
+   "hit": 85.7,
+   "blk": 42.7
+  },
+  {
    "name": "Jamie Oleksiak",
    "team": "VAN",
    "pos": [
@@ -7719,7 +8782,7 @@
    "gp": 68.4,
    "rank_pre": 617,
    "rank_cur": 381,
-   "ros_pct": 8,
+   "ros_pct": 7,
    "g": 4.7,
    "a": 9.5,
    "pm": 4.8,
@@ -7750,6 +8813,107 @@
    "blk": 46.9
   },
   {
+   "name": "Tyler Kleven",
+   "team": "OTT",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 33.5,
+   "rank_pre": 620,
+   "rank_cur": 643,
+   "ros_pct": 1,
+   "g": 1.2,
+   "a": 5.3,
+   "pm": 0.0,
+   "ppp": 0.0,
+   "sog": 38.5,
+   "fw": 0.0,
+   "hit": 54.0,
+   "blk": 41.3
+  },
+  {
+   "name": "Sam Carrick",
+   "team": "BUF",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 42.0,
+   "rank_pre": 621,
+   "rank_cur": 618,
+   "ros_pct": 0,
+   "g": 4.5,
+   "a": 3.9,
+   "pm": -0.2,
+   "ppp": 0.0,
+   "sog": 40.4,
+   "fw": 167.0,
+   "hit": 62.4,
+   "blk": 19.0
+  },
+  {
+   "name": "Ethen Frank",
+   "team": "WSH",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 21.9,
+   "rank_pre": 622,
+   "rank_cur": 705,
+   "ros_pct": 0,
+   "g": 2.8,
+   "a": 2.8,
+   "pm": 3.0,
+   "ppp": 0.9,
+   "sog": 28.7,
+   "fw": 0.5,
+   "hit": 17.3,
+   "blk": 14.4
+  },
+  {
+   "name": "Brandon Duhaime",
+   "team": "TOR",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 38.4,
+   "rank_pre": 623,
+   "rank_cur": 690,
+   "ros_pct": 0,
+   "g": 2.0,
+   "a": 2.4,
+   "pm": -1.0,
+   "ppp": 0.0,
+   "sog": 24.0,
+   "fw": 4.5,
+   "hit": 61.3,
+   "blk": 22.1
+  },
+  {
+   "name": "Carl Grundstrom",
+   "team": "PHI",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 45.6,
+   "rank_pre": 624,
+   "rank_cur": 545,
+   "ros_pct": 0,
+   "g": 6.8,
+   "a": 3.4,
+   "pm": 1.5,
+   "ppp": 0.0,
+   "sog": 59.0,
+   "fw": 4.0,
+   "hit": 129.6,
+   "blk": 22.3
+  },
+  {
    "name": "Cam York",
    "team": "PHI",
    "pos": [
@@ -7768,27 +8932,6 @@
    "fw": 0.0,
    "hit": 32.4,
    "blk": 125.5
-  },
-  {
-   "name": "Carl Grundstrom",
-   "team": "PHI",
-   "pos": [
-    "RW"
-   ],
-   "status": "FA",
-   "gp": 61,
-   "rank_pre": 625,
-   "rank_cur": 444,
-   "ros_pct": 0,
-   "g": 10,
-   "a": 5,
-   "pm": 2.0,
-   "ppp": 0,
-   "sog": 83,
-   "fw": 6,
-   "hit": 179,
-   "blk": 29,
-   "stale": true
   },
   {
    "name": "Jamie Drysdale",
@@ -7811,6 +8954,47 @@
    "blk": 81.2
   },
   {
+   "name": "Linus Karlsson",
+   "team": "VAN",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 49.1,
+   "rank_pre": 627,
+   "rank_cur": 642,
+   "ros_pct": 1,
+   "g": 7.7,
+   "a": 13.5,
+   "pm": -14.9,
+   "ppp": 2.8,
+   "sog": 70.2,
+   "fw": 10.1,
+   "hit": 48.1,
+   "blk": 13.4
+  },
+  {
+   "name": "Freddy Gaudreau",
+   "team": "SEA",
+   "pos": [
+    "C",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 55.6,
+   "rank_pre": 628,
+   "rank_cur": 504,
+   "ros_pct": 0,
+   "g": 7.6,
+   "a": 12.0,
+   "pm": -2.4,
+   "ppp": 3.7,
+   "sog": 62.2,
+   "fw": 253.0,
+   "hit": 26.0,
+   "blk": 41.4
+  },
+  {
    "name": "Noah Laba",
    "team": "NYR",
    "pos": [
@@ -7831,6 +9015,26 @@
    "blk": 35.9
   },
   {
+   "name": "Pontus Holmberg",
+   "team": "TB",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 58.3,
+   "rank_pre": 630,
+   "rank_cur": 572,
+   "ros_pct": 0,
+   "g": 7.6,
+   "a": 8.4,
+   "pm": 1.5,
+   "ppp": 0.0,
+   "sog": 67.0,
+   "fw": 34.8,
+   "hit": 49.6,
+   "blk": 27.1
+  },
+  {
    "name": "William Borgen",
    "team": "BOS",
    "pos": [
@@ -7840,7 +9044,7 @@
    "gp": 74.4,
    "rank_pre": 631,
    "rank_cur": 343,
-   "ros_pct": 0,
+   "ros_pct": 1,
    "g": 4.3,
    "a": 11.2,
    "pm": 3.0,
@@ -7869,6 +9073,66 @@
    "fw": 0.0,
    "hit": 195.7,
    "blk": 102.1
+  },
+  {
+   "name": "Niko Mikkola",
+   "team": "FLA",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 54.2,
+   "rank_pre": 633,
+   "rank_cur": 536,
+   "ros_pct": 0,
+   "g": 2.1,
+   "a": 5.7,
+   "pm": 1.6,
+   "ppp": 0.0,
+   "sog": 58.6,
+   "fw": 0.0,
+   "hit": 89.0,
+   "blk": 61.2
+  },
+  {
+   "name": "Erik Cernak",
+   "team": "TB",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 39.5,
+   "rank_pre": 634,
+   "rank_cur": 577,
+   "ros_pct": 1,
+   "g": 1.2,
+   "a": 5.1,
+   "pm": 4.1,
+   "ppp": 0.0,
+   "sog": 34.7,
+   "fw": 0.0,
+   "hit": 78.0,
+   "blk": 57.8
+  },
+  {
+   "name": "Cole Smith",
+   "team": "CHI",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 31.0,
+   "rank_pre": 635,
+   "rank_cur": 688,
+   "ros_pct": 0,
+   "g": 3.2,
+   "a": 2.2,
+   "pm": -1.7,
+   "ppp": 0.0,
+   "sog": 30.5,
+   "fw": 2.7,
+   "hit": 74.1,
+   "blk": 8.6
   },
   {
    "name": "Will Borgen",
@@ -7912,6 +9176,46 @@
    "blk": 94.6
   },
   {
+   "name": "Marc Gatcomb",
+   "team": "VGK",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 18.8,
+   "rank_pre": 637,
+   "rank_cur": 712,
+   "ros_pct": 1,
+   "g": 1.8,
+   "a": 1.3,
+   "pm": -1.9,
+   "ppp": 0.0,
+   "sog": 20.2,
+   "fw": 0.8,
+   "hit": 67.5,
+   "blk": 7.9
+  },
+  {
+   "name": "Connor Clifton",
+   "team": "BOS",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 20.1,
+   "rank_pre": 638,
+   "rank_cur": 680,
+   "ros_pct": 1,
+   "g": 0.9,
+   "a": 2.3,
+   "pm": 0.9,
+   "ppp": 0.0,
+   "sog": 15.2,
+   "fw": 0.0,
+   "hit": 62.4,
+   "blk": 30.6
+  },
+  {
    "name": "Kevin Bahl",
    "team": "CGY",
    "pos": [
@@ -7932,6 +9236,28 @@
    "blk": 87.3
   },
   {
+   "name": "Alex Steeves",
+   "team": "BOS",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 6.5,
+   "rank_pre": 641,
+   "rank_cur": 771,
+   "ros_pct": 0,
+   "g": 1.2,
+   "a": 1.0,
+   "pm": 1.1,
+   "ppp": 0.5,
+   "sog": 7.7,
+   "fw": 0.2,
+   "hit": 21.1,
+   "blk": 3.6
+  },
+  {
    "name": "Aatu Raty",
    "team": "VAN",
    "pos": [
@@ -7949,6 +9275,27 @@
    "sog": 60.1,
    "fw": 428.4,
    "hit": 149.1,
+   "blk": 14.4
+  },
+  {
+   "name": "Alexandre Texier",
+   "team": "MTL",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 41.8,
+   "rank_pre": 643,
+   "rank_cur": 599,
+   "ros_pct": 0,
+   "g": 5.8,
+   "a": 9.6,
+   "pm": 4.1,
+   "ppp": 1.3,
+   "sog": 57.5,
+   "fw": 1.9,
+   "hit": 45.1,
    "blk": 14.4
   },
   {
@@ -7992,6 +9339,28 @@
    "blk": 93.3
   },
   {
+   "name": "Trent Frederic",
+   "team": "EDM",
+   "pos": [
+    "C",
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 66.8,
+   "rank_pre": 646,
+   "rank_cur": 517,
+   "ros_pct": 1,
+   "g": 5.9,
+   "a": 4.1,
+   "pm": -10.7,
+   "ppp": 0.0,
+   "sog": 73.2,
+   "fw": 82.9,
+   "hit": 172.1,
+   "blk": 23.6
+  },
+  {
    "name": "Vladislav Namestnikov",
    "team": "WPG",
    "pos": [
@@ -8011,6 +9380,26 @@
    "fw": 138.3,
    "hit": 72.0,
    "blk": 37.4
+  },
+  {
+   "name": "Jonathan Aspirot",
+   "team": "BOS",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 13.5,
+   "rank_pre": 648,
+   "rank_cur": 715,
+   "ros_pct": 0,
+   "g": 0.7,
+   "a": 1.8,
+   "pm": 6.8,
+   "ppp": 0.3,
+   "sog": 10.7,
+   "fw": 0.0,
+   "hit": 18.5,
+   "blk": 18.3
   },
   {
    "name": "Jake Middleton",
@@ -8033,6 +9422,27 @@
    "blk": 106.8
   },
   {
+   "name": "Jesper Boqvist",
+   "team": "NJ",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 11.1,
+   "rank_pre": 650,
+   "rank_cur": 787,
+   "ros_pct": 0,
+   "g": 0.7,
+   "a": 1.3,
+   "pm": -1.4,
+   "ppp": 0.3,
+   "sog": 9.9,
+   "fw": 6.1,
+   "hit": 20.6,
+   "blk": 4.5
+  },
+  {
    "name": "Dalibor Dvorsky",
    "team": "STL",
    "pos": [
@@ -8051,6 +9461,47 @@
    "fw": 294.0,
    "hit": 66.4,
    "blk": 19.7
+  },
+  {
+   "name": "Nathan Walker",
+   "team": "STL",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 10.7,
+   "rank_pre": 652,
+   "rank_cur": 749,
+   "ros_pct": 0,
+   "g": 1.0,
+   "a": 1.3,
+   "pm": -1.7,
+   "ppp": 0.0,
+   "sog": 8.9,
+   "fw": 11.3,
+   "hit": 37.9,
+   "blk": 7.6
+  },
+  {
+   "name": "Kaedan Korczak",
+   "team": "PIT",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 54.4,
+   "rank_pre": 653,
+   "rank_cur": 521,
+   "ros_pct": 2,
+   "g": 1.5,
+   "a": 11.5,
+   "pm": 6.5,
+   "ppp": 0.0,
+   "sog": 42.5,
+   "fw": 0.0,
+   "hit": 67.1,
+   "blk": 64.3
   },
   {
    "name": "Hampus Lindholm",
@@ -8073,6 +9524,88 @@
    "blk": 82.7
   },
   {
+   "name": "Charle-Edouard D'Astous",
+   "team": "TB",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 43.0,
+   "rank_pre": 655,
+   "rank_cur": 581,
+   "ros_pct": 1,
+   "g": 4.0,
+   "a": 13.2,
+   "pm": -2.2,
+   "ppp": 1.3,
+   "sog": 47.1,
+   "fw": 0.0,
+   "hit": 55.2,
+   "blk": 43.6
+  },
+  {
+   "name": "Colton Dach",
+   "team": "EDM",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 40.4,
+   "rank_pre": 656,
+   "rank_cur": 629,
+   "ros_pct": 0,
+   "g": 2.6,
+   "a": 5.2,
+   "pm": -11.9,
+   "ppp": 1.2,
+   "sog": 39.1,
+   "fw": 27.9,
+   "hit": 139.0,
+   "blk": 20.3
+  },
+  {
+   "name": "Mark Jankowski",
+   "team": "CAR",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 34.3,
+   "rank_pre": 658,
+   "rank_cur": 656,
+   "ros_pct": 0,
+   "g": 5.0,
+   "a": 4.5,
+   "pm": 2.3,
+   "ppp": 1.1,
+   "sog": 28.9,
+   "fw": 154.5,
+   "hit": 19.4,
+   "blk": 19.2
+  },
+  {
+   "name": "Emil Lilleberg",
+   "team": "TB",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "DTD",
+   "gp": 25.4,
+   "rank_pre": 659,
+   "rank_cur": 681,
+   "ros_pct": 0,
+   "g": 1.0,
+   "a": 4.6,
+   "pm": 3.8,
+   "ppp": 0.0,
+   "sog": 19.4,
+   "fw": 0.0,
+   "hit": 47.1,
+   "blk": 21.2
+  },
+  {
    "name": "Connor Murphy",
    "team": "EDM",
    "pos": [
@@ -8093,6 +9626,26 @@
    "blk": 111.0
   },
   {
+   "name": "Ross Johnston",
+   "team": "STL",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 58.5,
+   "rank_pre": 661,
+   "rank_cur": 591,
+   "ros_pct": 1,
+   "g": 1.4,
+   "a": 6.6,
+   "pm": 0.1,
+   "ppp": 0.0,
+   "sog": 26.1,
+   "fw": 3.6,
+   "hit": 156.7,
+   "blk": 16.8
+  },
+  {
    "name": "Samuel Girard",
    "team": "PIT",
    "pos": [
@@ -8111,6 +9664,28 @@
    "fw": 0.0,
    "hit": 32.5,
    "blk": 67.7
+  },
+  {
+   "name": "Andre Burakovsky",
+   "team": "OTT",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "DTD",
+   "gp": 44.4,
+   "rank_pre": 663,
+   "rank_cur": 678,
+   "ros_pct": 0,
+   "g": 6.0,
+   "a": 12.7,
+   "pm": -16.3,
+   "ppp": 5.3,
+   "sog": 52.2,
+   "fw": 2.0,
+   "hit": 11.4,
+   "blk": 18.0
   },
   {
    "name": "Rasmus Ristolainen",
@@ -8154,6 +9729,171 @@
    "blk": 121.3
   },
   {
+   "name": "Alexey Toropchenko",
+   "team": "STL",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "O",
+   "gp": 18.0,
+   "rank_pre": 666,
+   "rank_cur": 731,
+   "ros_pct": 0,
+   "g": 1.1,
+   "a": 1.9,
+   "pm": -2.0,
+   "ppp": 0.0,
+   "sog": 18.2,
+   "fw": 0.7,
+   "hit": 35.8,
+   "blk": 13.2
+  },
+  {
+   "name": "Lars Eller",
+   "team": "FLA",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 39.5,
+   "rank_pre": 667,
+   "rank_cur": 625,
+   "ros_pct": 1,
+   "g": 3.6,
+   "a": 7.4,
+   "pm": 2.7,
+   "ppp": 0.6,
+   "sog": 42.3,
+   "fw": 179.4,
+   "hit": 28.5,
+   "blk": 18.8
+  },
+  {
+   "name": "Mason Appleton",
+   "team": "DET",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 58.3,
+   "rank_pre": 668,
+   "rank_cur": 590,
+   "ros_pct": 0,
+   "g": 6.1,
+   "a": 7.6,
+   "pm": 0.0,
+   "ppp": 0.0,
+   "sog": 59.7,
+   "fw": 6.1,
+   "hit": 75.6,
+   "blk": 23.8
+  },
+  {
+   "name": "Colin Blackwell",
+   "team": "DAL",
+   "pos": [
+    "C",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 40.7,
+   "rank_pre": 669,
+   "rank_cur": 661,
+   "ros_pct": 0,
+   "g": 2.6,
+   "a": 5.7,
+   "pm": -0.7,
+   "ppp": 0.0,
+   "sog": 35.9,
+   "fw": 66.8,
+   "hit": 56.9,
+   "blk": 18.5
+  },
+  {
+   "name": "Taylor Raddysh",
+   "team": "NYR",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 56.7,
+   "rank_pre": 670,
+   "rank_cur": 615,
+   "ros_pct": 0,
+   "g": 6.4,
+   "a": 8.6,
+   "pm": 0.7,
+   "ppp": 0.7,
+   "sog": 48.7,
+   "fw": 3.6,
+   "hit": 40.0,
+   "blk": 27.4
+  },
+  {
+   "name": "Kasperi Kapanen",
+   "team": "EDM",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 58.2,
+   "rank_pre": 671,
+   "rank_cur": 541,
+   "ros_pct": 2,
+   "g": 8.9,
+   "a": 11.2,
+   "pm": -3.5,
+   "ppp": 0.8,
+   "sog": 78.9,
+   "fw": 8.4,
+   "hit": 85.0,
+   "blk": 20.1
+  },
+  {
+   "name": "Ryan Greene",
+   "team": "CHI",
+   "pos": [
+    "C",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 50.4,
+   "rank_pre": 672,
+   "rank_cur": 603,
+   "ros_pct": 0,
+   "g": 5.6,
+   "a": 10.0,
+   "pm": -8.2,
+   "ppp": 3.5,
+   "sog": 61.2,
+   "fw": 204.3,
+   "hit": 27.8,
+   "blk": 22.0
+  },
+  {
+   "name": "Noah Ostlund",
+   "team": "BUF",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 48.0,
+   "rank_pre": 673,
+   "rank_cur": 564,
+   "ros_pct": 1,
+   "g": 7.6,
+   "a": 12.6,
+   "pm": 8.2,
+   "ppp": 4.2,
+   "sog": 47.3,
+   "fw": 68.8,
+   "hit": 3.5,
+   "blk": 22.9
+  },
+  {
    "name": "Ryker Evans",
    "team": "SEA",
    "pos": [
@@ -8174,6 +9914,47 @@
    "blk": 69.2
   },
   {
+   "name": "Kailer Yamamoto",
+   "team": "UTA",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 29.1,
+   "rank_pre": 676,
+   "rank_cur": 687,
+   "ros_pct": 0,
+   "g": 6.1,
+   "a": 4.5,
+   "pm": 4.1,
+   "ppp": 0.0,
+   "sog": 28.2,
+   "fw": 10.5,
+   "hit": 20.8,
+   "blk": 9.3
+  },
+  {
+   "name": "Joel Kiviranta",
+   "team": "DAL",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 45.5,
+   "rank_pre": 677,
+   "rank_cur": 646,
+   "ros_pct": 0,
+   "g": 2.8,
+   "a": 4.8,
+   "pm": 5.1,
+   "ppp": 0.0,
+   "sog": 44.5,
+   "fw": 4.8,
+   "hit": 56.5,
+   "blk": 16.5
+  },
+  {
    "name": "Andrew Peeke",
    "team": "UTA",
    "pos": [
@@ -8192,6 +9973,26 @@
    "fw": 0.0,
    "hit": 88.5,
    "blk": 105.8
+  },
+  {
+   "name": "Ryan Strome",
+   "team": "CGY",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 61.0,
+   "rank_pre": 679,
+   "rank_cur": 552,
+   "ros_pct": 0,
+   "g": 9.1,
+   "a": 15.9,
+   "pm": -10.7,
+   "ppp": 3.7,
+   "sog": 74.5,
+   "fw": 225.0,
+   "hit": 30.9,
+   "blk": 16.6
   },
   {
    "name": "Lian Bichsel",
@@ -8235,6 +10036,27 @@
    "blk": 129.1
   },
   {
+   "name": "Calum Ritchie",
+   "team": "NYI",
+   "pos": [
+    "C",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 61.1,
+   "rank_pre": 683,
+   "rank_cur": 522,
+   "ros_pct": 1,
+   "g": 10.4,
+   "a": 14.5,
+   "pm": -11.0,
+   "ppp": 9.7,
+   "sog": 73.6,
+   "fw": 103.5,
+   "hit": 17.3,
+   "blk": 30.2
+  },
+  {
    "name": "Adam Henrique",
    "team": "EDM",
    "pos": [
@@ -8255,6 +10077,66 @@
    "blk": 79,
    "inj": "NA",
    "stale": true
+  },
+  {
+   "name": "Matthew Robertson",
+   "team": "NYR",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 23.6,
+   "rank_pre": 685,
+   "rank_cur": 704,
+   "ros_pct": 0,
+   "g": 1.5,
+   "a": 3.5,
+   "pm": -0.5,
+   "ppp": 0.0,
+   "sog": 25.0,
+   "fw": 0.0,
+   "hit": 34.4,
+   "blk": 25.7
+  },
+  {
+   "name": "Jonatan Berggren",
+   "team": "STL",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 61.1,
+   "rank_pre": 686,
+   "rank_cur": 619,
+   "ros_pct": 0,
+   "g": 7.2,
+   "a": 12.8,
+   "pm": -8.6,
+   "ppp": 2.4,
+   "sog": 68.0,
+   "fw": 3.2,
+   "hit": 42.9,
+   "blk": 15.1
+  },
+  {
+   "name": "Blake Lizotte",
+   "team": "PIT",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 29.3,
+   "rank_pre": 687,
+   "rank_cur": 672,
+   "ros_pct": 0,
+   "g": 3.3,
+   "a": 5.4,
+   "pm": 1.7,
+   "ppp": 0.0,
+   "sog": 27.6,
+   "fw": 114.7,
+   "hit": 24.6,
+   "blk": 17.2
   },
   {
    "name": "Colton Sissons",
@@ -8278,6 +10160,251 @@
    "blk": 42.4
   },
   {
+   "name": "Elmer Soderblom",
+   "team": "PIT",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 18.4,
+   "rank_pre": 689,
+   "rank_cur": 738,
+   "ros_pct": 0,
+   "g": 2.0,
+   "a": 1.6,
+   "pm": -0.4,
+   "ppp": 0.0,
+   "sog": 19.9,
+   "fw": 1.2,
+   "hit": 28.2,
+   "blk": 4.9
+  },
+  {
+   "name": "Danton Heinen",
+   "team": "CBJ",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 13.2,
+   "rank_pre": 690,
+   "rank_cur": 747,
+   "ros_pct": 0,
+   "g": 1.8,
+   "a": 2.2,
+   "pm": 1.6,
+   "ppp": 0.0,
+   "sog": 12.9,
+   "fw": 3.8,
+   "hit": 13.5,
+   "blk": 7.2
+  },
+  {
+   "name": "Tyler Tucker",
+   "team": "STL",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "IR",
+   "gp": 51.2,
+   "rank_pre": 691,
+   "rank_cur": 610,
+   "ros_pct": 0,
+   "g": 1.5,
+   "a": 8.9,
+   "pm": -1.5,
+   "ppp": 0.0,
+   "sog": 44.7,
+   "fw": 0.0,
+   "hit": 72.4,
+   "blk": 37.0
+  },
+  {
+   "name": "Uvis Balinskis",
+   "team": "FLA",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 31.0,
+   "rank_pre": 692,
+   "rank_cur": 685,
+   "ros_pct": 0,
+   "g": 2.2,
+   "a": 5.0,
+   "pm": -4.7,
+   "ppp": 2.8,
+   "sog": 35.1,
+   "fw": 0.0,
+   "hit": 37.7,
+   "blk": 22.4
+  },
+  {
+   "name": "Ryan Lomberg",
+   "team": "CBJ",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 16.1,
+   "rank_pre": 694,
+   "rank_cur": 764,
+   "ros_pct": 0,
+   "g": 0.8,
+   "a": 0.8,
+   "pm": -0.8,
+   "ppp": 0.0,
+   "sog": 13.2,
+   "fw": 0.8,
+   "hit": 32.0,
+   "blk": 4.0
+  },
+  {
+   "name": "Luke Schenn",
+   "team": "VAN",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 52.9,
+   "rank_pre": 695,
+   "rank_cur": 525,
+   "ros_pct": 2,
+   "g": 2.1,
+   "a": 7.0,
+   "pm": -4.8,
+   "ppp": 0.0,
+   "sog": 41.3,
+   "fw": 0.0,
+   "hit": 151.2,
+   "blk": 56.6
+  },
+  {
+   "name": "Simon Benoit",
+   "team": "PHI",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 31.2,
+   "rank_pre": 696,
+   "rank_cur": 674,
+   "ros_pct": 0,
+   "g": 0.0,
+   "a": 2.2,
+   "pm": -6.0,
+   "ppp": 0.0,
+   "sog": 22.3,
+   "fw": 0.0,
+   "hit": 79.7,
+   "blk": 43.1
+  },
+  {
+   "name": "Carson Soucy",
+   "team": "CBJ",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 12.6,
+   "rank_pre": 697,
+   "rank_cur": 761,
+   "ros_pct": 0,
+   "g": 0.5,
+   "a": 0.9,
+   "pm": -0.4,
+   "ppp": 0.0,
+   "sog": 10.4,
+   "fw": 0.0,
+   "hit": 17.9,
+   "blk": 14.9
+  },
+  {
+   "name": "Jayden Struble",
+   "team": "MTL",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 41.8,
+   "rank_pre": 699,
+   "rank_cur": 637,
+   "ros_pct": 0,
+   "g": 1.3,
+   "a": 7.2,
+   "pm": 3.7,
+   "ppp": 0.0,
+   "sog": 21.6,
+   "fw": 0.0,
+   "hit": 82.3,
+   "blk": 26.5
+  },
+  {
+   "name": "Kaiden Guhle",
+   "team": "MTL",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "IR",
+   "gp": 22.4,
+   "rank_pre": 700,
+   "rank_cur": 663,
+   "ros_pct": 2,
+   "g": 1.8,
+   "a": 5.0,
+   "pm": 1.9,
+   "ppp": 0.0,
+   "sog": 23.7,
+   "fw": 0.0,
+   "hit": 43.4,
+   "blk": 39.4
+  },
+  {
+   "name": "Emil Andrae",
+   "team": "CBJ",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 12.0,
+   "rank_pre": 701,
+   "rank_cur": 783,
+   "ros_pct": 0,
+   "g": 0.4,
+   "a": 1.5,
+   "pm": 1.9,
+   "ppp": 0.4,
+   "sog": 4.8,
+   "fw": 0.4,
+   "hit": 7.8,
+   "blk": 8.3
+  },
+  {
+   "name": "Jonny Brodzinski",
+   "team": "WSH",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 29.0,
+   "rank_pre": 702,
+   "rank_cur": 701,
+   "ros_pct": 0,
+   "g": 3.7,
+   "a": 4.7,
+   "pm": 0.0,
+   "ppp": 1.0,
+   "sog": 32.8,
+   "fw": 29.1,
+   "hit": 20.4,
+   "blk": 8.8
+  },
+  {
    "name": "Radek Faksa",
    "team": "DAL",
    "pos": [
@@ -8296,6 +10423,46 @@
    "fw": 261.2,
    "hit": 84.2,
    "blk": 44.8
+  },
+  {
+   "name": "Ryan Winterton",
+   "team": "SEA",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 39.5,
+   "rank_pre": 704,
+   "rank_cur": 665,
+   "ros_pct": 0,
+   "g": 2.5,
+   "a": 8.2,
+   "pm": -0.6,
+   "ppp": 0.0,
+   "sog": 49.5,
+   "fw": 0.7,
+   "hit": 39.0,
+   "blk": 20.8
+  },
+  {
+   "name": "Jesperi Kotkaniemi",
+   "team": "CAR",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 34.3,
+   "rank_pre": 705,
+   "rank_cur": 668,
+   "ros_pct": 0,
+   "g": 2.9,
+   "a": 5.8,
+   "pm": 1.1,
+   "ppp": 0.0,
+   "sog": 38.3,
+   "fw": 109.9,
+   "hit": 38.4,
+   "blk": 12.8
   },
   {
    "name": "Jason Dickinson",
@@ -8319,25 +10486,126 @@
    "blk": 54.0
   },
   {
-   "name": "Luke Schenn",
-   "team": "VAN",
+   "name": "Ty Emberson",
+   "team": "EDM",
    "pos": [
     "D"
    ],
    "status": "FA",
-   "gp": 66,
+   "gp": 16.8,
+   "rank_pre": 707,
+   "rank_cur": 728,
+   "ros_pct": 0,
+   "g": 0.4,
+   "a": 2.5,
+   "pm": -0.4,
+   "ppp": 0.0,
+   "sog": 10.6,
+   "fw": 0.0,
+   "hit": 25.2,
+   "blk": 22.8
+  },
+  {
+   "name": "Cole Reinhardt",
+   "team": "FLA",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 21.1,
    "rank_pre": 708,
-   "rank_cur": 440,
-   "ros_pct": 1,
-   "g": 3,
-   "a": 8,
-   "pm": -11.0,
-   "ppp": 0,
-   "sog": 58,
-   "fw": 0,
-   "hit": 212,
-   "blk": 80,
-   "stale": true
+   "rank_cur": 723,
+   "ros_pct": 0,
+   "g": 2.8,
+   "a": 1.9,
+   "pm": -1.0,
+   "ppp": 0.0,
+   "sog": 17.3,
+   "fw": 2.8,
+   "hit": 46.3,
+   "blk": 5.1
+  },
+  {
+   "name": "Michael Rasmussen",
+   "team": "DET",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 58.3,
+   "rank_pre": 709,
+   "rank_cur": 559,
+   "ros_pct": 0,
+   "g": 6.1,
+   "a": 7.7,
+   "pm": -8.3,
+   "ppp": 0.0,
+   "sog": 62.4,
+   "fw": 94.8,
+   "hit": 68.7,
+   "blk": 52.0
+  },
+  {
+   "name": "Stefan Noesen",
+   "team": "NJ",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 41.8,
+   "rank_pre": 710,
+   "rank_cur": 649,
+   "ros_pct": 0,
+   "g": 4.5,
+   "a": 5.8,
+   "pm": -9.2,
+   "ppp": 5.8,
+   "sog": 61.0,
+   "fw": 18.3,
+   "hit": 50.4,
+   "blk": 13.8
+  },
+  {
+   "name": "Samuel Helenius",
+   "team": "LA",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 17.3,
+   "rank_pre": 711,
+   "rank_cur": 735,
+   "ros_pct": 0,
+   "g": 1.6,
+   "a": 0.8,
+   "pm": -1.7,
+   "ppp": 0.0,
+   "sog": 11.5,
+   "fw": 35.4,
+   "hit": 44.9,
+   "blk": 4.4
+  },
+  {
+   "name": "Arber Xhekaj",
+   "team": "MTL",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 35.1,
+   "rank_pre": 712,
+   "rank_cur": 682,
+   "ros_pct": 2,
+   "g": 0.6,
+   "a": 1.7,
+   "pm": -3.1,
+   "ppp": 0.0,
+   "sog": 21.9,
+   "fw": 0.0,
+   "hit": 86.3,
+   "blk": 22.7
   },
   {
    "name": "Brandon Carlo",
@@ -8360,6 +10628,89 @@
    "blk": 97.7
   },
   {
+   "name": "Kevin Stenlund",
+   "team": "UTA",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 35.2,
+   "rank_pre": 714,
+   "rank_cur": 666,
+   "ros_pct": 0,
+   "g": 2.3,
+   "a": 5.7,
+   "pm": -2.3,
+   "ppp": 0.0,
+   "sog": 29.5,
+   "fw": 239.6,
+   "hit": 18.6,
+   "blk": 25.9
+  },
+  {
+   "name": "Kirby Dach",
+   "team": "MTL",
+   "pos": [
+    "C",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 36.2,
+   "rank_pre": 715,
+   "rank_cur": 634,
+   "ros_pct": 1,
+   "g": 7.1,
+   "a": 6.6,
+   "pm": -6.5,
+   "ppp": 2.4,
+   "sog": 42.4,
+   "fw": 45.1,
+   "hit": 51.3,
+   "blk": 25.5
+  },
+  {
+   "name": "Joseph Veleno",
+   "team": "NYR",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "O",
+   "gp": 36.2,
+   "rank_pre": 716,
+   "rank_cur": 677,
+   "ros_pct": 1,
+   "g": 1.7,
+   "a": 2.3,
+   "pm": -7.4,
+   "ppp": 0.0,
+   "sog": 29.2,
+   "fw": 101.0,
+   "hit": 80.2,
+   "blk": 20.4
+  },
+  {
+   "name": "Martin Pospisil",
+   "team": "CGY",
+   "pos": [
+    "C",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 40.4,
+   "rank_pre": 717,
+   "rank_cur": 584,
+   "ros_pct": 1,
+   "g": 3.2,
+   "a": 6.9,
+   "pm": -3.5,
+   "ppp": 0.0,
+   "sog": 48.2,
+   "fw": 35.8,
+   "hit": 148.3,
+   "blk": 12.1
+  },
+  {
    "name": "Marcus Pettersson",
    "team": "NYR",
    "pos": [
@@ -8378,6 +10729,26 @@
    "fw": 0.0,
    "hit": 74.7,
    "blk": 130.2
+  },
+  {
+   "name": "Brett Kulak",
+   "team": "COL",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 72.8,
+   "rank_pre": 719,
+   "rank_cur": 524,
+   "ros_pct": 0,
+   "g": 1.7,
+   "a": 9.4,
+   "pm": -2.7,
+   "ppp": 0.0,
+   "sog": 80.9,
+   "fw": 0.0,
+   "hit": 22.0,
+   "blk": 89.6
   },
   {
    "name": "Jaccob Slavin",
@@ -8400,6 +10771,67 @@
    "blk": 90.5
   },
   {
+   "name": "Brian Dumoulin",
+   "team": "LA",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 80.7,
+   "rank_pre": 721,
+   "rank_cur": 507,
+   "ros_pct": 0,
+   "g": 3.8,
+   "a": 13.8,
+   "pm": -2.0,
+   "ppp": 0.0,
+   "sog": 59.5,
+   "fw": 0.0,
+   "hit": 41.7,
+   "blk": 83.9
+  },
+  {
+   "name": "Jeff Malott",
+   "team": "ANA",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 62.5,
+   "rank_pre": 722,
+   "rank_cur": 547,
+   "ros_pct": 0,
+   "g": 4.1,
+   "a": 5.5,
+   "pm": -8.4,
+   "ppp": 0.0,
+   "sog": 56.0,
+   "fw": 3.2,
+   "hit": 168.0,
+   "blk": 29.4
+  },
+  {
+   "name": "Alex Turcotte",
+   "team": "LA",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 58.2,
+   "rank_pre": 723,
+   "rank_cur": 597,
+   "ros_pct": 1,
+   "g": 2.3,
+   "a": 9.3,
+   "pm": -3.2,
+   "ppp": 0.0,
+   "sog": 58.6,
+   "fw": 193.6,
+   "hit": 44.9,
+   "blk": 27.8
+  },
+  {
    "name": "Alex Vlasic",
    "team": "CHI",
    "pos": [
@@ -8420,26 +10852,84 @@
    "blk": 105.8
   },
   {
-   "name": "Martin Pospisil",
-   "team": "CGY",
+   "name": "Scott Mayfield",
+   "team": "NYI",
    "pos": [
-    "C",
+    "D"
+   ],
+   "status": "FA",
+   "gp": 65.6,
+   "rank_pre": 725,
+   "rank_cur": 550,
+   "ros_pct": 0,
+   "g": 1.9,
+   "a": 9.5,
+   "pm": -5.1,
+   "ppp": 0.0,
+   "sog": 55.1,
+   "fw": 0.0,
+   "hit": 65.6,
+   "blk": 76.2
+  },
+  {
+   "name": "Mathieu Joseph",
+   "team": "EDM",
+   "pos": [
     "RW"
    ],
    "status": "FA",
-   "gp": 58,
+   "gp": 36.0,
    "rank_pre": 726,
-   "rank_cur": 452,
-   "ros_pct": 1,
-   "g": 5,
-   "a": 11,
-   "pm": -3.0,
-   "ppp": 0,
-   "sog": 71,
-   "fw": 42,
-   "hit": 218,
-   "blk": 18,
-   "stale": true
+   "rank_cur": 660,
+   "ros_pct": 0,
+   "g": 2.4,
+   "a": 7.2,
+   "pm": -3.7,
+   "ppp": 0.0,
+   "sog": 31.5,
+   "fw": 6.5,
+   "hit": 76.3,
+   "blk": 24.6
+  },
+  {
+   "name": "Fedor Svechkov",
+   "team": "COL",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 57.0,
+   "rank_pre": 728,
+   "rank_cur": 620,
+   "ros_pct": 0,
+   "g": 3.1,
+   "a": 9.1,
+   "pm": -4.7,
+   "ppp": 0.0,
+   "sog": 55.2,
+   "fw": 169.0,
+   "hit": 42.4,
+   "blk": 22.9
+  },
+  {
+   "name": "Teddy Blueger",
+   "team": "TOR",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 36.2,
+   "rank_pre": 729,
+   "rank_cur": 696,
+   "ros_pct": 0,
+   "g": 4.1,
+   "a": 4.9,
+   "pm": -4.9,
+   "ppp": 0.4,
+   "sog": 29.3,
+   "fw": 127.6,
+   "hit": 33.2,
+   "blk": 11.1
   },
   {
    "name": "Jonas Siegenthaler",
@@ -8462,6 +10952,129 @@
    "blk": 109.6
   },
   {
+   "name": "Barclay Goodrow",
+   "team": "SJ",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 62.5,
+   "rank_pre": 732,
+   "rank_cur": 611,
+   "ros_pct": 0,
+   "g": 4.1,
+   "a": 4.1,
+   "pm": -15.5,
+   "ppp": 0.0,
+   "sog": 49.1,
+   "fw": 44.9,
+   "hit": 108.6,
+   "blk": 46.5
+  },
+  {
+   "name": "Dante Fabbro",
+   "team": "CBJ",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "IR",
+   "gp": 57.2,
+   "rank_pre": 733,
+   "rank_cur": 555,
+   "ros_pct": 0,
+   "g": 3.8,
+   "a": 6.9,
+   "pm": -6.6,
+   "ppp": 0.0,
+   "sog": 52.7,
+   "fw": 0.0,
+   "hit": 47.7,
+   "blk": 89.0
+  },
+  {
+   "name": "Jeffrey Viel",
+   "team": "TB",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 50.3,
+   "rank_pre": 734,
+   "rank_cur": 580,
+   "ros_pct": 0,
+   "g": 3.6,
+   "a": 6.5,
+   "pm": -6.4,
+   "ppp": 0.0,
+   "sog": 63.5,
+   "fw": 1.4,
+   "hit": 134.2,
+   "blk": 20.6
+  },
+  {
+   "name": "Brandon Tanev",
+   "team": "UTA",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 16.3,
+   "rank_pre": 736,
+   "rank_cur": 742,
+   "ros_pct": 0,
+   "g": 0.8,
+   "a": 1.2,
+   "pm": -3.4,
+   "ppp": 0.0,
+   "sog": 14.1,
+   "fw": 1.2,
+   "hit": 40.4,
+   "blk": 12.4
+  },
+  {
+   "name": "Nick Jensen",
+   "team": "ANA",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 61.3,
+   "rank_pre": 737,
+   "rank_cur": 574,
+   "ros_pct": 0,
+   "g": 2.5,
+   "a": 12.1,
+   "pm": 0.0,
+   "ppp": 0.0,
+   "sog": 41.2,
+   "fw": 0.0,
+   "hit": 38.4,
+   "blk": 67.4
+  },
+  {
+   "name": "Trevor van Riemsdyk",
+   "team": "PIT",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 48.0,
+   "rank_pre": 738,
+   "rank_cur": 609,
+   "ros_pct": 0,
+   "g": 0.7,
+   "a": 7.7,
+   "pm": 4.5,
+   "ppp": 0.0,
+   "sog": 33.6,
+   "fw": 0.0,
+   "hit": 9.2,
+   "blk": 71.5
+  },
+  {
    "name": "Tyler Myers",
    "team": "DAL",
    "pos": [
@@ -8480,6 +11093,129 @@
    "fw": 0.0,
    "hit": 78.7,
    "blk": 110.6
+  },
+  {
+   "name": "Zachary L'Heureux",
+   "team": "COL",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "inj": "IR",
+   "gp": 37.4,
+   "rank_pre": 740,
+   "rank_cur": 595,
+   "ros_pct": 0,
+   "g": 4.9,
+   "a": 3.1,
+   "pm": 1.9,
+   "ppp": 1.8,
+   "sog": 45.3,
+   "fw": 3.1,
+   "hit": 96.2,
+   "blk": 19.3
+  },
+  {
+   "name": "Vincent Desharnais",
+   "team": "WSH",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 17.7,
+   "rank_pre": 741,
+   "rank_cur": 714,
+   "ros_pct": 0,
+   "g": 0.4,
+   "a": 1.6,
+   "pm": 2.3,
+   "ppp": 0.0,
+   "sog": 9.9,
+   "fw": 0.0,
+   "hit": 32.5,
+   "blk": 25.6
+  },
+  {
+   "name": "Conor Sheary",
+   "team": "BUF",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 43.2,
+   "rank_pre": 742,
+   "rank_cur": 651,
+   "ros_pct": 0,
+   "g": 4.0,
+   "a": 7.3,
+   "pm": 1.4,
+   "ppp": 1.9,
+   "sog": 51.2,
+   "fw": 9.1,
+   "hit": 15.2,
+   "blk": 25.3
+  },
+  {
+   "name": "Liam Ohgren",
+   "team": "VAN",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 65.4,
+   "rank_pre": 743,
+   "rank_cur": 608,
+   "ros_pct": 3,
+   "g": 7.0,
+   "a": 10.3,
+   "pm": -14.8,
+   "ppp": 0.0,
+   "sog": 79.8,
+   "fw": 7.9,
+   "hit": 59.0,
+   "blk": 37.0
+  },
+  {
+   "name": "Nicolas Hague",
+   "team": "NSH",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 65.4,
+   "rank_pre": 744,
+   "rank_cur": 578,
+   "ros_pct": 0,
+   "g": 2.5,
+   "a": 9.7,
+   "pm": -9.5,
+   "ppp": 0.0,
+   "sog": 59.7,
+   "fw": 0.0,
+   "hit": 80.0,
+   "blk": 59.8
+  },
+  {
+   "name": "Oskar Back",
+   "team": "DAL",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 65.4,
+   "rank_pre": 745,
+   "rank_cur": 626,
+   "ros_pct": 0,
+   "g": 4.0,
+   "a": 6.4,
+   "pm": 6.8,
+   "ppp": 0.0,
+   "sog": 36.6,
+   "fw": 33.4,
+   "hit": 24.3,
+   "blk": 34.4
   },
   {
    "name": "Drew Helleson",
@@ -8503,6 +11239,213 @@
    "blk": 86.4
   },
   {
+   "name": "Hendrix Lapierre",
+   "team": "PIT",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 48.0,
+   "rank_pre": 747,
+   "rank_cur": 657,
+   "ros_pct": 1,
+   "g": 3.5,
+   "a": 9.1,
+   "pm": 0.8,
+   "ppp": 1.5,
+   "sog": 32.7,
+   "fw": 74.9,
+   "hit": 31.4,
+   "blk": 14.6
+  },
+  {
+   "name": "Nathan Bastian",
+   "team": "FLA",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 10.7,
+   "rank_pre": 748,
+   "rank_cur": 778,
+   "ros_pct": 0,
+   "g": 1.6,
+   "a": 0.6,
+   "pm": 0.3,
+   "ppp": 0.0,
+   "sog": 7.5,
+   "fw": 0.3,
+   "hit": 23.6,
+   "blk": 2.8
+  },
+  {
+   "name": "Tyson Jost",
+   "team": "NSH",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 15.8,
+   "rank_pre": 749,
+   "rank_cur": 784,
+   "ros_pct": 0,
+   "g": 1.5,
+   "a": 1.5,
+   "pm": -4.2,
+   "ppp": 0.0,
+   "sog": 19.9,
+   "fw": 12.1,
+   "hit": 14.3,
+   "blk": 6.7
+  },
+  {
+   "name": "Henri Jokiharju",
+   "team": "BOS",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 17.9,
+   "rank_pre": 750,
+   "rank_cur": 721,
+   "ros_pct": 0,
+   "g": 0.8,
+   "a": 4.6,
+   "pm": 1.8,
+   "ppp": 0.8,
+   "sog": 16.7,
+   "fw": 0.0,
+   "hit": 13.5,
+   "blk": 16.7
+  },
+  {
+   "name": "Brayden Pachal",
+   "team": "CGY",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 11.2,
+   "rank_pre": 751,
+   "rank_cur": 763,
+   "ros_pct": 0,
+   "g": 0.3,
+   "a": 1.3,
+   "pm": 0.0,
+   "ppp": 0.0,
+   "sog": 8.0,
+   "fw": 0.0,
+   "hit": 24.1,
+   "blk": 11.3
+  },
+  {
+   "name": "Dominic James",
+   "team": "TB",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "IR-NR",
+   "gp": 12.3,
+   "rank_pre": 753,
+   "rank_cur": 745,
+   "ros_pct": 0,
+   "g": 1.7,
+   "a": 2.0,
+   "pm": 1.1,
+   "ppp": 0.0,
+   "sog": 14.8,
+   "fw": 36.6,
+   "hit": 15.2,
+   "blk": 3.4
+  },
+  {
+   "name": "Alexander Kerfoot",
+   "team": "NSH",
+   "pos": [
+    "C",
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 35.1,
+   "rank_pre": 754,
+   "rank_cur": 645,
+   "ros_pct": 0,
+   "g": 5.2,
+   "a": 8.2,
+   "pm": -2.6,
+   "ppp": 1.8,
+   "sog": 32.5,
+   "fw": 111.7,
+   "hit": 26.5,
+   "blk": 27.2
+  },
+  {
+   "name": "Kyle MacLean",
+   "team": "NYI",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 16.4,
+   "rank_pre": 756,
+   "rank_cur": 755,
+   "ros_pct": 0,
+   "g": 0.8,
+   "a": 1.6,
+   "pm": -1.8,
+   "ppp": 0.0,
+   "sog": 12.2,
+   "fw": 24.2,
+   "hit": 31.6,
+   "blk": 5.9
+  },
+  {
+   "name": "Nils Lundkvist",
+   "team": "DAL",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 61.1,
+   "rank_pre": 757,
+   "rank_cur": 551,
+   "ros_pct": 0,
+   "g": 2.4,
+   "a": 9.4,
+   "pm": 10.7,
+   "ppp": 0.0,
+   "sog": 57.6,
+   "fw": 0.0,
+   "hit": 29.4,
+   "blk": 51.9
+  },
+  {
+   "name": "Zack Ostapchuk",
+   "team": "SJ",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 13.5,
+   "rank_pre": 758,
+   "rank_cur": 762,
+   "ros_pct": 0,
+   "g": 0.7,
+   "a": 0.4,
+   "pm": -1.8,
+   "ppp": 0.0,
+   "sog": 9.8,
+   "fw": 46.0,
+   "hit": 28.9,
+   "blk": 7.3
+  },
+  {
    "name": "Ryan Lindgren",
    "team": "SEA",
    "pos": [
@@ -8521,6 +11464,130 @@
    "fw": 0.0,
    "hit": 49.5,
    "blk": 103.7
+  },
+  {
+   "name": "Nico Sturm",
+   "team": "MIN",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 45.0,
+   "rank_pre": 760,
+   "rank_cur": 640,
+   "ros_pct": 0,
+   "g": 5.1,
+   "a": 5.8,
+   "pm": -2.8,
+   "ppp": 0.0,
+   "sog": 34.5,
+   "fw": 186.4,
+   "hit": 50.9,
+   "blk": 18.5
+  },
+  {
+   "name": "Jansen Harkins",
+   "team": "TB",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 43.1,
+   "rank_pre": 762,
+   "rank_cur": 652,
+   "ros_pct": 0,
+   "g": 2.0,
+   "a": 4.1,
+   "pm": -7.3,
+   "ppp": 0.0,
+   "sog": 35.0,
+   "fw": 77.5,
+   "hit": 101.6,
+   "blk": 22.1
+  },
+  {
+   "name": "Noah Juulsen",
+   "team": "COL",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 20.9,
+   "rank_pre": 763,
+   "rank_cur": 708,
+   "ros_pct": 0,
+   "g": 1.4,
+   "a": 2.9,
+   "pm": 0.5,
+   "ppp": 0.0,
+   "sog": 10.3,
+   "fw": 0.0,
+   "hit": 44.0,
+   "blk": 21.1
+  },
+  {
+   "name": "Ben Hutton",
+   "team": "OTT",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 9.3,
+   "rank_pre": 764,
+   "rank_cur": 799,
+   "ros_pct": 0,
+   "g": 0.7,
+   "a": 1.1,
+   "pm": 0.5,
+   "ppp": 0.0,
+   "sog": 8.8,
+   "fw": 0.0,
+   "hit": 3.6,
+   "blk": 6.8
+  },
+  {
+   "name": "Jacob Melanson",
+   "team": "SEA",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "IR",
+   "gp": 15.2,
+   "rank_pre": 765,
+   "rank_cur": 732,
+   "ros_pct": 0,
+   "g": 0.7,
+   "a": 1.1,
+   "pm": -3.9,
+   "ppp": 0.0,
+   "sog": 13.0,
+   "fw": 0.7,
+   "hit": 70.9,
+   "blk": 5.3
+  },
+  {
+   "name": "Luke Glendening",
+   "team": "TB",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 14.4,
+   "rank_pre": 766,
+   "rank_cur": 803,
+   "ros_pct": 0,
+   "g": 0.4,
+   "a": 0.4,
+   "pm": -0.7,
+   "ppp": 0.0,
+   "sog": 5.5,
+   "fw": 40.4,
+   "hit": 10.6,
+   "blk": 5.5
   },
   {
    "name": "Maxim Tsyplakov",
@@ -8564,6 +11631,169 @@
    "blk": 68.9
   },
   {
+   "name": "Ilya Lyubushkin",
+   "team": "NSH",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 34.2,
+   "rank_pre": 770,
+   "rank_cur": 654,
+   "ros_pct": 0,
+   "g": 0.6,
+   "a": 4.5,
+   "pm": 0.6,
+   "ppp": 0.0,
+   "sog": 20.4,
+   "fw": 0.0,
+   "hit": 43.5,
+   "blk": 56.3
+  },
+  {
+   "name": "Braeden Bowman",
+   "team": "VGK",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 50.5,
+   "rank_pre": 771,
+   "rank_cur": 655,
+   "ros_pct": 0,
+   "g": 7.6,
+   "a": 15.8,
+   "pm": -16.3,
+   "ppp": 4.1,
+   "sog": 65.6,
+   "fw": 2.1,
+   "hit": 15.2,
+   "blk": 20.3
+  },
+  {
+   "name": "Adam Wilsby",
+   "team": "NSH",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 38.4,
+   "rank_pre": 772,
+   "rank_cur": 673,
+   "ros_pct": 0,
+   "g": 0.6,
+   "a": 9.0,
+   "pm": 1.3,
+   "ppp": 0.0,
+   "sog": 36.3,
+   "fw": 0.0,
+   "hit": 18.0,
+   "blk": 31.1
+  },
+  {
+   "name": "Max Sasson",
+   "team": "VAN",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 45.4,
+   "rank_pre": 773,
+   "rank_cur": 669,
+   "ros_pct": 1,
+   "g": 8.0,
+   "a": 4.7,
+   "pm": -8.5,
+   "ppp": 0.6,
+   "sog": 44.2,
+   "fw": 84.7,
+   "hit": 20.6,
+   "blk": 27.8
+  },
+  {
+   "name": "Sam Dickinson",
+   "team": "SJ",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 62.7,
+   "rank_pre": 774,
+   "rank_cur": 582,
+   "ros_pct": 2,
+   "g": 0.8,
+   "a": 10.7,
+   "pm": -4.3,
+   "ppp": 0.0,
+   "sog": 60.2,
+   "fw": 0.0,
+   "hit": 61.8,
+   "blk": 58.6
+  },
+  {
+   "name": "J. Kovacevic",
+   "team": "NJ",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "IR-NR",
+   "gp": 39.6,
+   "rank_pre": 775,
+   "rank_cur": 623,
+   "ros_pct": 0,
+   "g": 1.2,
+   "a": 6.9,
+   "pm": 2.7,
+   "ppp": 0.0,
+   "sog": 32.6,
+   "fw": 0.0,
+   "hit": 55.5,
+   "blk": 43.4
+  },
+  {
+   "name": "Wyatt Kaiser",
+   "team": "CHI",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 40.7,
+   "rank_pre": 776,
+   "rank_cur": 699,
+   "ros_pct": 0,
+   "g": 3.1,
+   "a": 5.6,
+   "pm": -8.8,
+   "ppp": 0.0,
+   "sog": 35.3,
+   "fw": 0.0,
+   "hit": 23.3,
+   "blk": 40.9
+  },
+  {
+   "name": "Zach Bogosian",
+   "team": "MIN",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 55.7,
+   "rank_pre": 777,
+   "rank_cur": 589,
+   "ros_pct": 0,
+   "g": 2.8,
+   "a": 5.5,
+   "pm": 5.1,
+   "ppp": 0.0,
+   "sog": 43.7,
+   "fw": 0.0,
+   "hit": 59.2,
+   "blk": 47.9
+  },
+  {
    "name": "Cody Ceci",
    "team": "LA",
    "pos": [
@@ -8582,6 +11812,313 @@
    "fw": 0.0,
    "hit": 42.9,
    "blk": 109.6
+  },
+  {
+   "name": "Maxim Shabanov",
+   "team": "MIN",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 34.3,
+   "rank_pre": 779,
+   "rank_cur": 670,
+   "ros_pct": 3,
+   "g": 4.2,
+   "a": 9.6,
+   "pm": -4.4,
+   "ppp": 4.8,
+   "sog": 40.3,
+   "fw": 0.0,
+   "hit": 20.4,
+   "blk": 11.4
+  },
+  {
+   "name": "Nick Perbix",
+   "team": "NSH",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 66.8,
+   "rank_pre": 781,
+   "rank_cur": 600,
+   "ros_pct": 0,
+   "g": 2.4,
+   "a": 8.8,
+   "pm": -8.7,
+   "ppp": 0.0,
+   "sog": 58.4,
+   "fw": 0.0,
+   "hit": 30.3,
+   "blk": 74.8
+  },
+  {
+   "name": "Oskar Sundqvist",
+   "team": "STL",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 6.6,
+   "rank_pre": 783,
+   "rank_cur": 811,
+   "ros_pct": 0,
+   "g": 0.5,
+   "a": 1.5,
+   "pm": -1.8,
+   "ppp": 0.5,
+   "sog": 4.8,
+   "fw": 23.0,
+   "hit": 7.9,
+   "blk": 3.6
+  },
+  {
+   "name": "Nils Hoglander",
+   "team": "NSH",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 54.3,
+   "rank_pre": 784,
+   "rank_cur": 624,
+   "ros_pct": 0,
+   "g": 5.4,
+   "a": 6.9,
+   "pm": 0.0,
+   "ppp": 0.8,
+   "sog": 55.5,
+   "fw": 2.5,
+   "hit": 64.4,
+   "blk": 12.1
+  },
+  {
+   "name": "Mike Reilly",
+   "team": "CAR",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 6.0,
+   "rank_pre": 786,
+   "rank_cur": 808,
+   "ros_pct": 0,
+   "g": 0.2,
+   "a": 1.0,
+   "pm": 0.7,
+   "ppp": 0.2,
+   "sog": 8.4,
+   "fw": 0.0,
+   "hit": 2.5,
+   "blk": 4.9
+  },
+  {
+   "name": "Ty Dellandrea",
+   "team": "SJ",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 27.2,
+   "rank_pre": 787,
+   "rank_cur": 694,
+   "ros_pct": 0,
+   "g": 1.1,
+   "a": 4.9,
+   "pm": -11.5,
+   "ppp": 0.0,
+   "sog": 27.7,
+   "fw": 135.2,
+   "hit": 69.1,
+   "blk": 20.1
+  },
+  {
+   "name": "Isac Lundestrom",
+   "team": "CBJ",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "IR-LT",
+   "gp": 39.6,
+   "rank_pre": 789,
+   "rank_cur": 689,
+   "ros_pct": 0,
+   "g": 2.9,
+   "a": 5.1,
+   "pm": -2.5,
+   "ppp": 0.0,
+   "sog": 29.3,
+   "fw": 102.4,
+   "hit": 21.5,
+   "blk": 22.2
+  },
+  {
+   "name": "Gavin Brindley",
+   "team": "COL",
+   "pos": [
+    "C",
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 10.6,
+   "rank_pre": 790,
+   "rank_cur": 793,
+   "ros_pct": 0,
+   "g": 1.0,
+   "a": 1.3,
+   "pm": 0.7,
+   "ppp": 0.0,
+   "sog": 11.4,
+   "fw": 2.7,
+   "hit": 6.7,
+   "blk": 2.7
+  },
+  {
+   "name": "Berkly Catton",
+   "team": "SEA",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 56.9,
+   "rank_pre": 791,
+   "rank_cur": 647,
+   "ros_pct": 1,
+   "g": 6.1,
+   "a": 9.1,
+   "pm": -4.6,
+   "ppp": 1.6,
+   "sog": 64.1,
+   "fw": 63.4,
+   "hit": 6.0,
+   "blk": 24.3
+  },
+  {
+   "name": "Liam O'Brien",
+   "team": "UTA",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 17.1,
+   "rank_pre": 792,
+   "rank_cur": 736,
+   "ros_pct": 0,
+   "g": 1.2,
+   "a": 0.8,
+   "pm": -1.8,
+   "ppp": 0.0,
+   "sog": 15.1,
+   "fw": 2.5,
+   "hit": 47.8,
+   "blk": 6.1
+  },
+  {
+   "name": "Yan Kuznetsov",
+   "team": "CGY",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 7.5,
+   "rank_pre": 793,
+   "rank_cur": 801,
+   "ros_pct": 0,
+   "g": 0.3,
+   "a": 1.0,
+   "pm": -2.1,
+   "ppp": 0.0,
+   "sog": 8.4,
+   "fw": 0.0,
+   "hit": 10.0,
+   "blk": 12.1
+  },
+  {
+   "name": "Troy Stecher",
+   "team": "TOR",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 14.2,
+   "rank_pre": 796,
+   "rank_cur": 765,
+   "ros_pct": 0,
+   "g": 0.3,
+   "a": 2.0,
+   "pm": -0.3,
+   "ppp": 0.0,
+   "sog": 13.3,
+   "fw": 0.0,
+   "hit": 7.6,
+   "blk": 16.1
+  },
+  {
+   "name": "Denver Barkey",
+   "team": "PHI",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "inj": "IR",
+   "gp": 46.1,
+   "rank_pre": 798,
+   "rank_cur": 658,
+   "ros_pct": 0,
+   "g": 5.2,
+   "a": 8.5,
+   "pm": -6.3,
+   "ppp": 3.8,
+   "sog": 41.9,
+   "fw": 5.8,
+   "hit": 41.2,
+   "blk": 18.3
+  },
+  {
+   "name": "Axel Sandin-Pellikka",
+   "team": "DET",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 49.1,
+   "rank_pre": 801,
+   "rank_cur": 671,
+   "ros_pct": 2,
+   "g": 4.2,
+   "a": 9.0,
+   "pm": -12.4,
+   "ppp": 4.2,
+   "sog": 48.2,
+   "fw": 0.0,
+   "hit": 12.0,
+   "blk": 35.4
+  },
+  {
+   "name": "Max Crozier",
+   "team": "TB",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 9.3,
+   "rank_pre": 802,
+   "rank_cur": 775,
+   "ros_pct": 0,
+   "g": 0.3,
+   "a": 1.9,
+   "pm": 1.3,
+   "ppp": 0.0,
+   "sog": 11.4,
+   "fw": 0.0,
+   "hit": 9.8,
+   "blk": 7.6
   },
   {
    "name": "Timothy Liljegren",
@@ -8604,6 +12141,616 @@
    "blk": 115.8
   },
   {
+   "name": "Oliver Moore",
+   "team": "CHI",
+   "pos": [
+    "C",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 62.5,
+   "rank_pre": 804,
+   "rank_cur": 635,
+   "ros_pct": 0,
+   "g": 5.5,
+   "a": 14.7,
+   "pm": -18.4,
+   "ppp": 7.1,
+   "sog": 67.1,
+   "fw": 113.0,
+   "hit": 30.1,
+   "blk": 14.0
+  },
+  {
+   "name": "Ben Meyers",
+   "team": "SEA",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 20.2,
+   "rank_pre": 805,
+   "rank_cur": 737,
+   "ros_pct": 0,
+   "g": 2.3,
+   "a": 2.7,
+   "pm": -4.3,
+   "ppp": 0.0,
+   "sog": 21.6,
+   "fw": 67.1,
+   "hit": 24.2,
+   "blk": 5.5
+  },
+  {
+   "name": "Jacob Bernard-Docker",
+   "team": "DET",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "IR",
+   "gp": 11.1,
+   "rank_pre": 806,
+   "rank_cur": 776,
+   "ros_pct": 0,
+   "g": 0.3,
+   "a": 1.0,
+   "pm": 0.0,
+   "ppp": 0.0,
+   "sog": 7.1,
+   "fw": 0.0,
+   "hit": 10.9,
+   "blk": 15.5
+  },
+  {
+   "name": "Nikita Grebenkin",
+   "team": "PHI",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "DTD",
+   "gp": 8.7,
+   "rank_pre": 807,
+   "rank_cur": 818,
+   "ros_pct": 0,
+   "g": 0.5,
+   "a": 1.5,
+   "pm": -0.9,
+   "ppp": 0.0,
+   "sog": 4.6,
+   "fw": 0.5,
+   "hit": 12.3,
+   "blk": 2.3
+  },
+  {
+   "name": "Nicolas Deslauriers",
+   "team": "CAR",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 12.1,
+   "rank_pre": 809,
+   "rank_cur": 785,
+   "ros_pct": 0,
+   "g": 0.0,
+   "a": 0.6,
+   "pm": -1.8,
+   "ppp": 0.0,
+   "sog": 7.3,
+   "fw": 0.6,
+   "hit": 40.4,
+   "blk": 2.5
+  },
+  {
+   "name": "Shakir Mukhamadullin",
+   "team": "EDM",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 56.4,
+   "rank_pre": 810,
+   "rank_cur": 612,
+   "ros_pct": 0,
+   "g": 4.5,
+   "a": 6.6,
+   "pm": -9.2,
+   "ppp": 0.0,
+   "sog": 52.0,
+   "fw": 0.0,
+   "hit": 37.7,
+   "blk": 68.8
+  },
+  {
+   "name": "Nick Lardis",
+   "team": "CHI",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 58.3,
+   "rank_pre": 811,
+   "rank_cur": 648,
+   "ros_pct": 1,
+   "g": 13.1,
+   "a": 6.9,
+   "pm": -28.2,
+   "ppp": 3.8,
+   "sog": 76.9,
+   "fw": 1.6,
+   "hit": 76.0,
+   "blk": 17.1
+  },
+  {
+   "name": "Alexander Holtz",
+   "team": "VGK",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 51.6,
+   "rank_pre": 813,
+   "rank_cur": 686,
+   "ros_pct": 0,
+   "g": 4.4,
+   "a": 7.7,
+   "pm": -3.5,
+   "ppp": 0.0,
+   "sog": 45.1,
+   "fw": 3.2,
+   "hit": 32.7,
+   "blk": 10.9
+  },
+  {
+   "name": "Olli Maatta",
+   "team": "MIN",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 61.3,
+   "rank_pre": 814,
+   "rank_cur": 568,
+   "ros_pct": 0,
+   "g": 1.6,
+   "a": 14.5,
+   "pm": -3.4,
+   "ppp": 0.0,
+   "sog": 47.9,
+   "fw": 0.0,
+   "hit": 12.0,
+   "blk": 86.5
+  },
+  {
+   "name": "Stephen Halliday",
+   "team": "OTT",
+   "pos": [
+    "C",
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 27.6,
+   "rank_pre": 815,
+   "rank_cur": 695,
+   "ros_pct": 0,
+   "g": 3.1,
+   "a": 5.2,
+   "pm": 0.6,
+   "ppp": 2.6,
+   "sog": 28.4,
+   "fw": 23.2,
+   "hit": 24.7,
+   "blk": 8.5
+  },
+  {
+   "name": "Justin Barron",
+   "team": "STL",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 21.0,
+   "rank_pre": 817,
+   "rank_cur": 751,
+   "ros_pct": 0,
+   "g": 0.0,
+   "a": 3.1,
+   "pm": -1.6,
+   "ppp": 0.0,
+   "sog": 12.4,
+   "fw": 0.0,
+   "hit": 14.0,
+   "blk": 18.6
+  },
+  {
+   "name": "Joel Hanley",
+   "team": "CGY",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 23.9,
+   "rank_pre": 818,
+   "rank_cur": 729,
+   "ros_pct": 0,
+   "g": 0.0,
+   "a": 2.0,
+   "pm": -1.7,
+   "ppp": 0.0,
+   "sog": 13.6,
+   "fw": 0.0,
+   "hit": 16.1,
+   "blk": 31.6
+  },
+  {
+   "name": "Conor Timmins",
+   "team": "BUF",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "IR",
+   "gp": 42.6,
+   "rank_pre": 819,
+   "rank_cur": 604,
+   "ros_pct": 0,
+   "g": 0.0,
+   "a": 7.6,
+   "pm": -1.8,
+   "ppp": 0.0,
+   "sog": 44.4,
+   "fw": 0.0,
+   "hit": 32.1,
+   "blk": 74.6
+  },
+  {
+   "name": "Matt Rempe",
+   "team": "NYR",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 7.2,
+   "rank_pre": 821,
+   "rank_cur": 812,
+   "ros_pct": 0,
+   "g": 0.2,
+   "a": 0.2,
+   "pm": -0.5,
+   "ppp": 0.0,
+   "sog": 4.1,
+   "fw": 0.5,
+   "hit": 21.8,
+   "blk": 1.8
+  },
+  {
+   "name": "Nikita Nesterenko",
+   "team": "ANA",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 65.4,
+   "rank_pre": 822,
+   "rank_cur": 560,
+   "ros_pct": 0,
+   "g": 4.9,
+   "a": 13.8,
+   "pm": -7.0,
+   "ppp": 0.0,
+   "sog": 65.2,
+   "fw": 17.0,
+   "hit": 118.8,
+   "blk": 16.2
+  },
+  {
+   "name": "Reid Schaefer",
+   "team": "NSH",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 11.7,
+   "rank_pre": 823,
+   "rank_cur": 789,
+   "ros_pct": 0,
+   "g": 1.3,
+   "a": 0.3,
+   "pm": -3.3,
+   "ppp": 0.0,
+   "sog": 9.5,
+   "fw": 0.3,
+   "hit": 25.4,
+   "blk": 7.5
+  },
+  {
+   "name": "Josh Mahura",
+   "team": "SEA",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 45.5,
+   "rank_pre": 824,
+   "rank_cur": 570,
+   "ros_pct": 0,
+   "g": 1.3,
+   "a": 5.6,
+   "pm": 11.1,
+   "ppp": 0.0,
+   "sog": 33.7,
+   "fw": 0.0,
+   "hit": 53.5,
+   "blk": 57.7
+  },
+  {
+   "name": "Declan Carlile",
+   "team": "PIT",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 48.0,
+   "rank_pre": 826,
+   "rank_cur": 605,
+   "ros_pct": 1,
+   "g": 2.2,
+   "a": 2.2,
+   "pm": 8.6,
+   "ppp": 0.0,
+   "sog": 39.4,
+   "fw": 0.0,
+   "hit": 54.8,
+   "blk": 42.5
+  },
+  {
+   "name": "Albert Johansson",
+   "team": "DET",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 47.8,
+   "rank_pre": 827,
+   "rank_cur": 684,
+   "ros_pct": 0,
+   "g": 1.4,
+   "a": 4.8,
+   "pm": -9.5,
+   "ppp": 0.0,
+   "sog": 33.3,
+   "fw": 0.0,
+   "hit": 33.8,
+   "blk": 51.4
+  },
+  {
+   "name": "Daniil But",
+   "team": "UTA",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 26.1,
+   "rank_pre": 829,
+   "rank_cur": 703,
+   "ros_pct": 1,
+   "g": 3.0,
+   "a": 2.9,
+   "pm": 1.1,
+   "ppp": 2.0,
+   "sog": 33.2,
+   "fw": 6.4,
+   "hit": 16.4,
+   "blk": 13.6
+  },
+  {
+   "name": "Tom Willander",
+   "team": "VAN",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 71.3,
+   "rank_pre": 830,
+   "rank_cur": 617,
+   "ros_pct": 1,
+   "g": 4.1,
+   "a": 16.7,
+   "pm": -23.8,
+   "ppp": 2.5,
+   "sog": 53.7,
+   "fw": 0.0,
+   "hit": 33.0,
+   "blk": 75.0
+  },
+  {
+   "name": "Nick DeSimone",
+   "team": "UTA",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 21.9,
+   "rank_pre": 831,
+   "rank_cur": 726,
+   "ros_pct": 0,
+   "g": 0.9,
+   "a": 3.6,
+   "pm": 2.0,
+   "ppp": 0.0,
+   "sog": 18.1,
+   "fw": 0.0,
+   "hit": 10.4,
+   "blk": 16.3
+  },
+  {
+   "name": "Erik Gudbranson",
+   "team": "CBJ",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 41.6,
+   "rank_pre": 832,
+   "rank_cur": 588,
+   "ros_pct": 0,
+   "g": 1.5,
+   "a": 4.7,
+   "pm": 3.2,
+   "ppp": 0.0,
+   "sog": 35.3,
+   "fw": 0.0,
+   "hit": 47.9,
+   "blk": 72.3
+  },
+  {
+   "name": "Jordan Greenway",
+   "team": "CHI",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 9.2,
+   "rank_pre": 833,
+   "rank_cur": 794,
+   "ros_pct": 0,
+   "g": 0.6,
+   "a": 1.3,
+   "pm": -1.1,
+   "ppp": 0.0,
+   "sog": 9.7,
+   "fw": 1.3,
+   "hit": 14.3,
+   "blk": 6.0
+  },
+  {
+   "name": "Jack Finley",
+   "team": "STL",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 28.1,
+   "rank_pre": 834,
+   "rank_cur": 700,
+   "ros_pct": 0,
+   "g": 1.6,
+   "a": 2.2,
+   "pm": 1.7,
+   "ppp": 0.0,
+   "sog": 16.2,
+   "fw": 124.0,
+   "hit": 47.4,
+   "blk": 5.9
+  },
+  {
+   "name": "Jiri Kulich",
+   "team": "BUF",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 42.0,
+   "rank_pre": 835,
+   "rank_cur": 594,
+   "ros_pct": 1,
+   "g": 8.8,
+   "a": 6.2,
+   "pm": -8.7,
+   "ppp": 0.0,
+   "sog": 75.0,
+   "fw": 189.5,
+   "hit": 28.4,
+   "blk": 28.9
+  },
+  {
+   "name": "Tim Washe",
+   "team": "ANA",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 50.3,
+   "rank_pre": 836,
+   "rank_cur": 573,
+   "ros_pct": 0,
+   "g": 2.8,
+   "a": 4.9,
+   "pm": -7.5,
+   "ppp": 0.0,
+   "sog": 39.1,
+   "fw": 277.6,
+   "hit": 107.6,
+   "blk": 30.6
+  },
+  {
+   "name": "Nikolas Matinpalo",
+   "team": "OTT",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 38.9,
+   "rank_pre": 837,
+   "rank_cur": 693,
+   "ros_pct": 0,
+   "g": 0.0,
+   "a": 3.2,
+   "pm": -1.4,
+   "ppp": 0.0,
+   "sog": 28.4,
+   "fw": 0.0,
+   "hit": 34.3,
+   "blk": 38.1
+  },
+  {
+   "name": "Zach Metsa",
+   "team": "BUF",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 27.4,
+   "rank_pre": 838,
+   "rank_cur": 706,
+   "ros_pct": 0,
+   "g": 1.3,
+   "a": 3.4,
+   "pm": 9.9,
+   "ppp": 0.0,
+   "sog": 13.1,
+   "fw": 0.0,
+   "hit": 2.7,
+   "blk": 20.1
+  },
+  {
+   "name": "Max Jones",
+   "team": "EDM",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 22.4,
+   "rank_pre": 840,
+   "rank_cur": 722,
+   "ros_pct": 0,
+   "g": 2.3,
+   "a": 2.3,
+   "pm": -3.1,
+   "ppp": 0.0,
+   "sog": 23.6,
+   "fw": 1.5,
+   "hit": 54.0,
+   "blk": 3.2
+  },
+  {
    "name": "Alexander Romanov",
    "team": "NYI",
    "pos": [
@@ -8622,6 +12769,69 @@
    "fw": 0.0,
    "hit": 121.9,
    "blk": 132.1
+  },
+  {
+   "name": "Ian Moore",
+   "team": "ANA",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "IR",
+   "gp": 60.4,
+   "rank_pre": 843,
+   "rank_cur": 636,
+   "ros_pct": 0,
+   "g": 2.4,
+   "a": 7.8,
+   "pm": -13.4,
+   "ppp": 0.0,
+   "sog": 57.3,
+   "fw": 0.0,
+   "hit": 36.6,
+   "blk": 69.2
+  },
+  {
+   "name": "Noah Gregor",
+   "team": "WPG",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 10.0,
+   "rank_pre": 845,
+   "rank_cur": 802,
+   "ros_pct": 0,
+   "g": 1.2,
+   "a": 1.2,
+   "pm": -2.7,
+   "ppp": 0.6,
+   "sog": 11.3,
+   "fw": 3.8,
+   "hit": 12.5,
+   "blk": 3.7
+  },
+  {
+   "name": "Donovan Sebrango",
+   "team": "FLA",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 8.5,
+   "rank_pre": 846,
+   "rank_cur": 805,
+   "ros_pct": 0,
+   "g": 0.0,
+   "a": 1.5,
+   "pm": -0.9,
+   "ppp": 0.0,
+   "sog": 6.2,
+   "fw": 0.0,
+   "hit": 14.7,
+   "blk": 5.9
   },
   {
    "name": "Chris Tanev",
@@ -8644,25 +12854,1445 @@
    "blk": 108.9
   },
   {
+   "name": "Taylor Ward",
+   "team": "LA",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 12.8,
+   "rank_pre": 849,
+   "rank_cur": 791,
+   "ros_pct": 0,
+   "g": 1.0,
+   "a": 1.0,
+   "pm": 0.0,
+   "ppp": 0.0,
+   "sog": 12.3,
+   "fw": 1.0,
+   "hit": 11.8,
+   "blk": 3.1
+  },
+  {
+   "name": "Jack St. Ivany",
+   "team": "WPG",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 7.3,
+   "rank_pre": 850,
+   "rank_cur": 777,
+   "ros_pct": 0,
+   "g": 0.0,
+   "a": 1.6,
+   "pm": 0.9,
+   "ppp": 0.0,
+   "sog": 6.1,
+   "fw": 0.0,
+   "hit": 16.9,
+   "blk": 8.6
+  },
+  {
+   "name": "Declan Chisholm",
+   "team": "NJ",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 17.0,
+   "rank_pre": 851,
+   "rank_cur": 750,
+   "ros_pct": 0,
+   "g": 0.8,
+   "a": 4.2,
+   "pm": -1.0,
+   "ppp": 0.0,
+   "sog": 14.2,
+   "fw": 0.0,
+   "hit": 6.8,
+   "blk": 15.2
+  },
+  {
+   "name": "Mitchell Chaffee",
+   "team": "NYI",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 15.1,
+   "rank_pre": 853,
+   "rank_cur": 743,
+   "ros_pct": 0,
+   "g": 1.1,
+   "a": 1.1,
+   "pm": -1.2,
+   "ppp": 0.8,
+   "sog": 13.2,
+   "fw": 3.2,
+   "hit": 34.3,
+   "blk": 5.9
+  },
+  {
+   "name": "Conor Geekie",
+   "team": "TB",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 12.8,
+   "rank_pre": 854,
+   "rank_cur": 769,
+   "ros_pct": 0,
+   "g": 1.4,
+   "a": 1.4,
+   "pm": -2.8,
+   "ppp": 0.0,
+   "sog": 11.1,
+   "fw": 23.6,
+   "hit": 27.6,
+   "blk": 5.1
+  },
+  {
+   "name": "Alex Bump",
+   "team": "PHI",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 17.3,
+   "rank_pre": 856,
+   "rank_cur": 713,
+   "ros_pct": 0,
+   "g": 4.5,
+   "a": 3.6,
+   "pm": 3.0,
+   "ppp": 0.0,
+   "sog": 22.8,
+   "fw": 0.0,
+   "hit": 17.4,
+   "blk": 6.1
+  },
+  {
+   "name": "Isak Rosen",
+   "team": "WPG",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 54.3,
+   "rank_pre": 857,
+   "rank_cur": 667,
+   "ros_pct": 0,
+   "g": 7.3,
+   "a": 5.1,
+   "pm": -7.9,
+   "ppp": 4.4,
+   "sog": 46.2,
+   "fw": 0.7,
+   "hit": 20.5,
+   "blk": 25.1
+  },
+  {
+   "name": "Jani Nyman",
+   "team": "SEA",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 26.1,
+   "rank_pre": 858,
+   "rank_cur": 733,
+   "ros_pct": 0,
+   "g": 2.4,
+   "a": 2.4,
+   "pm": -4.0,
+   "ppp": 2.9,
+   "sog": 28.4,
+   "fw": 1.5,
+   "hit": 19.6,
+   "blk": 4.8
+  },
+  {
+   "name": "Brett Pesce",
+   "team": "NJ",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 55.6,
+   "rank_pre": 859,
+   "rank_cur": 575,
+   "ros_pct": 0,
+   "g": 0.7,
+   "a": 8.7,
+   "pm": -8.5,
+   "ppp": 0.0,
+   "sog": 65.8,
+   "fw": 0.0,
+   "hit": 17.0,
+   "blk": 99.7
+  },
+  {
+   "name": "Jaroslav Chmelar",
+   "team": "NYR",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 17.7,
+   "rank_pre": 860,
+   "rank_cur": 739,
+   "ros_pct": 0,
+   "g": 1.6,
+   "a": 1.2,
+   "pm": -0.8,
+   "ppp": 0.0,
+   "sog": 19.6,
+   "fw": 0.0,
+   "hit": 31.7,
+   "blk": 8.1
+  },
+  {
+   "name": "Curtis Douglas",
+   "team": "SEA",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 23.5,
+   "rank_pre": 861,
+   "rank_cur": 744,
+   "ros_pct": 0,
+   "g": 0.5,
+   "a": 1.6,
+   "pm": -1.6,
+   "ppp": 0.0,
+   "sog": 15.5,
+   "fw": 3.0,
+   "hit": 37.9,
+   "blk": 7.2
+  },
+  {
    "name": "Cale Fleury",
    "team": "SEA",
    "pos": [
     "D"
    ],
    "status": "FA",
-   "gp": 59,
+   "gp": 39.6,
    "rank_pre": 863,
-   "rank_cur": 451,
+   "rank_cur": 569,
    "ros_pct": 0,
-   "g": 3,
-   "a": 5,
+   "g": 2.0,
+   "a": 3.2,
+   "pm": 2.1,
+   "ppp": 0.0,
+   "sog": 38.9,
+   "fw": 0.0,
+   "hit": 88.8,
+   "blk": 62.0
+  },
+  {
+   "name": "Filip Chytil",
+   "team": "VAN",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "IR",
+   "gp": 27.2,
+   "rank_pre": 865,
+   "rank_cur": 698,
+   "ros_pct": 0,
+   "g": 5.8,
+   "a": 4.2,
+   "pm": -9.0,
+   "ppp": 1.6,
+   "sog": 59.3,
+   "fw": 130.2,
+   "hit": 8.4,
+   "blk": 7.4
+  },
+  {
+   "name": "Lenni Hameenaho",
+   "team": "NJ",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 24.4,
+   "rank_pre": 870,
+   "rank_cur": 727,
+   "ros_pct": 0,
+   "g": 1.9,
+   "a": 3.9,
+   "pm": -2.0,
+   "ppp": 0.0,
+   "sog": 32.1,
+   "fw": 0.0,
+   "hit": 13.7,
+   "blk": 10.8
+  },
+  {
+   "name": "Dmitry Kulikov",
+   "team": "FLA",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 13.5,
+   "rank_pre": 872,
+   "rank_cur": 756,
+   "ros_pct": 0,
+   "g": 0.7,
+   "a": 1.5,
+   "pm": 0.4,
+   "ppp": 0.0,
+   "sog": 10.1,
+   "fw": 0.0,
+   "hit": 19.0,
+   "blk": 12.7
+  },
+  {
+   "name": "Tyler Pitlick",
+   "team": "MIN",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 10.6,
+   "rank_pre": 874,
+   "rank_cur": 796,
+   "ros_pct": 0,
+   "g": 0.3,
+   "a": 0.0,
+   "pm": -1.3,
+   "ppp": 0.0,
+   "sog": 8.4,
+   "fw": 0.0,
+   "hit": 23.4,
+   "blk": 5.6
+  },
+  {
+   "name": "Rutger McGroarty",
+   "team": "PIT",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 11.6,
+   "rank_pre": 875,
+   "rank_cur": 788,
+   "ros_pct": 0,
+   "g": 1.4,
+   "a": 1.4,
+   "pm": -1.2,
+   "ppp": 0.0,
+   "sog": 15.1,
+   "fw": 3.3,
+   "hit": 11.2,
+   "blk": 3.6
+  },
+  {
+   "name": "Ilya Solovyov",
+   "team": "PIT",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 14.8,
+   "rank_pre": 877,
+   "rank_cur": 752,
+   "ros_pct": 0,
+   "g": 0.4,
+   "a": 2.6,
+   "pm": 0.0,
+   "ppp": 0.0,
+   "sog": 9.6,
+   "fw": 0.0,
+   "hit": 15.6,
+   "blk": 15.0
+  },
+  {
+   "name": "Jonah Gadjovich",
+   "team": "FLA",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "inj": "IR-LT",
+   "gp": 9.6,
+   "rank_pre": 878,
+   "rank_cur": 779,
+   "ros_pct": 0,
+   "g": 0.6,
+   "a": 0.9,
+   "pm": 0.6,
+   "ppp": 0.0,
+   "sog": 7.5,
+   "fw": 0.0,
+   "hit": 26.0,
+   "blk": 3.1
+  },
+  {
+   "name": "Logan O'Connor",
+   "team": "COL",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "IR",
+   "gp": 61.3,
+   "rank_pre": 879,
+   "rank_cur": 598,
+   "ros_pct": 0,
+   "g": 5.6,
+   "a": 9.6,
+   "pm": -2.6,
+   "ppp": 0.0,
+   "sog": 65.8,
+   "fw": 14.2,
+   "hit": 49.8,
+   "blk": 28.1
+  },
+  {
+   "name": "Arttu Hyry",
+   "team": "DAL",
+   "pos": [
+    "C",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 36.2,
+   "rank_pre": 880,
+   "rank_cur": 616,
+   "ros_pct": 0,
+   "g": 5.4,
+   "a": 3.7,
+   "pm": 1.2,
+   "ppp": 0.0,
+   "sog": 42.7,
+   "fw": 208.0,
+   "hit": 57.4,
+   "blk": 9.1
+  },
+  {
+   "name": "Elias Salomonsson",
+   "team": "WPG",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "IR-NR",
+   "gp": 25.1,
+   "rank_pre": 881,
+   "rank_cur": 718,
+   "ros_pct": 0,
+   "g": 0.5,
+   "a": 3.1,
+   "pm": -4.8,
+   "ppp": 0.5,
+   "sog": 27.4,
+   "fw": 0.0,
+   "hit": 36.4,
+   "blk": 20.2
+  },
+  {
+   "name": "Scott Sabourin",
+   "team": "TB",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 11.7,
+   "rank_pre": 882,
+   "rank_cur": 781,
+   "ros_pct": 0,
+   "g": 0.5,
+   "a": 1.5,
+   "pm": 0.5,
+   "ppp": 0.0,
+   "sog": 3.9,
+   "fw": 0.0,
+   "hit": 26.3,
+   "blk": 3.9
+  },
+  {
+   "name": "Samuel Honzek",
+   "team": "CGY",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 26.9,
+   "rank_pre": 886,
+   "rank_cur": 697,
+   "ros_pct": 0,
+   "g": 2.6,
+   "a": 2.6,
+   "pm": 1.6,
+   "ppp": 0.0,
+   "sog": 30.5,
+   "fw": 8.8,
+   "hit": 52.4,
+   "blk": 8.9
+  },
+  {
+   "name": "Sandis Vilmanis",
+   "team": "FLA",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 8.2,
+   "rank_pre": 889,
+   "rank_cur": 800,
+   "ros_pct": 0,
+   "g": 1.1,
+   "a": 0.5,
+   "pm": -0.6,
+   "ppp": 0.0,
+   "sog": 7.8,
+   "fw": 1.5,
+   "hit": 17.6,
+   "blk": 2.6
+  },
+  {
+   "name": "Ryan Ufko",
+   "team": "NSH",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 12.5,
+   "rank_pre": 892,
+   "rank_cur": 759,
+   "ros_pct": 0,
+   "g": 1.4,
+   "a": 2.5,
+   "pm": -0.3,
+   "ppp": 0.0,
+   "sog": 19.6,
+   "fw": 0.0,
+   "hit": 6.8,
+   "blk": 8.8
+  },
+  {
+   "name": "Mattias Janmark",
+   "team": "EDM",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "IR",
+   "gp": 38.5,
+   "rank_pre": 893,
+   "rank_cur": 746,
+   "ros_pct": 0,
+   "g": 1.2,
+   "a": 5.5,
+   "pm": -5.2,
+   "ppp": 0.0,
+   "sog": 23.1,
+   "fw": 16.5,
+   "hit": 14.6,
+   "blk": 11.0
+  },
+  {
+   "name": "Theo Lindstein",
+   "team": "STL",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 25.3,
+   "rank_pre": 896,
+   "rank_cur": 709,
+   "ros_pct": 0,
+   "g": 1.4,
+   "a": 1.9,
+   "pm": 7.4,
+   "ppp": 0.0,
+   "sog": 22.2,
+   "fw": 0.0,
+   "hit": 7.8,
+   "blk": 16.6
+  },
+  {
+   "name": "Jared Wright",
+   "team": "LA",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 6.8,
+   "rank_pre": 897,
+   "rank_cur": 810,
+   "ros_pct": 0,
+   "g": 0.0,
+   "a": 1.0,
+   "pm": 0.0,
+   "ppp": 0.0,
+   "sog": 8.6,
+   "fw": 0.0,
+   "hit": 7.2,
+   "blk": 4.6
+  },
+  {
+   "name": "Arshdeep Bains",
+   "team": "VAN",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 18.6,
+   "rank_pre": 903,
+   "rank_cur": 782,
+   "ros_pct": 0,
+   "g": 1.3,
+   "a": 2.4,
+   "pm": -2.1,
+   "ppp": 0.8,
+   "sog": 10.4,
+   "fw": 1.7,
+   "hit": 15.1,
+   "blk": 5.0
+  },
+  {
+   "name": "Sam Lafferty",
+   "team": "FLA",
+   "pos": [
+    "C",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 30.1,
+   "rank_pre": 905,
+   "rank_cur": 730,
+   "ros_pct": 0,
+   "g": 2.1,
+   "a": 2.1,
+   "pm": -2.3,
+   "ppp": 0.0,
+   "sog": 16.8,
+   "fw": 32.3,
+   "hit": 39.9,
+   "blk": 5.7
+  },
+  {
+   "name": "Ivan Miroshnichenko",
+   "team": "WSH",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 15.0,
+   "rank_pre": 907,
+   "rank_cur": 754,
+   "ros_pct": 0,
+   "g": 1.2,
+   "a": 0.8,
+   "pm": 0.8,
+   "ppp": 0.0,
+   "sog": 13.4,
+   "fw": 0.0,
+   "hit": 23.0,
+   "blk": 6.8
+  },
+  {
+   "name": "Jakob Pelletier",
+   "team": "TB",
+   "pos": [
+    "LW",
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 9.5,
+   "rank_pre": 909,
+   "rank_cur": 798,
+   "ros_pct": 0,
+   "g": 0.6,
+   "a": 1.5,
+   "pm": 0.0,
+   "ppp": 0.0,
+   "sog": 8.8,
+   "fw": 3.0,
+   "hit": 10.3,
+   "blk": 3.6
+  },
+  {
+   "name": "Avery Hayes",
+   "team": "PIT",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 12.1,
+   "rank_pre": 910,
+   "rank_cur": 774,
+   "ros_pct": 0,
+   "g": 1.8,
+   "a": 1.4,
+   "pm": -2.0,
+   "ppp": 0.0,
+   "sog": 21.7,
+   "fw": 0.5,
+   "hit": 11.9,
+   "blk": 4.5
+  },
+  {
+   "name": "Justin Holl",
+   "team": "WSH",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 11.9,
+   "rank_pre": 911,
+   "rank_cur": 786,
+   "ros_pct": 0,
+   "g": 0.6,
+   "a": 0.9,
+   "pm": 2.0,
+   "ppp": 0.0,
+   "sog": 5.5,
+   "fw": 0.0,
+   "hit": 6.9,
+   "blk": 9.4
+  },
+  {
+   "name": "M. Brandsegg-Nygård",
+   "team": "DET",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 9.8,
+   "rank_pre": 913,
+   "rank_cur": 790,
+   "ros_pct": 1,
+   "g": 0.0,
+   "a": 1.0,
+   "pm": -3.0,
+   "ppp": 0.0,
+   "sog": 15.7,
+   "fw": 0.0,
+   "hit": 30.3,
+   "blk": 1.8
+  },
+  {
+   "name": "Josh Samanski",
+   "team": "EDM",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 26.9,
+   "rank_pre": 915,
+   "rank_cur": 720,
+   "ros_pct": 0,
+   "g": 2.0,
+   "a": 2.0,
+   "pm": 2.1,
+   "ppp": 0.0,
+   "sog": 8.4,
+   "fw": 55.4,
+   "hit": 26.8,
+   "blk": 13.0
+  },
+  {
+   "name": "Owen Beck",
+   "team": "MTL",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 14.4,
+   "rank_pre": 916,
+   "rank_cur": 748,
+   "ros_pct": 0,
+   "g": 0.7,
+   "a": 0.0,
+   "pm": 2.8,
+   "ppp": 0.0,
+   "sog": 9.5,
+   "fw": 35.8,
+   "hit": 21.2,
+   "blk": 7.0
+  },
+  {
+   "name": "Brett Leason",
+   "team": "SJ",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 17.1,
+   "rank_pre": 917,
+   "rank_cur": 792,
+   "ros_pct": 0,
+   "g": 1.0,
+   "a": 1.2,
+   "pm": -1.3,
+   "ppp": 0.0,
+   "sog": 10.3,
+   "fw": 3.1,
+   "hit": 12.1,
+   "blk": 6.2
+  },
+  {
+   "name": "Joakim Kemell",
+   "team": "NSH",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 29.0,
+   "rank_pre": 918,
+   "rank_cur": 676,
+   "ros_pct": 0,
+   "g": 2.3,
+   "a": 5.0,
+   "pm": 5.3,
+   "ppp": 0.0,
+   "sog": 22.1,
+   "fw": 2.3,
+   "hit": 46.9,
+   "blk": 15.6
+  },
+  {
+   "name": "Josh Dunne",
+   "team": "WSH",
+   "pos": [
+    "C",
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 20.3,
+   "rank_pre": 920,
+   "rank_cur": 770,
+   "ros_pct": 0,
+   "g": 0.8,
+   "a": 1.6,
+   "pm": -3.6,
+   "ppp": 0.0,
+   "sog": 15.6,
+   "fw": 34.3,
+   "hit": 21.5,
+   "blk": 8.0
+  },
+  {
+   "name": "Jonathan Lekkerimäki",
+   "team": "VAN",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 27.1,
+   "rank_pre": 921,
+   "rank_cur": 753,
+   "ros_pct": 1,
+   "g": 4.1,
+   "a": 2.1,
+   "pm": -5.8,
+   "ppp": 0.0,
+   "sog": 24.5,
+   "fw": 0.0,
+   "hit": 17.6,
+   "blk": 8.2
+  },
+  {
+   "name": "C. Alexis Legault",
+   "team": "CAR",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 4.0,
+   "rank_pre": 922,
+   "rank_cur": 819,
+   "ros_pct": 0,
+   "g": 0.5,
+   "a": 0.5,
+   "pm": 1.5,
+   "ppp": 0.0,
+   "sog": 3.7,
+   "fw": 0.0,
+   "hit": 4.4,
+   "blk": 3.2
+  },
+  {
+   "name": "Kyle Capobianco",
+   "team": "DAL",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 23.6,
+   "rank_pre": 923,
+   "rank_cur": 741,
+   "ros_pct": 0,
+   "g": 1.0,
+   "a": 2.5,
+   "pm": 1.0,
+   "ppp": 0.0,
+   "sog": 11.3,
+   "fw": 0.0,
+   "hit": 7.3,
+   "blk": 18.6
+  },
+  {
+   "name": "Sam Colangelo",
+   "team": "ANA",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 72.8,
+   "rank_pre": 924,
+   "rank_cur": 622,
+   "ros_pct": 0,
+   "g": 10.0,
+   "a": 5.0,
+   "pm": -16.2,
+   "ppp": 0.0,
+   "sog": 62.2,
+   "fw": 10.0,
+   "hit": 99.9,
+   "blk": 20.9
+  },
+  {
+   "name": "Daemon Hunt",
+   "team": "MIN",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 10.0,
+   "rank_pre": 929,
+   "rank_cur": 804,
+   "ros_pct": 0,
+   "g": 0.0,
+   "a": 1.5,
+   "pm": -0.6,
+   "ppp": 0.0,
+   "sog": 5.1,
+   "fw": 0.0,
+   "hit": 5.8,
+   "blk": 11.9
+  },
+  {
+   "name": "Pierre Engvall",
+   "team": "NYI",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 15.1,
+   "rank_pre": 932,
+   "rank_cur": 757,
+   "ros_pct": 0,
+   "g": 2.4,
+   "a": 2.8,
+   "pm": -2.0,
+   "ppp": 0.0,
+   "sog": 23.2,
+   "fw": 0.0,
+   "hit": 12.0,
+   "blk": 4.4
+  },
+  {
+   "name": "Dominik Shine",
+   "team": "DET",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 11.3,
+   "rank_pre": 933,
+   "rank_cur": 795,
+   "ros_pct": 0,
+   "g": 2.2,
+   "a": 0.0,
+   "pm": 0.0,
+   "ppp": 0.0,
+   "sog": 8.5,
+   "fw": 2.9,
+   "hit": 10.0,
+   "blk": 3.6
+  },
+  {
+   "name": "Jacob Bryson",
+   "team": "DET",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 23.6,
+   "rank_pre": 938,
+   "rank_cur": 780,
+   "ros_pct": 0,
+   "g": 0.7,
+   "a": 2.8,
+   "pm": -3.0,
+   "ppp": 0.0,
+   "sog": 10.4,
+   "fw": 0.0,
+   "hit": 7.1,
+   "blk": 16.1
+  },
+  {
+   "name": "Erik Gustafsson",
+   "team": "LA",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 6.0,
+   "rank_pre": 943,
+   "rank_cur": 815,
+   "ros_pct": 0,
+   "g": 0.5,
+   "a": 1.8,
+   "pm": -1.3,
+   "ppp": 0.5,
+   "sog": 7.2,
+   "fw": 0.0,
+   "hit": 3.6,
+   "blk": 4.5
+  },
+  {
+   "name": "Tanner Laczynski",
+   "team": "VGK",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 36.5,
+   "rank_pre": 944,
+   "rank_cur": 717,
+   "ros_pct": 0,
+   "g": 0.0,
+   "a": 7.9,
+   "pm": 0.0,
+   "ppp": 2.1,
+   "sog": 19.8,
+   "fw": 69.4,
+   "hit": 4.0,
+   "blk": 7.9
+  },
+  {
+   "name": "John Leonard",
+   "team": "DET",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 20.3,
+   "rank_pre": 946,
+   "rank_cur": 719,
+   "ros_pct": 0,
+   "g": 2.8,
+   "a": 2.8,
+   "pm": -5.8,
+   "ppp": 0.0,
+   "sog": 39.5,
+   "fw": 0.0,
+   "hit": 20.0,
+   "blk": 18.4
+  },
+  {
+   "name": "David Jiricek",
+   "team": "PHI",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 25.5,
+   "rank_pre": 956,
+   "rank_cur": 760,
+   "ros_pct": 0,
+   "g": 0.0,
+   "a": 1.0,
+   "pm": 0.0,
+   "ppp": 0.0,
+   "sog": 14.9,
+   "fw": 0.0,
+   "hit": 9.3,
+   "blk": 17.7
+  },
+  {
+   "name": "Nikita Chibrikov",
+   "team": "WPG",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 56.2,
+   "rank_pre": 962,
+   "rank_cur": 586,
+   "ros_pct": 0,
+   "g": 7.8,
+   "a": 7.0,
+   "pm": -9.9,
+   "ppp": 1.5,
+   "sog": 69.1,
+   "fw": 0.0,
+   "hit": 85.6,
+   "blk": 30.9
+  },
+  {
+   "name": "Luca Del Bel Belluz",
+   "team": "CBJ",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 19.7,
+   "rank_pre": 973,
+   "rank_cur": 768,
+   "ros_pct": 0,
+   "g": 0.4,
+   "a": 2.6,
+   "pm": -2.8,
+   "ppp": 0.0,
+   "sog": 15.8,
+   "fw": 39.3,
+   "hit": 4.3,
+   "blk": 14.2
+  },
+  {
+   "name": "Victor Mancini",
+   "team": "VAN",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 24.5,
+   "rank_pre": 988,
+   "rank_cur": 773,
+   "ros_pct": 0,
+   "g": 0.0,
+   "a": 3.6,
+   "pm": -10.7,
+   "ppp": 0.0,
+   "sog": 14.2,
+   "fw": 0.0,
+   "hit": 27.6,
+   "blk": 25.7
+  },
+  {
+   "name": "Tyson Hinds",
+   "team": "ANA",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 46.6,
+   "rank_pre": 990,
+   "rank_cur": 562,
+   "ros_pct": 0,
+   "g": 0.0,
+   "a": 0.0,
+   "pm": 7.3,
+   "ppp": 0.0,
+   "sog": 68.0,
+   "fw": 0.0,
+   "hit": 44.2,
+   "blk": 71.3
+  },
+  {
+   "name": "Isaiah George",
+   "team": "NYI",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 7.0,
+   "rank_pre": 992,
+   "rank_cur": 806,
+   "ros_pct": 0,
+   "g": 0.3,
+   "a": 1.3,
+   "pm": 1.1,
+   "ppp": 0.0,
+   "sog": 5.0,
+   "fw": 0.0,
+   "hit": 2.8,
+   "blk": 6.9
+  },
+  {
+   "name": "Mikael Pyyhtia",
+   "team": "CBJ",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "inj": "IR-NR",
+   "gp": 12.8,
+   "rank_pre": 996,
+   "rank_cur": 807,
+   "ros_pct": 0,
+   "g": 1.6,
+   "a": 1.3,
+   "pm": -3.6,
+   "ppp": 0.0,
+   "sog": 10.4,
+   "fw": 0.0,
+   "hit": 5.1,
+   "blk": 8.8
+  },
+  {
+   "name": "Sacha Boisvert",
+   "team": "CHI",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 11.8,
+   "rank_pre": 1011,
+   "rank_cur": 797,
+   "ros_pct": 0,
+   "g": 1.2,
+   "a": 1.2,
+   "pm": -1.3,
+   "ppp": 0.0,
+   "sog": 9.3,
+   "fw": 25.6,
+   "hit": 13.6,
+   "blk": 1.2
+  },
+  {
+   "name": "Tristan Luneau",
+   "team": "ANA",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 33.0,
+   "rank_pre": 1020,
+   "rank_cur": 601,
+   "ros_pct": 9,
+   "g": 10.8,
+   "a": 0.6,
+   "pm": 12.2,
+   "ppp": 0.0,
+   "sog": 40.9,
+   "fw": 0.0,
+   "hit": 28.9,
+   "blk": 22.8
+  },
+  {
+   "name": "Riley Tufte",
+   "team": "NJ",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 20.3,
+   "rank_pre": 1025,
+   "rank_cur": 716,
+   "ros_pct": 0,
+   "g": 4.0,
+   "a": 0.0,
+   "pm": -4.2,
+   "ppp": 4.0,
+   "sog": 34.1,
+   "fw": 0.0,
+   "hit": 26.8,
+   "blk": 4.0
+  },
+  {
+   "name": "Dmitri Simashev",
+   "team": "UTA",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 35.2,
+   "rank_pre": 1030,
+   "rank_cur": 758,
+   "ros_pct": 0,
+   "g": 0.0,
+   "a": 1.8,
+   "pm": -11.6,
+   "ppp": 0.0,
+   "sog": 30.3,
+   "fw": 0.0,
+   "hit": 18.8,
+   "blk": 31.7
+  },
+  {
+   "name": "Oliver Bonk",
+   "team": "PHI",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 5.1,
+   "rank_pre": 1031,
+   "rank_cur": 767,
+   "ros_pct": 0,
+   "g": 1.0,
+   "a": 1.0,
    "pm": 3.0,
-   "ppp": 0,
-   "sog": 59,
-   "fw": 0,
-   "hit": 138,
-   "blk": 95,
-   "stale": true
+   "ppp": 0.0,
+   "sog": 16.0,
+   "fw": 0.0,
+   "hit": 9.4,
+   "blk": 3.9
+  },
+  {
+   "name": "Trevor Connelly",
+   "team": "VGK",
+   "pos": [
+    "LW"
+   ],
+   "status": "FA",
+   "gp": 14.4,
+   "rank_pre": 1073,
+   "rank_cur": 707,
+   "ros_pct": 1,
+   "g": 3.2,
+   "a": 3.9,
+   "pm": 1.9,
+   "ppp": 1.0,
+   "sog": 35.8,
+   "fw": 0.0,
+   "hit": 12.0,
+   "blk": 8.4
+  },
+  {
+   "name": "Brady Martin",
+   "team": "NSH",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 12.5,
+   "rank_pre": 1087,
+   "rank_cur": 817,
+   "ros_pct": 1,
+   "g": 0.5,
+   "a": 1.4,
+   "pm": 0.0,
+   "ppp": 0.0,
+   "sog": 5.2,
+   "fw": 13.2,
+   "hit": 0.0,
+   "blk": 5.2
+  },
+  {
+   "name": "Nathan Gaucher",
+   "team": "ANA",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 18.6,
+   "rank_pre": 1119,
+   "rank_cur": 725,
+   "ros_pct": 0,
+   "g": 1.6,
+   "a": 7.4,
+   "pm": -4.4,
+   "ppp": 0.0,
+   "sog": 20.9,
+   "fw": 16.8,
+   "hit": 33.4,
+   "blk": 5.7
+  },
+  {
+   "name": "Adam Jiricek",
+   "team": "STL",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "gp": 3.1,
+   "rank_pre": 1127,
+   "rank_cur": 814,
+   "ros_pct": 1,
+   "g": 0.6,
+   "a": 1.4,
+   "pm": -1.1,
+   "ppp": 0.0,
+   "sog": 9.2,
+   "fw": 0.0,
+   "hit": 6.8,
+   "blk": 3.3
+  },
+  {
+   "name": "Ilya Safonov",
+   "team": "VAN",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 4.5,
+   "rank_pre": 1249,
+   "rank_cur": 816,
+   "ros_pct": 0,
+   "g": 0.8,
+   "a": 1.1,
+   "pm": -1.2,
+   "ppp": 0.0,
+   "sog": 9.5,
+   "fw": 9.0,
+   "hit": 4.6,
+   "blk": 3.8
+  },
+  {
+   "name": "Alex Belzile",
+   "team": "MTL",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 4.5,
+   "rank_pre": 1307,
+   "rank_cur": 813,
+   "ros_pct": 0,
+   "g": 0.6,
+   "a": 1.4,
+   "pm": 0.6,
+   "ppp": 0.0,
+   "sog": 6.7,
+   "fw": 0.0,
+   "hit": 3.6,
+   "blk": 2.7
   },
   {
    "name": "Vitali Pinchuk",
@@ -8683,6 +14313,109 @@
    "fw": 109.6,
    "hit": 23.8,
    "blk": 20.6
+  },
+  {
+   "name": "Libor Hajek",
+   "team": "SJ",
+   "pos": [
+    "D"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 20.0,
+   "rank_pre": 1490,
+   "rank_cur": 766,
+   "ros_pct": 0,
+   "g": 0.8,
+   "a": 1.2,
+   "pm": -4.5,
+   "ppp": 0.0,
+   "sog": 16.6,
+   "fw": 0.0,
+   "hit": 12.3,
+   "blk": 21.7
+  },
+  {
+   "name": "Jacob Lucchini",
+   "team": "NSH",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 44.4,
+   "rank_pre": 1577,
+   "rank_cur": 809,
+   "ros_pct": 0,
+   "g": 0.8,
+   "a": 1.3,
+   "pm": 0.0,
+   "ppp": 0.3,
+   "sog": 9.8,
+   "fw": 0.0,
+   "hit": 2.3,
+   "blk": 1.9
+  },
+  {
+   "name": "Dillon Dube",
+   "team": "STL",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "gp": 17.0,
+   "rank_pre": 1578,
+   "rank_cur": 772,
+   "ros_pct": 0,
+   "g": 1.5,
+   "a": 5.7,
+   "pm": -4.9,
+   "ppp": 0.0,
+   "sog": 16.8,
+   "fw": 14.4,
+   "hit": 12.8,
+   "blk": 5.2
+  },
+  {
+   "name": "Roman Kantserov",
+   "team": "CHI",
+   "pos": [
+    "RW"
+   ],
+   "status": "FA",
+   "gp": 29.0,
+   "rank_pre": 1585,
+   "rank_cur": 653,
+   "ros_pct": 11,
+   "g": 7.9,
+   "a": 6.8,
+   "pm": -12.8,
+   "ppp": 3.7,
+   "sog": 71.5,
+   "fw": 8.3,
+   "hit": 33.4,
+   "blk": 20.8
+  },
+  {
+   "name": "Jett Luchanko",
+   "team": "PHI",
+   "pos": [
+    "C"
+   ],
+   "status": "FA",
+   "inj": "NA",
+   "gp": 16.0,
+   "rank_pre": 1594,
+   "rank_cur": 711,
+   "ros_pct": 0,
+   "g": 3.5,
+   "a": 5.9,
+   "pm": -7.2,
+   "ppp": 0.0,
+   "sog": 52.1,
+   "fw": 35.5,
+   "hit": 11.6,
+   "blk": 11.7
   }
  ],
  "goalies": [
@@ -9020,7 +14753,7 @@
    "gp": 65.0,
    "rank_pre": 162,
    "rank_cur": 66,
-   "ros_pct": 74,
+   "ros_pct": 73,
    "w": 22.0,
    "sv": 1613.4,
    "sa": 1791.2,
@@ -9037,7 +14770,7 @@
    "gp": 65.0,
    "rank_pre": 174,
    "rank_cur": 98,
-   "ros_pct": 78,
+   "ros_pct": 77,
    "w": 30.5,
    "sv": 1615.7,
    "sa": 1790.8,
@@ -9226,7 +14959,7 @@
    "gp": 31.9,
    "rank_pre": 242,
    "rank_cur": 187,
-   "ros_pct": 34,
+   "ros_pct": 35,
    "w": 13.5,
    "sv": 798.4,
    "sa": 888.0,
@@ -9243,7 +14976,7 @@
    "gp": 59.4,
    "rank_pre": 252,
    "rank_cur": 103,
-   "ros_pct": 43,
+   "ros_pct": 42,
    "w": 22.2,
    "sv": 1411.9,
    "sa": 1576.3,
@@ -9260,7 +14993,7 @@
    "gp": 22.9,
    "rank_pre": 270,
    "rank_cur": 266,
-   "ros_pct": 17,
+   "ros_pct": 18,
    "w": 9.5,
    "sv": 635.2,
    "sa": 703.6,
@@ -9329,7 +15062,7 @@
    "gp": 26.2,
    "rank_pre": 280,
    "rank_cur": 475,
-   "ros_pct": 16,
+   "ros_pct": 15,
    "w": 12.7,
    "sv": 585.5,
    "sa": 665.5,
@@ -9694,7 +15427,7 @@
    "gp": 0.2,
    "rank_pre": 371,
    "rank_cur": 531,
-   "ros_pct": 1,
+   "ros_pct": 2,
    "w": 0.0,
    "sv": 3.3,
    "sa": 3.5,
@@ -10816,7 +16549,7 @@
    "gp": 8.6,
    "rank_pre": 552,
    "rank_cur": 496,
-   "ros_pct": 1,
+   "ros_pct": 0,
    "w": 2.6,
    "sv": 215.4,
    "sa": 240.2,
