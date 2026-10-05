@@ -21,10 +21,19 @@ for (const tm of teams){
 say(bad === 0, 'составы легальны', bad ? bad + ' незаконных' : 'все 12');
 say(st/teams.length === 12, 'стартеров', (st/teams.length).toFixed(1) + '/12');
 const cal = sum/teams.length;
+// pts = победа + ½ ничьей: у средней команды лиги против средней — около ½.
+let pts = 0, mono = 0;
+for (const tm of teams){
+  const w = C.winProbs(['C','LW','RW','D','G','BN'].flatMap(s => tm.at[s]||[]));
+  pts += w.pts; if (w.pts < w.p7 - 1e-9 || w.pts > 1) mono++;
+}
+pts /= teams.length;
 say(Math.abs(cal - 6) < 0.25, 'калибровка', cal.toFixed(3) + ' (эталон 6.000)');
 
 const ps = [0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5];
 say(Math.abs(C.pAtLeast(ps, 7) - 0.3872) < 0.001, 'свёртка P(7 из 12)',
     C.pAtLeast(ps,7).toFixed(4) + ' при всех 50% (эталон 0.3872)');
+
+say(Math.abs(pts - 0.5) < 0.05 && !mono, 'pts лиги', pts.toFixed(3) + ' в среднем (эталон 0.500)' + (mono ? ', pts < p7 у ' + mono : ''));
 
 process.exit(fail ? 1 : 0);

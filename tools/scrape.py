@@ -1,4 +1,4 @@
-"""Проекции Yahoo по всем игрокам лиги: .venv/bin/python tools/scrape.py (~5 мин).
+"""Проекции Yahoo по всем игрокам лиги: .venv/bin/python tools/scrape.py (~6 мин).
 
 Логин живёт в .pw-profile (отдельный Chrome). Умерла сессия — tools/login.py,
 Мартин входит в окне сам, дальше снова фоном. Вкладки строго по одной и с
@@ -35,8 +35,10 @@ GOALIE_COLS = ["gp","rank_pre","rank_cur","ros_pct","w","sv","sa","svpct","sho"]
 COUNTING = {"gp","g","a","pm","ppp","sog","fw","hit","blk","w","sv","sa","sho"}
 FLAGS = {"O","IR","IR+","IR-LT","IR-NR","DTD","NA","SUSP"}
 NHL_CODE = {"LA": "LAK", "NJ": "NJD", "SJ": "SJS", "TB": "TBL"}
-# (проекция, поз, status, страниц по 25); везде sort=AR — ранг по этой проекции
-PLAN = [("S_PSR", "P", "ALL", 16), ("S_PSR", "G", "ALL", 5),
+# (проекция, поз, status, страниц по 25); везде sort=AR — ранг по этой проекции.
+# Полевых 28 страниц = 700: со 400 сайт не видел свободных за ~440-м местом
+# (четвёртые звенья, кто набирает хиты и блоки), а недельная замена — чаще они.
+PLAN = [("S_PSR", "P", "ALL", 28), ("S_PSR", "G", "ALL", 5),
         ("S_PSR", "P", "T", 9),    ("S_PSR", "G", "T", 2),
         ("S_PS7", "P", "A", 4),    ("S_PS7", "G", "A", 2),
         ("S_PS7", "P", "T", 9),    ("S_PS7", "G", "T", 2)]
