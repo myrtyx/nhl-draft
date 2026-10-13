@@ -3,6 +3,7 @@
     .venv/bin/python tools/yahoo_week.py              # текущая неделя: сыгранные дни, которых ещё нет
     .venv/bin/python tools/yahoo_week.py --week 1     # неделя 1 целиком заново
     .venv/bin/python tools/yahoo_week.py --dry        # только напечатать, на lynx не писать
+    .venv/bin/python tools/yahoo_week.py --check      # без браузера: код 0 — есть что снять, 3 — нечего
     ... --out путь                                    # ещё и копия файла локально
 
 Зачем. Сыгранные дни соперника сайт восстанавливает лучшей расстановкой по
@@ -15,8 +16,10 @@
 попадёт половина матча. Прошедшую неделю — ещё раз во вторник: в понедельник
 Yahoo вносит правки статистики («stat corrections»), тогда final: true.
 
-Сессия — .pw-profile, как у scrape.py (умерла — tools/login.py). Страницы по
-одной, с паузой: на частые запросы Yahoo отвечает «Request denied».
+Сессия — .pw-profile, как у scrape.py (умерла — tools/login.py; на lynx — файл
+YAHOO_STATE, см. yahoo_browser.py). Страницы по одной, с паузой: на частые
+запросы Yahoo отвечает «Request denied». На самом lynx (ночной снимок,
+tools/nightly.sh) файлы сайта читаются и пишутся без ssh.
 
 Пишет data/hockey_yahoo.json на lynx — сайт отдаёт его в /api/hockey/live:
   weeks[понедельник] = { week, at, final,
@@ -27,16 +30,17 @@ Yahoo вносит правки статистики («stat corrections»), т�
   r — [[слот Yahoo, имя, клуб, играл 0/1], …] — весь состав на день.
 Слот сайта — по названию команды (hockey.json → yahoo).
 """
-import argparse, difflib, functools, json, pathlib, re, subprocess, sys, time, urllib.request
+import argparse, difflib, functools, json, os, pathlib, re, subprocess, sys, time, urllib.request
 from datetime import date, datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 from playwright.sync_api import sync_playwright
+from yahoo_browser import dead, open_sync
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-PROFILE = ROOT / ".pw-profile"
 LEAGUE = "105022"
 B = f"https://hockey.fantasysports.yahoo.com/hockey/{LEAGUE}"
 LYNX = "myrtyx@lynx"
+ON_LYNX = os.uname().nodename == "lynx"
 DATA = "/home/myrtyx/workspace/life-dash/data"
 STATE, OUT = f"{DATA}/hockey.json", f"{DATA}/hockey_yahoo.json"
 WEEK1 = date(2026, 9, 28)  # понедельник недели 1 (сезон с вт 29.09)
@@ -91,7 +95,8 @@ def num(v):
 
 
 def ssh(cmd, inp=None):
-    return subprocess.run(["ssh", LYNX, cmd], input=inp, capture_output=True, text=True, check=True).stdout
+    argv = ["bash", "-c", cmd] if ON_LYNX else ["ssh", LYNX, cmd]
+    return subprocess.run(argv, input=inp, capture_output=True, text=True, check=True).stdout
 
 
 def nhl_days(monday):
@@ -108,7 +113,7 @@ def go(pg, url, wait=3500):
         pg.goto(url, timeout=60000, wait_until="domcontentloaded")
         pg.wait_for_timeout(wait)
         if "login.yahoo.com" in pg.url:
-            sys.exit("сессия Yahoo умерла — tools/login.py, потом снова")
+            dead("сессия Yahoo умерла — tools/login.py, потом снова")
         if "Request denied" in pg.inner_text("body")[:600]:
             print("  Request denied, жду 90 с", flush=True)
             time.sleep(90)
@@ -177,6 +182,7 @@ def main():
     ap.add_argument("--week", type=int)
     ap.add_argument("--dry", action="store_true")
     ap.add_argument("--out", help="копия файла локально")
+    ap.add_argument("--check", action="store_true", help="без браузера: код 0 — есть что снять, 3 — нечего")
     a = ap.parse_args()
 
     et = datetime.now(ZoneInfo("America/New_York")).date()
@@ -213,25 +219,37 @@ def main():
         plan.append((a.week, monday_of(a.week), True))
     else:
         plan.append((cur, monday_of(cur), False))
-        # Прошлая неделя после правок статистики (понедельник) — один раз заново.
+        # Прошлая неделя: до вторника досниматься её последние дни (воскресенье
+        # кончается по Риге уже в понедельник), со вторника, после правок
+        # статистики, — один раз заново.
         prev = store["weeks"].get(monday_of(cur - 1).isoformat()) if cur > 1 else None
-        if prev is not None and not prev.get("final") and et >= monday_of(cur - 1) + timedelta(days=8):
-            plan.insert(0, (cur - 1, monday_of(cur - 1), True))
+        if prev is not None and not prev.get("final"):
+            plan.insert(0, (cur - 1, monday_of(cur - 1), et >= monday_of(cur - 1) + timedelta(days=8)))
+
+    # Снимаю дни, где все матчи NHL закончились, а в снимке их ещё нет.
+    jobs = []
+    for n, monday, redo in plan:
+        key = monday.isoformat()
+        have = store["weeks"].get(key, {}).get("days", {})
+        games = nhl_days(key)
+        dates = [(monday + timedelta(days=i)).isoformat() for i in range(7)]
+        todo = [d for d in dates if games.get(d) and all(g.get("gameState") in ("OFF", "FINAL") for g in games[d])
+                and (redo or d not in have)]
+        live = [d for d in dates if any(g.get("gameState") in ("LIVE", "CRIT") for g in games.get(d, []))]
+        print(f"неделя {n} ({key}): снимаю {', '.join(todo) or 'нечего'}" + (f"; идут матчи {', '.join(live)}" if live else ""), flush=True)
+        if todo:
+            jobs.append((n, monday, redo, todo))
+    if a.check:
+        sys.exit(0 if jobs else 3)
+    if not jobs:
+        return
 
     with sync_playwright() as p:
-        ctx = p.chromium.launch_persistent_context(str(PROFILE), channel="chrome", headless=True, viewport={"width": 1600, "height": 1000})
+        ctx, close = open_sync(p, {"width": 1600, "height": 1000})
         pg = ctx.pages[0] if ctx.pages else ctx.new_page()
-        for n, monday, redo in plan:
+        for n, monday, redo, todo in jobs:
             key = monday.isoformat()
             wk = store["weeks"].setdefault(key, {"week": n, "days": {}, "totals": {}})
-            games = nhl_days(key)
-            dates = [(monday + timedelta(days=i)).isoformat() for i in range(7)]
-            todo = [d for d in dates if games.get(d) and all(g.get("gameState") in ("OFF", "FINAL") for g in games[d])
-                    and (redo or d not in wk["days"])]
-            live = [d for d in dates if any(g.get("gameState") in ("LIVE", "CRIT") for g in games.get(d, []))]
-            print(f"неделя {n} ({key}): снимаю {', '.join(todo) or 'нечего'}" + (f"; идут матчи {', '.join(live)}" if live else ""), flush=True)
-            if not todo:
-                continue
             go(pg, f"{B}?matchup_week={n}&module=matchups")
             pairs = set()
             for el in pg.query_selector_all("a"):
@@ -273,7 +291,7 @@ def main():
                 bad = [f"{k} {tot[k]}≠{t['s'][k]}" for k in SK + GK if t["s"].get(k) is not None and abs(tot[k] - t["s"][k]) > 1e-9]
                 team = teams[slot]
                 print(f"  {team:24s} кат. {t['cw']}  " + (f"! дни ≠ итог: {', '.join(bad)}" if bad else "дни = итог"), flush=True)
-        ctx.close()
+        close()
 
     body = json.dumps(store, ensure_ascii=False, separators=(",", ":"))
     if a.out:

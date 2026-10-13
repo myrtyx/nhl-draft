@@ -1,7 +1,8 @@
 """Проекции Yahoo по всем игрокам лиги: .venv/bin/python tools/scrape.py (~6 мин).
 
 Логин живёт в .pw-profile (отдельный Chrome). Умерла сессия — tools/login.py,
-Мартин входит в окне сам, дальше снова фоном. Вкладки строго по одной и с
+Мартин входит в окне сам, дальше снова фоном. На lynx сессия — файл YAHOO_STATE
+(tools/yahoo_browser.py). Вкладки строго по одной и с
 паузой: на параллельных Yahoo отвечает «Request denied» на несколько минут.
 
 Пишет два файла:
@@ -20,9 +21,9 @@ stale: true — пики и трансферы сайта ссылаются н�
 import asyncio, json, pathlib, re, sys, time, urllib.request
 from datetime import datetime, timezone
 from playwright.async_api import async_playwright
+from yahoo_browser import dead, open_async
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-PROFILE = ROOT / ".pw-profile"
 LEAGUE = "105022"
 BASE = f"https://hockey.fantasysports.yahoo.com/hockey/{LEAGUE}/players"
 SEASON_GP = 84
@@ -108,19 +109,17 @@ async def grab(pg, stat, pos, status, i):
 async def scrape_all():
     got = {}
     async with async_playwright() as p:
-        ctx = await p.chromium.launch_persistent_context(str(PROFILE), channel="chrome", headless=True,
-                                                         viewport={"width": 1700, "height": 1000})
+        ctx, close = await open_async(p, {"width": 1700, "height": 1000})
         pg = ctx.pages[0] if ctx.pages else await ctx.new_page()
         await pg.goto(f"{BASE}?status=ALL&pos=G&count=0", timeout=60000, wait_until="domcontentloaded")
         if "login" in pg.url:
-            await ctx.close()
-            sys.exit("Сессия Yahoo умерла: .venv/bin/python tools/login.py — войти в окне, потом снова scrape.py")
+            dead("Сессия Yahoo умерла: .venv/bin/python tools/login.py — войти в окне, потом снова scrape.py")
         for stat, pos, status, pages in PLAN:
             for i in range(pages):
                 recs = await grab(pg, stat, pos, status, i)
                 for r in recs: got.setdefault((stat, pos), {}).setdefault((r["name"], r["team"]), r)
                 if not recs: break
-        await ctx.close()
+        await close()
     return {s: (list(got.get((s, "P"), {}).values()), list(got.get((s, "G"), {}).values()))
             for s in ("S_PSR", "S_PS7")}
 
