@@ -6,7 +6,9 @@ let fail = 0;
 const say = (ok, name, got) => { console.log((ok ? '  ок   ' : '  ПЛОХО') + '  ' + name + ': ' + got); if (!ok) fail++; };
 
 let t = Date.now(); const P = P0(); const tp = Date.now() - t;
-say(tp < 1500, 'скорость prepare', tp + ' мс (предел 1500)');
+// предел — под мак; lynx (ночной снимок) раза в 4 медленнее, nightly.sh даёт свой
+const LIM = +process.env.CHECK_PREPARE_MS || 1500;
+say(tp < LIM, 'скорость prepare', tp + ' мс (предел ' + LIM + ')');
 
 const teams = C.simulate(P, 0);
 let bad = 0, st = 0, sum = 0;

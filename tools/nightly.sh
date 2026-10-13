@@ -48,7 +48,7 @@ fi
 
 git pull -q --rebase origin main || fail $? pull
 $PY tools/scrape.py || fail $? scrape
-node tools/check.js || fail $? check.js
+CHECK_PREPARE_MS=6000 node tools/check.js || fail $? check.js  # проц lynx медленнее мака
 if ! git diff --quiet -- data/yahoo_proj.json data/yahoo_p7.json; then
   git -c user.name=Martins -c user.email=martins.rots@gmail.com commit -q \
     -m "Yahoo-проекции $(date +%d.%m) (lynx)" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" \
