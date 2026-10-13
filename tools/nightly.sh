@@ -46,6 +46,8 @@ if [ "${1:-}" != "--force" ]; then
   [ $rc -ne 0 ] && fail $rc check
 fi
 
+# недописанный снимок прошлого захода (упал check.js) мешает pull — его всё равно переснимаю
+git checkout -q -- data/yahoo_proj.json data/yahoo_p7.json
 git pull -q --rebase origin main || fail $? pull
 $PY tools/scrape.py || fail $? scrape
 CHECK_PREPARE_MS=6000 node tools/check.js || fail $? check.js  # проц lynx медленнее мака
