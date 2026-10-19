@@ -13,6 +13,9 @@ set -e
 cd "$(dirname "$0")/.."
 git fetch -q origin && git merge -q --ff-only origin/main 2>/dev/null \
   || echo "! main разошёлся с GitHub — ночные проекции lynx не подтянул"
+# ходы соперников в журнал сайта — до любого совета (lynx тянет их каждые 3 ч)
+.venv/bin/python tools/yahoo_moves.py $([ "${1:-}" = "--dry" ] && echo --dry) \
+  || echo "! ходы команд из Yahoo не подтянулись — журнал сайта может отставать"
 if [ $# -eq 0 ]; then
   age=$(.venv/bin/python -c "import json, datetime as d; f = json.load(open('data/yahoo_proj.json'))['fetched']; print(int((d.datetime.now(d.timezone.utc) - d.datetime.fromisoformat(f)).total_seconds() // 3600))")
   rc=0; .venv/bin/python tools/yahoo_week.py --check >/dev/null || rc=$?

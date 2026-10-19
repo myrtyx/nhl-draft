@@ -4,8 +4,10 @@
 # данные уже свежие, tools/refresh.sh на маке это видит и не ждёт.
 #   tools/nightly.sh            тихо выходит, если NHL не сыграл дней, которых нет в снимке
 #   tools/nightly.sh --force    снять, даже если нечего (проверка)
-# Дальше как refresh.sh: проекции → check.js → коммит и push data/yahoo_*.json
-# (deploy key lynx), счёт недели → hockey_yahoo.json сайта.
+#   tools/nightly.sh --moves    только ходы команд (cron каждые 3 ч: соперники ходят весь день)
+# Каждый заход сперва дописывает в журнал сайта ходы всех команд из журнала
+# трансферов Yahoo (yahoo_moves.py). Дальше как refresh.sh: проекции → check.js →
+# коммит и push data/yahoo_*.json (deploy key lynx), счёт недели → hockey_yahoo.json сайта.
 # Звонит в Life Dash: сразу — если умерла сессия Yahoo (на маке login.py, потом
 # yahoo_state.py), иначе — если не вышло и в последний заход дня (12:05).
 set -u
@@ -39,6 +41,14 @@ fail() {  # $1 — код выхода шага, $2 — шаг
   echo "!! $2: код $1"
   exit "$1"
 }
+
+if [ "${1:-}" = "--moves" ]; then
+  $PY tools/yahoo_moves.py || fail $? moves
+  exit 0
+fi
+$PY tools/yahoo_moves.py; rc=$?  # не вышло — снимок всё равно делаю, позовёт заход --moves
+[ $rc -eq 4 ] && fail 4 moves
+[ $rc -ne 0 ] && echo "!! moves: код $rc"
 
 if [ "${1:-}" != "--force" ]; then
   $PY tools/yahoo_week.py --check; rc=$?
