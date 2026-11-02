@@ -16,7 +16,7 @@ drop (берёт подсказку сайта) — запись с той же 
 
 Дата хода — дата трансфера в Yahoo, время там EDT (настройка лиги). Год в
 журнале Yahoo не пишет: сентябрь–декабрь — 2026, остальное — 2027.
-Обмены (trade) не разбираю: встретится — выйду с ошибкой, разобрать руками.
+Обмен заношу двумя ходами, по одному на сторону: +полученный −отданный.
 
 Сессия и страницы — как у yahoo_week.py: на маке .pw-profile, на lynx файл
 YAHOO_STATE; на lynx файлы сайта читаются и пишутся без ssh.
@@ -57,6 +57,15 @@ def parse(text, slots):
         month = datetime.strptime(mon, "%b").month
         ts = datetime(2026 if month >= 9 else 2027, month, int(d), int(h) % 12 + (12 if ap == "pm" else 0), int(mi))
         mv = {"ts": ts.isoformat(), "team": slots[team], "date": ts.date().isoformat(), "add": None, "drop": None}
+        if pairs and pairs[1] == "Traded to":
+            # обмен в журнале — блок на каждую сторону, с одним временем; drop сторона
+            # получает от второй стороны (игрок за игрока) в trades() ниже
+            for i in range(0, len(pairs), 2):
+                p = PLAYER.match(pairs[i])
+                if not p or pairs[i + 1] != "Traded to":
+                    sys.exit(f"не разобрал обмен: {pairs} {team} {l}")
+                out.append({**mv, "add": p.group(1), "trade": True})
+            continue
         for i in range(0, len(pairs), 2):
             p, act = PLAYER.match(pairs[i]), pairs[i + 1]
             key = "add" if act in ADD else "drop" if act in DROP else None
@@ -64,7 +73,20 @@ def parse(text, slots):
                 sys.exit(f"не разобрал ход (обмен?): {pairs} {team} {l}")
             mv[key] = p.group(1)
         out.append(mv)
-    return out
+    return trades(out)
+
+
+def trades(moves):
+    """Сторонам обмена проставляю drop: что получила вторая сторона, то эта отдала."""
+    for ts in {m["ts"] for m in moves if m.get("trade")}:
+        side = [m for m in moves if m.get("trade") and m["ts"] == ts]
+        teams = {m["team"] for m in side}
+        if len(teams) != 2:
+            sys.exit(f"не разобрал обмен {ts}: {side}")
+        a, b = ([m for m in side if m["team"] == t] for t in teams)
+        for x, y in zip(a, b):
+            x["drop"], y["drop"] = y["add"], x["add"]
+    return [{k: v for k, v in m.items() if k != "trade"} for m in moves]
 
 
 def key(m):
